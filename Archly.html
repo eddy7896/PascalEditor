@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Archly — Realtime 3D for architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --accent: #3DCBFF;
+    --accent-deep: #0AA9E2;
+    --accent-soft: rgba(61, 203, 255, 0.12);
+
+    /* dark theme (default) */
+    --bg: #0E0F11;
+    --bg-elev: #16181B;
+    --bg-elev-2: #1D2024;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.16);
+    --ink: #F4F5F7;
+    --ink-mid: #A8ADB4;
+    --ink-low: #6B7079;
+    --grid: rgba(255, 255, 255, 0.04);
+    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+  }
+  [data-theme="light"] {
+    --bg: #F7F7F4;
+    --bg-elev: #FFFFFF;
+    --bg-elev-2: #FBFBF8;
+    --line: rgba(20, 22, 25, 0.08);
+    --line-strong: rgba(20, 22, 25, 0.16);
+    --ink: #14161A;
+    --ink-mid: #5A5F66;
+    --ink-low: #8A8F97;
+    --grid: rgba(20, 22, 25, 0.04);
+    --shadow: 0 1px 2px rgba(20,22,25,0.04), 0 12px 32px rgba(20,22,25,0.06);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent); color: #000; }
+
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; font-feature-settings: "ss01"; }
+  .serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--ink-low); }
+
+  /* Smooth route transitions */
+  .route-enter {
+    animation: routeEnter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes routeEnter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Marquee */
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Cursor blink */
+  @keyframes cursorPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+
+  /* Shimmer for loading states */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Subtle drift for hero axon */
+  @keyframes drift {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(0.3deg); }
+  }
+</style>
+
+<script type="application/json" id="speaker-notes">[]</script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="src/icons.jsx"></script>
+  <script type="text/babel" src="src/illustrations.jsx"></script>
+  <script type="text/babel" src="src/shared.jsx"></script>
+  <script type="text/babel" src="src/landing.jsx"></script>
+  <script type="text/babel" src="src/dashboard.jsx"></script>
+  <script type="text/babel" src="src/marketplace.jsx"></script>
+  <script type="text/babel" src="src/app.jsx"></script>
+</body>
+</html>
