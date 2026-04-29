@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import type { TeamRole } from "@/prisma/generated-client";
 
 export async function getDashboardData() {
   const session = await getServerSession(authOptions);
@@ -189,4 +190,79 @@ export async function updateLastOpened(projectId: string) {
     data: { lastOpenedAt: new Date() },
   });
   revalidatePath("/dashboard");
+}
+
+export async function changeTeamMemberRole(
+  teamId: string,
+  targetUserId: string,
+  role: TeamRole,
+) {
+  const session = await getServerSession(authOptions);
+  const actorId = (session?.user as { id?: string } | undefined)?.id;
+  if (!actorId) throw new Error("Unauthorized");
+
+  // Disallow assigning OWNER via this action — owner only set at team creation
+  if (role === "OWNER") throw new Error("Cannot assign OWNER role via UI");
+
+  const actorMembership = await prisma.teamMember.findUnique({
+    where: { teamId_userId: { teamId, userId: actorId } },
+  });
+  if (!actorMembership || !["OWNER", "ADMIN"].includes(actorMembership.role)) {
+    throw new Error("Forbidden");
+  }
+
+  const targetMembership = await prisma.teamMember.findUnique({
+    where: { teamId_userId: { teamId, userId: targetUserId } },
+  });
+  if (!targetMembership) throw new Error("Member not found");
+
+  // Disallow demoting an OWNER
+  if (targetMembership.role === "OWNER") {
+    throw new Error("Cannot change OWNER role");
+  }
+
+  await prisma.teamMember.update({
+    where: { teamId_userId: { teamId, userId: targetUserId } },
+    data: { role },
+  });
+
+  revalidatePath(`/dashboard/teams/${teamId}/members`);
+  revalidatePath(`/dashboard/teams/${teamId}`);
+  revalidatePath(`/dashboard`);
+}
+
+export async function removeTeamMember(teamId: string, targetUserId: string) {
+  const session = await getServerSession(authOptions);
+  const actorId = (session?.user as { id?: string } | undefined)?.id;
+  if (!actorId) throw new Error("Unauthorized");
+
+  const actorMembership = await prisma.teamMember.findUnique({
+    where: { teamId_userId: { teamId, userId: actorId } },
+  });
+  if (!actorMembership || !["OWNER", "ADMIN"].includes(actorMembership.role)) {
+    throw new Error("Forbidden");
+  }
+
+  const targetMembership = await prisma.teamMember.findUnique({
+    where: { teamId_userId: { teamId, userId: targetUserId } },
+  });
+  if (!targetMembership) throw new Error("Member not found");
+
+  // Cannot remove the OWNER
+  if (targetMembership.role === "OWNER") {
+    throw new Error("Cannot remove team owner");
+  }
+
+  // Cannot remove yourself via this action
+  if (targetUserId === actorId) {
+    throw new Error("Cannot remove yourself");
+  }
+
+  await prisma.teamMember.delete({
+    where: { teamId_userId: { teamId, userId: targetUserId } },
+  });
+
+  revalidatePath(`/dashboard/teams/${teamId}/members`);
+  revalidatePath(`/dashboard/teams/${teamId}`);
+  revalidatePath(`/dashboard`);
 }
