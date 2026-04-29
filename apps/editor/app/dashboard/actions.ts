@@ -19,7 +19,7 @@ export async function getDashboardData() {
               teams: {
                 include: {
                   projects: true,
-                  members: true,
+                  members: { include: { user: { select: { id: true, name: true, image: true } } } },
                 },
               },
               members: {
@@ -31,10 +31,16 @@ export async function getDashboardData() {
           },
         },
       },
+      starredProjects: { select: { projectId: true } },
     },
   });
 
-  return user;
+  if (!user) return null;
+
+  return {
+    ...user,
+    starredProjectIds: user.starredProjects.map((sp) => sp.projectId),
+  };
 }
 
 export async function createTeam(organizationId: string, name: string, description: string) {
@@ -61,7 +67,7 @@ export async function createTeam(organizationId: string, name: string, descripti
   return { success: true, team };
 }
 
-export async function createProject(teamId: string, name: string, description: string) {
+export async function createProject(teamId: string, name: string, description: string): Promise<{ id: string; success: boolean }> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) throw new Error("Unauthorized");
 
@@ -75,7 +81,22 @@ export async function createProject(teamId: string, name: string, description: s
 
   revalidatePath("/dashboard/projects");
   revalidatePath("/dashboard");
-  return { success: true, project };
+  return { id: project.id, success: true };
+}
+
+export async function getFirstTeamId(): Promise<string | null> {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) return null
+  const userId = (session.user as { id: string }).id
+  const member = await prisma.organizationMember.findFirst({
+    where: { userId },
+    include: {
+      organization: {
+        include: { teams: { take: 1 } },
+      },
+    },
+  })
+  return member?.organization.teams[0]?.id ?? null
 }
 
 export async function inviteMember(organizationId: string, email: string, name: string) {
@@ -105,4 +126,58 @@ export async function inviteMember(organizationId: string, email: string, name: 
     console.error("Invite error:", error);
     return { success: false, error: "Failed to invite member. They may already be in the organization." };
   }
+}
+
+export async function renameProject(projectId: string, name: string) {
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) throw new Error("Unauthorized");
+  await prisma.project.update({
+    where: { id: projectId },
+    data: { name: name.trim() },
+  });
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/projects");
+}
+
+export async function deleteProject(projectId: string) {
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) throw new Error("Unauthorized");
+  await prisma.project.delete({ where: { id: projectId } });
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/projects");
+}
+
+export async function starProject(projectId: string) {
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) throw new Error("Unauthorized");
+  await prisma.starredProject.create({
+    data: { userId, projectId },
+  });
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/projects");
+}
+
+export async function unstarProject(projectId: string) {
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) throw new Error("Unauthorized");
+  await prisma.starredProject.delete({
+    where: { userId_projectId: { userId, projectId } },
+  });
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/projects");
+}
+
+export async function updateLastOpened(projectId: string) {
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) return; // fire-and-forget, no throw
+  await prisma.project.update({
+    where: { id: projectId },
+    data: { lastOpenedAt: new Date() },
+  });
+  revalidatePath("/dashboard");
 }

@@ -17,6 +17,8 @@ model User {
   image         String?
   password      String?
   bio           String?
+  onboardingComplete  Boolean            @default(false)
+  onboardingProgress  OnboardingProgress?
 
   organizations    OrganizationMember[]
   teamMemberships  TeamMember[]
@@ -24,8 +26,21 @@ model User {
   publishedAssets  MarketplaceAsset[]
   clonedProjects   ProjectClone[]
 
+  starredProjects  StarredProject[]
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+model OnboardingProgress {
+  userId      String    @id
+  currentStep Int       @default(0)
+  selections  Json      @default("{}")
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Organization {
@@ -38,7 +53,8 @@ model Organization {
   
   members     OrganizationMember[]
   teams       Team[]
-  
+  inviteTokens OrganizationInviteToken[]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -70,6 +86,22 @@ enum OrgRole {
   OWNER
   ADMIN
   MEMBER
+}
+
+model OrganizationInviteToken {
+  id              String    @id @default(cuid())
+  organizationId  String
+  token           String    @unique @default(cuid())
+  createdByUserId String
+  expiresAt       DateTime
+  usedAt          DateTime?
+  usedByUserId    String?
+
+  organization    Organization @relation(fields: [organizationId], references: [id])
+
+  createdAt       DateTime  @default(now())
+
+  @@index([token])
 }
 
 model Team {
@@ -110,11 +142,13 @@ model Project {
   thumbnailUrl String?
   stateUrl     String?
   isPublic     Boolean  @default(false)
+  lastOpenedAt DateTime?
 
   team             Team              @relation(fields: [teamId], references: [id])
   members          ProjectMember[]
   publishedAsset   MarketplaceAsset?
   clonedFrom       ProjectClone?     @relation("ClonedProject")
+  starredBy        StarredProject[]
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -192,7 +226,30 @@ model EarlyAccessApplication {
   useCase          String
   teamSize         Int
   status           OrgStatus @default(PENDING)
-  
+
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  email     String
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime  @default(now())
+
+  @@index([email])
+  @@index([token])
+}
+
+model StarredProject {
+  userId    String
+  projectId String
+  createdAt DateTime @default(now())
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  @@id([userId, projectId])
+  @@index([userId])
 }

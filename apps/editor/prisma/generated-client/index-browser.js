@@ -115,6 +115,16 @@ exports.Prisma.UserScalarFieldEnum = {
   image: 'image',
   password: 'password',
   bio: 'bio',
+  onboardingComplete: 'onboardingComplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OnboardingProgressScalarFieldEnum = {
+  userId: 'userId',
+  currentStep: 'currentStep',
+  selections: 'selections',
+  completedAt: 'completedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -137,6 +147,17 @@ exports.Prisma.OrganizationMemberScalarFieldEnum = {
   role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrganizationInviteTokenScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  token: 'token',
+  createdByUserId: 'createdByUserId',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  usedByUserId: 'usedByUserId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.TeamScalarFieldEnum = {
@@ -164,6 +185,7 @@ exports.Prisma.ProjectScalarFieldEnum = {
   thumbnailUrl: 'thumbnailUrl',
   stateUrl: 'stateUrl',
   isPublic: 'isPublic',
+  lastOpenedAt: 'lastOpenedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -211,9 +233,28 @@ exports.Prisma.EarlyAccessApplicationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  email: 'email',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.StarredProjectScalarFieldEnum = {
+  userId: 'userId',
+  projectId: 'projectId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -224,6 +265,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.OrgStatus = exports.$Enums.OrgStatus = {
   PENDING: 'PENDING',
@@ -246,15 +293,19 @@ exports.ProjectRole = exports.$Enums.ProjectRole = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  OnboardingProgress: 'OnboardingProgress',
   Organization: 'Organization',
   OrganizationMember: 'OrganizationMember',
+  OrganizationInviteToken: 'OrganizationInviteToken',
   Team: 'Team',
   TeamMember: 'TeamMember',
   Project: 'Project',
   ProjectMember: 'ProjectMember',
   MarketplaceAsset: 'MarketplaceAsset',
   ProjectClone: 'ProjectClone',
-  EarlyAccessApplication: 'EarlyAccessApplication'
+  EarlyAccessApplication: 'EarlyAccessApplication',
+  PasswordResetToken: 'PasswordResetToken',
+  StarredProject: 'StarredProject'
 };
 
 /**
