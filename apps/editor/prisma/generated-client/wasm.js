@@ -165,6 +165,8 @@ exports.Prisma.TeamScalarFieldEnum = {
   organizationId: 'organizationId',
   name: 'name',
   description: 'description',
+  avatarUrl: 'avatarUrl',
+  slug: 'slug',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -173,8 +175,22 @@ exports.Prisma.TeamMemberScalarFieldEnum = {
   id: 'id',
   teamId: 'teamId',
   userId: 'userId',
+  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeamInviteTokenScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  teamId: 'teamId',
+  inviteeEmail: 'inviteeEmail',
+  role: 'role',
+  createdByUserId: 'createdByUserId',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  usedByUserId: 'usedByUserId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
@@ -284,6 +300,14 @@ exports.OrgRole = exports.$Enums.OrgRole = {
   MEMBER: 'MEMBER'
 };
 
+exports.TeamRole = exports.$Enums.TeamRole = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR',
+  COMMENTER: 'COMMENTER',
+  VIEWER: 'VIEWER'
+};
+
 exports.ProjectRole = exports.$Enums.ProjectRole = {
   OWNER: 'OWNER',
   EDITOR: 'EDITOR',
@@ -299,6 +323,7 @@ exports.Prisma.ModelName = {
   OrganizationInviteToken: 'OrganizationInviteToken',
   Team: 'Team',
   TeamMember: 'TeamMember',
+  TeamInviteToken: 'TeamInviteToken',
   Project: 'Project',
   ProjectMember: 'ProjectMember',
   MarketplaceAsset: 'MarketplaceAsset',

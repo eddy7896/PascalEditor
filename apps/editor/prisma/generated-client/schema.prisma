@@ -104,24 +104,36 @@ model OrganizationInviteToken {
   @@index([token])
 }
 
+enum TeamRole {
+  OWNER
+  ADMIN
+  EDITOR
+  COMMENTER
+  VIEWER
+}
+
 model Team {
   id             String   @id @default(cuid())
   organizationId String
   name           String
   description    String?
-  
+  avatarUrl      String?
+  slug           String?
+
   organization   Organization @relation(fields: [organizationId], references: [id])
   members        TeamMember[]
   projects       Project[]
-  
+  inviteTokens   TeamInviteToken[]
+
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
 
 model TeamMember {
-  id      String @id @default(cuid())
+  id      String    @id @default(cuid())
   teamId  String
   userId  String
+  role    TeamRole  @default(VIEWER)
 
   team    Team @relation(fields: [teamId], references: [id])
   user    User @relation(fields: [userId], references: [id])
@@ -132,6 +144,24 @@ model TeamMember {
   @@unique([teamId, userId])
   @@index([userId])
   @@index([teamId])
+}
+
+model TeamInviteToken {
+  id              String    @id @default(cuid())
+  token           String    @unique
+  teamId          String
+  inviteeEmail    String
+  role            TeamRole
+  createdByUserId String
+  expiresAt       DateTime
+  usedAt          DateTime?
+  usedByUserId    String?
+  team            Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+
+  @@index([token])
+  @@index([teamId])
+  @@index([inviteeEmail])
 }
 
 model Project {
