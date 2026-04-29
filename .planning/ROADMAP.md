@@ -103,12 +103,12 @@ Plans:
   3. Invited user can accept the invitation and immediately sees the team's shared projects view
   4. Team owner or admin can change a member's role or remove them, and the change takes effect without a page reload
   5. User belonging to multiple teams can switch between them from the sidebar and each shows its own project grid
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: Teamspace creation + sidebar integration
-- [ ] 05-02: Invite flow — email delivery, accept/decline, invitation token validation
-- [ ] 05-03: Member management — role change, removal, shared projects view
+- [ ] 05-01-PLAN.md — Schema migration + createTeam + sidebar active-team highlighting + team detail route
+- [ ] 05-02-PLAN.md — Invite flow: POST /api/teams/invite, GET /api/teams/invite/accept, InviteMemberModal
+- [ ] 05-03-PLAN.md — Member management: role change + remove actions, members page, OWNER protection, human-verify checkpoint
 
 ---
 
