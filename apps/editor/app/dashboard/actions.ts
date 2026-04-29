@@ -43,28 +43,37 @@ export async function getDashboardData() {
   };
 }
 
-export async function createTeam(organizationId: string, name: string, description: string) {
+export async function createTeam(input: { name: string; avatarUrl?: string; organizationId?: string }): Promise<{ id: string }> {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) throw new Error("Unauthorized");
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) throw new Error("Unauthorized");
 
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
-  if (!user) throw new Error("User not found");
+  const name = input.name.trim();
+  if (!name || name.length > 50) throw new Error("Team name must be 1-50 characters");
 
-  const team = await prisma.team.create({
-    data: {
-      organizationId,
-      name,
-      description,
-      members: {
-        create: {
-          userId: user.id,
+  let organizationId = input.organizationId;
+  if (!organizationId) {
+    const membership = await prisma.organizationMember.findFirst({ where: { userId } });
+    if (!membership) throw new Error("No organization — create one first");
+    organizationId = membership.organizationId;
+  }
+
+  const [team] = await prisma.$transaction([
+    prisma.team.create({
+      data: {
+        organizationId,
+        name,
+        avatarUrl: input.avatarUrl,
+        members: {
+          create: { userId, role: "OWNER" },
         },
       },
-    },
-  });
+    }),
+  ]);
 
+  revalidatePath("/dashboard");
   revalidatePath("/dashboard/teams");
-  return { success: true, team };
+  return { id: team.id };
 }
 
 export async function createProject(teamId: string, name: string, description: string): Promise<{ id: string; success: boolean }> {
