@@ -39,15 +39,16 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     role: m.role,
   }))
 
-  const firstOrg = memberships[0]?.organization
-  const teams = firstOrg?.teams.map((t, i) => ({
+  const allTeams = memberships.flatMap((m) => m.organization.teams)
+  const TEAM_COLORS = ['#4F8EF7', '#F97316', '#A855F7', '#10B981', '#F59E0B']
+  const teams = allTeams.map((t, i) => ({
     id: t.id,
     name: t.name,
     projectCount: t.projects.length,
-    color: ['#4F8EF7', '#F97316', '#A855F7', '#10B981', '#F59E0B'][i % 5]!,
-  })) ?? []
+    color: TEAM_COLORS[i % TEAM_COLORS.length]!,
+  }))
 
-  const totalProjects = firstOrg?.teams.reduce((acc, t) => acc + t.projects.length, 0) ?? 0
+  const totalProjects = allTeams.reduce((acc, t) => acc + t.projects.length, 0)
   const starredCount = user.starredProjects.length
 
   return (
