@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-28)
 
 **Core value:** Make discovering, organizing, and sharing 3D spaces as fluid as Figma makes 2D design
-**Current focus:** Phase 3 — Onboarding
+**Current focus:** Phase 5 — Teamspaces
 
 ## Current Position
 
-Phase: 4 of 7 (Dashboard) — IN PROGRESS
-Plan: 2 of 2 complete (awaiting human verify checkpoint)
-Status: 04-02 built — 5 client components (StarButton, ProjectContextMenu, RenameModal, DeleteConfirmModal, ProjectsGrid), server projects page, Starred+Recent sections on dashboard home
-Last activity: 2026-04-29 — 04-02 tasks complete: all 8 DASH requirements implemented, awaiting human verify checkpoint
+Phase: 5 of 7 (Teamspaces) — IN PROGRESS
+Plan: 1 of 3 complete
+Status: 05-01 complete — TeamRole schema, createTeam action, CreateTeamModal, active-team sidebar, /dashboard/teams/[teamId] route
+Last activity: 2026-04-30 — 05-01 all 3 tasks done, commits fbd0399 / 521865d / bc46e92
 
 Progress: [██████████] 93%
 
@@ -64,6 +64,9 @@ Recent decisions affecting current work:
 - WorkspaceSetupModal removed from dashboard layout — middleware from 03-01 guarantees only onboarded users reach /dashboard
 - session.user cast to { id?: string } in dashboard server actions — consistent with getFirstTeamId pattern; no next-auth.d.ts module augmentation needed
 - StarredProject migration deferred to deployment (no local DB); schema validated via bunx prisma validate; client regenerated against updated schema
+- activeTeamId derived via usePathname() inside DashboardSidebar (client) — no prop drilling from server layout
+- Team slug optional, not used in URLs for v1; id-based routing (/dashboard/teams/[teamId])
+- Dashboard layout flatMaps across all org memberships so multi-org users see all their teams
 
 ### Pending Todos
 
@@ -75,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-29
-Stopped at: 04-01 complete — data layer done, ready for 04-02 (dashboard UI)
-Resume file: Run 04-02-PLAN.md next
+Last session: 2026-04-30
+Stopped at: 05-01 complete — schema + createTeam + team route done
+Resume file: Run 05-02-PLAN.md next (invite token flow)
