@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 ## Current Position
 
 Phase: 5 of 7 (Teamspaces) — IN PROGRESS
-Plan: 1 of 3 complete
-Status: 05-01 complete — TeamRole schema, createTeam action, CreateTeamModal, active-team sidebar, /dashboard/teams/[teamId] route
-Last activity: 2026-04-30 — 05-01 all 3 tasks done, commits fbd0399 / 521865d / bc46e92
+Plan: 2 of 3 complete
+Status: 05-02 complete — POST /api/teams/invite, GET /api/teams/invite/accept, InviteMemberModal
+Last activity: 2026-04-30 — 05-02 all 3 tasks done, commits 11abd34 / 87de9a7 / 3465408
 
 Progress: [██████████] 93%
 
@@ -67,6 +67,9 @@ Recent decisions affecting current work:
 - activeTeamId derived via usePathname() inside DashboardSidebar (client) — no prop drilling from server layout
 - Team slug optional, not used in URLs for v1; id-based routing (/dashboard/teams/[teamId])
 - Dashboard layout flatMaps across all org memberships so multi-org users see all their teams
+- Team invite token is 64-char raw hex, 48h TTL, v1 URL-in-response pattern (no email provider)
+- OWNER role excluded from invite — owner only set on team creation
+- Atomic transaction on invite accept: teamMember.upsert + token.usedAt update
 
 ### Pending Todos
 
@@ -79,5 +82,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: 05-01 complete — schema + createTeam + team route done
-Resume file: Run 05-02-PLAN.md next (invite token flow)
+Stopped at: 05-02 complete — invite token creation, accept handler, InviteMemberModal done
+Resume file: Run 05-03-PLAN.md next
