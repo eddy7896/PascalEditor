@@ -16,7 +16,7 @@ export function NewProjectCard() {
     if (!name.trim()) return
     setLoading(true)
     try {
-      const result = await createProject(name.trim())
+      const result = await createProject('', name.trim(), '')
       if (result?.id) router.push(`/editor/${result.id}`)
       else router.refresh()
     } finally {
