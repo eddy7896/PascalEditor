@@ -16,7 +16,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Authentication** - Email/password polish + Google OAuth + password reset ✓ 2026-04-29
 - [ ] **Phase 3: Onboarding** - Multi-step first-run flow that contextualizes the product
 - [ ] **Phase 4: Dashboard** - Figma-styled project home with grid, recents, starred, and sidebar
-- [ ] **Phase 5: Teamspaces** - Create teams, invite members by role, and switch between them
+- [x] **Phase 5: Teamspaces** - Create teams, invite members by role, and switch between them ✓ 2026-04-30
+- [ ] **Phase 5.1: Email + Auth Hardening** [INSERTED] - Resend email provider, email verification, rate limiting on auth endpoints
+- [ ] **Phase 5.2: RBAC Enforcement + Soft Delete** [INSERTED] - Enforce roles in all server actions, archive/soft-delete for projects
+- [ ] **Phase 5.3: Search, Navigation + Settings** [INSERTED] - Server-side search, sort/filter on project grid, breadcrumbs, settings page
+- [ ] **Phase 5.4: Audit Log + Notifications** [INSERTED] - Append-only audit events table, in-app notification bell + email notifications
 - [ ] **Phase 6: Marketplace** - Browse, publish, and duplicate public 3D+2D scenes
 - [ ] **Phase 7: Designer Profiles** - Public Dribbble-style portfolio pages with contact
 
@@ -109,6 +113,80 @@ Plans:
 - [ ] 05-01-PLAN.md — Schema migration + createTeam + sidebar active-team highlighting + team detail route
 - [ ] 05-02-PLAN.md — Invite flow: POST /api/teams/invite, GET /api/teams/invite/accept, InviteMemberModal
 - [ ] 05-03-PLAN.md — Member management: role change + remove actions, members page, OWNER protection, human-verify checkpoint
+
+---
+
+### Phase 5.1: Email + Auth Hardening [INSERTED]
+**Goal**: Every auth touchpoint sends real email and is protected against abuse — password reset via Resend, email verification on signup, and rate limiting on all auth endpoints
+**Depends on**: Phase 5
+**Requirements**: AUTH-05, AUTH-06, AUTH-07
+**Success Criteria** (what must be TRUE):
+  1. User who resets their password receives an email with the reset link (not a URL in the API response)
+  2. New user who signs up with email/password receives a verification email and must confirm before accessing the dashboard
+  3. Auth endpoints (login, signup, forgot-password) return 429 after repeated failures within a time window
+  4. Team invite email is sent to the invitee (not just a URL returned in the modal)
+**Plans**: 3 plans
+
+Plans:
+- [ ] 05.1-01-PLAN.md � Resend integration + password reset email + team invite email (SHA-256 tokens)
+- [ ] 05.1-02-PLAN.md � Email verification flow on credentials signup + verify-email endpoint + NextAuth gate
+- [ ] 05.1-03-PLAN.md � Redis rate limiting on signup, forgot-password, and credentials login route handlers
+
+---
+
+### Phase 5.2: RBAC Enforcement + Soft Delete [INSERTED]
+**Goal**: Every project mutation checks the caller's role before executing, and deleted projects are archived rather than permanently destroyed
+**Depends on**: Phase 5.1
+**Requirements**: RBAC-01, PROJ-01
+**Success Criteria** (what must be TRUE):
+  1. A VIEWER or COMMENTER who calls renameProject or deleteProject receives a 403 — not a silent success
+  2. An EDITOR can rename and delete their own team's projects
+  3. Deleted projects are moved to an "Archived" state (deletedAt timestamp) and hidden from default views, not hard-deleted
+  4. Team OWNER and ADMIN distinction is clearly defined: ADMIN cannot delete the team or transfer ownership
+**Plans**: TBD
+
+Plans:
+- [ ] 05.2-01: Add role guard helper + enforce in renameProject, deleteProject, createProject server actions
+- [ ] 05.2-02: Soft delete — add deletedAt to Project schema, filter from all list queries, add archive/restore actions
+- [ ] 05.2-03: Clarify OWNER vs ADMIN permissions in team server actions
+
+---
+
+### Phase 5.3: Search, Navigation + Settings [INSERTED]
+**Goal**: Users can find any project instantly via server-side search, navigate with breadcrumbs, sort/filter their project grid, and manage their account from a settings page
+**Depends on**: Phase 5.2
+**Requirements**: UI-01, UI-02, UI-03, UI-04
+**Success Criteria** (what must be TRUE):
+  1. Typing in the search bar returns matching projects from the server (not filtered from a client-side array)
+  2. Team → Project navigation shows a breadcrumb trail that reflects the current location
+  3. Project grid has working sort controls (name, last modified, last opened) and filter by team
+  4. /dashboard/settings page exists and allows user to update display name, avatar URL, and password
+**Plans**: TBD
+
+Plans:
+- [ ] 05.3-01: Server-side search — Prisma full-text or icontains, wired to top bar search input
+- [ ] 05.3-02: Breadcrumb component derived from pathname + DB name lookups
+- [ ] 05.3-03: Sort + filter controls on project grid
+- [ ] 05.3-04: Settings page — profile edit (display name, avatar), password change
+
+---
+
+### Phase 5.4: Audit Log + Notifications [INSERTED]
+**Goal**: Team owners have a full audit trail of membership and role changes, and users receive in-app and email notifications for events that affect them
+**Depends on**: Phase 5.3
+**Requirements**: AUDIT-01, NOTIF-01, NOTIF-02
+**Success Criteria** (what must be TRUE):
+  1. Team audit log page shows timestamped entries for: member joined, role changed, member removed, project created/deleted
+  2. In-app notification bell shows unread count and a dropdown of recent notifications
+  3. User receives an email when their team role is changed
+  4. User receives an email when they are added to a new team
+**Plans**: TBD
+
+Plans:
+- [ ] 05.4-01: AuditEvent model + appendAuditEvent helper + log writes in all team/project mutations
+- [ ] 05.4-02: Audit log page at /dashboard/teams/[teamId]/audit
+- [ ] 05.4-03: Notification model + in-app bell (unread count, dropdown, mark-read)
+- [ ] 05.4-04: Email notifications for role change and team join via Resend (reuses 5.1 email setup)
 
 ---
 
