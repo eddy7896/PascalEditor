@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 ## Current Position
 
 Phase: 5.2 of 7 (RBAC Enforcement + Soft Delete) — IN PROGRESS
-Plan: 2 of 3 — COMPLETE
-Status: Phase 5.2 Plan 02 complete; deletedAt field on Project model + softDeleteExtension Prisma client extension applied globally
-Last activity: 2026-04-30 — 05.2-02 soft-delete schema + extension complete; all project queries auto-exclude soft-deleted records
+Plan: 4 of 4 — COMPLETE
+Status: Phase 5.2 Plan 04 complete; JSDoc + inline comments documenting OWNER immutability in createTeam, changeTeamMemberRole, removeTeamMember
+Last activity: 2026-04-30 — 05.2-04 documentation plan complete; role hierarchy and OWNER protection fully documented in code
 
-Progress: [████████░░] 92% (5.0, 5.1 complete; 5.2 plans 01-02 of 3 done)
+Progress: [█████████░] 96% (5.0, 5.1 complete; 5.2 plans 01-04 of 4 done)
 
 ## Performance Metrics
 
@@ -90,6 +90,7 @@ Recent decisions affecting current work:
 - Soft-delete via deletedAt field on Project model — preserves records for audit/recovery without permanent destruction
 - findUnique soft-delete filter uses direct field spread (deletedAt:null) not AND wrapping — ProjectWhereUniqueInput requires id; AND breaks type safety
 - createPrismaClient() wrapper used in prisma.ts for correct ReturnType inference of $extends() extended client
+- JSDoc on server actions documents OWNER immutability; each guard comment explains WHY (team stability, security, audit clarity)
 
 ### Pending Todos
 
@@ -102,5 +103,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Completed 05.2-02-PLAN.md — soft-delete schema + Prisma extension; deletedAt on Project, softDeleteExtension in lib/prisma-soft-delete.ts
-Resume file: Phase 5.2 (RBAC Enforcement + Soft Delete) Plan 02 complete; ready for Plan 03 (wire RBAC guards into dashboard/actions.ts)
+Stopped at: Completed 05.2-04-PLAN.md — JSDoc and inline comments documenting OWNER immutability across three team management server actions
+Resume file: Phase 5.2 (RBAC Enforcement + Soft Delete) all plans complete; ready for Phase 5.3
