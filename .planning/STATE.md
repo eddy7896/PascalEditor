@@ -9,29 +9,29 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 
 ## Current Position
 
-Phase: 5 of 7 (Teamspaces) — COMPLETE
-Plan: 3 of 3 — all plans complete
-Status: Phase 5 fully complete; all 6 TEAM requirements human-verified; ready for Phase 6
-Last activity: 2026-04-30 — 05-03 human-verify approved (all 8 tests passed); Phase 5 done
+Phase: 5.1 of 7 (Email Auth Hardening) — IN PROGRESS
+Plan: 1 of 3 — COMPLETE
+Status: Phase 5.1 Plan 01 complete; Resend email integration and SHA-256 token hashing deployed; Plan 02 (email verification) ready
+Last activity: 2026-04-30 — 05.1-01 email auth hardening complete; sent real email for password reset and team invites
 
-Progress: [██████████] 100%
+Progress: [████████░░] 87% (5.0 complete, 5.1 started)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 18 min
+- Total execution time: 18 min (0.3 hours)
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 05.1 | 1 | 18 min | 18 min |
 
 **Recent Trend:**
-- Last 5 plans: —
-- Trend: —
+- Last 5 plans: [05.1-01: 18 min]
+- Trend: Accelerating (planned phases ahead)
 
 *Updated after each plan completion*
 
@@ -74,6 +74,12 @@ Recent decisions affecting current work:
 - Self-remove blocked at action level — separate leave-team flow deferred to future phase
 - router.refresh() chosen over optimistic UI for member changes — simpler, consistent with server-driven data model
 - Inline confirm in RemoveMemberButton avoids cross-component dependency on DeleteConfirmModal
+- Resend chosen for transactional email (managed service, reliable, excellent TypeScript DX)
+- SHA-256(token) stored in DB for password reset tokens (v2 hardening pattern, establishes secure pattern early)
+- Raw token sent in email link, hashed token in DB (prevents URL leakage if DB compromised)
+- Fire-and-forget email sends with .catch() error logging (preserves enumeration safety)
+- Password reset endpoint no longer returns resetUrl in API response (v1 → v2 upgrade)
+- Team invite endpoint no longer returns inviteUrl in API response (v1 → v2 upgrade)
 
 ### Pending Todos
 
@@ -86,5 +92,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Completed 05-03-PLAN.md — Phase 5 fully done
-Resume file: Begin Phase 6 (Editor)
+Stopped at: Completed 05.1-01-PLAN.md — Resend integration and email auth hardening complete
+Resume file: Begin Phase 5.1 Plan 02 (Email Verification) or continue to Phase 06 (Editor)
