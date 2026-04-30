@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 ## Current Position
 
 Phase: 5 of 7 (Teamspaces) — IN PROGRESS
-Plan: 2 of 3 complete
-Status: 05-02 complete — POST /api/teams/invite, GET /api/teams/invite/accept, InviteMemberModal
-Last activity: 2026-04-30 — 05-02 all 3 tasks done, commits 11abd34 / 87de9a7 / 3465408
+Plan: 3 of 3 (awaiting human verification — Task 3 checkpoint)
+Status: 05-03 tasks 1+2 complete — changeTeamMemberRole, removeTeamMember, MembersPage, MembersTable, RoleSelect, RemoveMemberButton
+Last activity: 2026-04-30 — 05-03 auto tasks done, commits ba0799f / 5985758; awaiting human-verify checkpoint
 
 Progress: [██████████] 93%
 
@@ -70,6 +70,10 @@ Recent decisions affecting current work:
 - Team invite token is 64-char raw hex, 48h TTL, v1 URL-in-response pattern (no email provider)
 - OWNER role excluded from invite — owner only set on team creation
 - Atomic transaction on invite accept: teamMember.upsert + token.usedAt update
+- OWNER role fully protected in server actions: cannot be assigned, demoted, or removed via any UI call
+- Self-remove blocked at action level — separate leave-team flow deferred to future phase
+- router.refresh() chosen over optimistic UI for member changes — simpler, consistent with server-driven data model
+- Inline confirm in RemoveMemberButton avoids cross-component dependency on DeleteConfirmModal
 
 ### Pending Todos
 
@@ -82,5 +86,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: 05-02 complete — invite token creation, accept handler, InviteMemberModal done
-Resume file: Run 05-03-PLAN.md next
+Stopped at: 05-03 Task 3 checkpoint — human verification of full Phase 5 stack required
+Resume file: After human types "approved", Phase 5 is complete; run Phase 6 next
