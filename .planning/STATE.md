@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 ## Current Position
 
 Phase: 5.1 of 7 (Email Auth Hardening) — IN PROGRESS
-Plan: 1 of 3 — COMPLETE
-Status: Phase 5.1 Plan 01 complete; Resend email integration and SHA-256 token hashing deployed; Plan 02 (email verification) ready
-Last activity: 2026-04-30 — 05.1-01 email auth hardening complete; sent real email for password reset and team invites
+Plan: 2 of 3 — COMPLETE
+Status: Phase 5.1 Plan 02 complete; Email verification gating implemented; Plan 03 (email rate limiting) ready
+Last activity: 2026-04-30 — 05.1-02 email verification complete; credentials signup requires email verification
 
 Progress: [████████░░] 87% (5.0 complete, 5.1 started)
 
@@ -80,6 +80,10 @@ Recent decisions affecting current work:
 - Fire-and-forget email sends with .catch() error logging (preserves enumeration safety)
 - Password reset endpoint no longer returns resetUrl in API response (v1 → v2 upgrade)
 - Team invite endpoint no longer returns inviteUrl in API response (v1 → v2 upgrade)
+- Email verification mandatory for credentials signup (prevents fake email registrations)
+- Verification tokens use same security pattern as password reset: raw hex in URL, SHA-256 hash in DB
+- Google OAuth users auto-verified on signup (Google has already verified their email)
+- Grandfather migration sets emailVerified = createdAt for existing password users (no lockout)
 
 ### Pending Todos
 
