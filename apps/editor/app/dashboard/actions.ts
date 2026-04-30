@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import type { TeamRole } from "@/prisma/generated-client";
+import { requireTeamRole, assertTeamMember, PermissionError } from "@/lib/rbac-guards";
 
 export async function getDashboardData() {
   const session = await getServerSession(authOptions);
@@ -91,6 +92,20 @@ export async function createTeam(input: { name: string; avatarUrl?: string; orga
 export async function createProject(teamId: string, name: string, description: string): Promise<{ id: string; success: boolean }> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) throw new Error("Unauthorized");
+
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) throw new Error("Unauthorized");
+
+  // Check caller is on the team with at least EDITOR role
+  try {
+    await assertTeamMember(teamId, userId);
+    await requireTeamRole(teamId, userId, "EDITOR");
+  } catch (error) {
+    if (error instanceof PermissionError) {
+      throw new Error(error.message);
+    }
+    throw error;
+  }
 
   const project = await prisma.project.create({
     data: {
