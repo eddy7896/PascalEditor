@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 ## Current Position
 
 Phase: 5.2 of 7 (RBAC Enforcement + Soft Delete) — IN PROGRESS
-Plan: 1 of 3 — COMPLETE
-Status: Phase 5.2 Plan 01 complete; shared rbac-guards.ts with PermissionError and role hierarchy validators created
-Last activity: 2026-04-30 — 05.2-01 RBAC guards library complete; requireTeamRole, requireProjectRole, assertTeamMember exported from lib/rbac-guards.ts
+Plan: 2 of 3 — COMPLETE
+Status: Phase 5.2 Plan 02 complete; deletedAt field on Project model + softDeleteExtension Prisma client extension applied globally
+Last activity: 2026-04-30 — 05.2-02 soft-delete schema + extension complete; all project queries auto-exclude soft-deleted records
 
-Progress: [████████░░] 90% (5.0, 5.1 complete; 5.2 plan 01 of 3 done)
+Progress: [████████░░] 92% (5.0, 5.1 complete; 5.2 plans 01-02 of 3 done)
 
 ## Performance Metrics
 
@@ -87,6 +87,9 @@ Recent decisions affecting current work:
 - requireTeamRole used for mutations (rename, delete); assertTeamMember for createProject (any role gate, not role-specific)
 - Role ranks stored as Record<TeamRole|ProjectRole, number> — easy to extend when new roles added to schema
 - PermissionError extends Error with Object.setPrototypeOf to restore prototype chain in TS/ES5 compilation targets
+- Soft-delete via deletedAt field on Project model — preserves records for audit/recovery without permanent destruction
+- findUnique soft-delete filter uses direct field spread (deletedAt:null) not AND wrapping — ProjectWhereUniqueInput requires id; AND breaks type safety
+- createPrismaClient() wrapper used in prisma.ts for correct ReturnType inference of $extends() extended client
 
 ### Pending Todos
 
@@ -99,5 +102,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Completed 05.2-01-PLAN.md — RBAC guards library created; requireTeamRole/requireProjectRole/assertTeamMember in lib/rbac-guards.ts
-Resume file: Phase 5.2 (RBAC Enforcement + Soft Delete) Plan 01 complete; ready for Plan 02 (wire guards into dashboard/actions.ts)
+Stopped at: Completed 05.2-02-PLAN.md — soft-delete schema + Prisma extension; deletedAt on Project, softDeleteExtension in lib/prisma-soft-delete.ts
+Resume file: Phase 5.2 (RBAC Enforcement + Soft Delete) Plan 02 complete; ready for Plan 03 (wire RBAC guards into dashboard/actions.ts)
