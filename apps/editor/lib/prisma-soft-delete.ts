@@ -21,12 +21,13 @@ export const softDeleteExtension = Prisma.defineExtension((client) =>
       project: {
         /**
          * Intercept findUnique to exclude soft-deleted projects.
-         * Merges deletedAt: null into the existing where clause using AND.
+         * Uses type assertion because ProjectWhereUniqueInput requires id,
+         * but we can safely append deletedAt as an additional field.
          */
         async findUnique({ args, query }) {
-          args.where = args.where
-            ? { AND: [args.where, { deletedAt: null }] }
-            : { deletedAt: null }
+          // Spread the unique where fields and add deletedAt: null as an extra filter.
+          // Prisma resolves the query by unique key first, then filters the result.
+          ;(args.where as Record<string, unknown>).deletedAt = null
           return query(args)
         },
 
@@ -34,9 +35,7 @@ export const softDeleteExtension = Prisma.defineExtension((client) =>
          * Intercept findUniqueOrThrow to exclude soft-deleted projects.
          */
         async findUniqueOrThrow({ args, query }) {
-          args.where = args.where
-            ? { AND: [args.where, { deletedAt: null }] }
-            : { deletedAt: null }
+          ;(args.where as Record<string, unknown>).deletedAt = null
           return query(args)
         },
 
