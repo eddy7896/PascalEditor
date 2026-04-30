@@ -2,31 +2,33 @@
 phase: 05-teamspaces
 plan: 03
 subsystem: ui
-tags: [nextjs, prisma, react, teamspaces, rbac, server-actions]
+tags: [next.js, prisma, server-actions, rbac, teamspaces]
 
+# Dependency graph
 requires:
   - phase: 05-01
-    provides: Team schema, createTeam action, sidebar team navigation
+    provides: Team schema, createTeam action, sidebar team switching
   - phase: 05-02
-    provides: Invite token API, InviteMemberModal
+    provides: TeamInviteToken, invite API, InviteMemberModal
 
 provides:
-  - changeTeamMemberRole server action with OWNER/ADMIN authorization guard
-  - removeTeamMember server action with OWNER protection and self-remove guard
-  - Members page listing all team members with role badges
-  - MembersTable client component with inline role editing and remove controls
-  - RoleSelect client component — useTransition + router.refresh() for live updates
-  - RemoveMemberButton client component — inline confirm dialog + router.refresh()
+  - changeTeamMemberRole server action with OWNER/ADMIN gate and OWNER protection
+  - removeTeamMember server action with OWNER/ADMIN gate and OWNER + self-remove protection
+  - /dashboard/teams/[teamId]/members server page (data fetching + role context)
+  - MembersTable client component (role-gated controls per row)
+  - RoleSelect client component (useTransition + router.refresh inline role change)
+  - RemoveMemberButton client component (inline confirm + router.refresh removal)
 
-affects: [06-editor-integration, future-members-management]
+affects: [06-editor, 07-deployment]
 
+# Tech tracking
 tech-stack:
   added: []
   patterns:
-    - "Server action authorization: fetch actor membership, check OWNER/ADMIN, guard OWNER targets"
-    - "Live UI updates via router.refresh() after server action — no full page reload"
-    - "useTransition for pending state during server action calls"
-    - "Inline confirm pattern for destructive actions (no modal dependency)"
+    - router.refresh() for live updates after server actions (no optimistic UI)
+    - useTransition for pending state on server action calls
+    - Inline confirm in RemoveMemberButton avoids cross-component DeleteConfirmModal dependency
+    - OWNER role fully protected at action level — cannot be assigned, demoted, or removed via any UI call
 
 key-files:
   created:
@@ -38,75 +40,99 @@ key-files:
     - apps/editor/app/dashboard/actions.ts
 
 key-decisions:
-  - "OWNER role fully protected: cannot be assigned, demoted, or removed via any UI action"
-  - "Self-remove blocked at action level (Cannot remove yourself) — separate leave-team flow deferred"
-  - "router.refresh() chosen over optimistic UI — simpler, consistent with server-driven data model"
-  - "Inline confirm in RemoveMemberButton (no DeleteConfirmModal import) — avoids cross-component dependency"
+  - "router.refresh() chosen over optimistic UI for member changes — simpler, consistent with server-driven data model"
+  - "OWNER role fully protected in server actions: cannot be assigned, demoted, or removed via any UI call"
+  - "Self-remove blocked at action level — separate leave-team flow deferred to future phase"
+  - "Inline confirm in RemoveMemberButton avoids cross-component dependency on DeleteConfirmModal"
 
 patterns-established:
-  - "Authorization pattern: actorMembership check before any mutation; target OWNER guard before any role/remove op"
-  - "revalidatePath triple: members list + team page + dashboard — covers all stale caches"
+  - "Server action authorization: always verify caller membership before performing team mutation"
+  - "Role-gated UI: OWNER/ADMIN see controls; VIEWER/EDITOR/COMMENTER see read-only; OWNER row always read-only"
+  - "Live row updates via router.refresh() after action resolves — no state lifting or prop threading needed"
 
-duration: continuation
+# Metrics
+duration: ~60min (across session)
 completed: 2026-04-30
 ---
 
-# Phase 05 Plan 03: Members Page Summary
+# Phase 5 Plan 03: Member Management Summary
 
-**Role change and member removal UI with OWNER protection, ADMIN authorization guards, and live updates via router.refresh() — completes TEAM-04**
+**Role change + removal actions with OWNER/ADMIN RBAC gates, live row updates via router.refresh(), and a fully protected OWNER row across MembersTable, RoleSelect, and RemoveMemberButton**
 
 ## Performance
 
-- **Duration:** continuation (tasks committed in prior session)
+- **Duration:** ~60 min
+- **Started:** 2026-04-30
 - **Completed:** 2026-04-30
-- **Tasks:** 2 of 2 auto tasks complete (Task 3 = human-verify checkpoint, pending)
+- **Tasks:** 3 (2 auto + 1 human-verify)
 - **Files modified:** 5
 
 ## Accomplishments
 
-- `changeTeamMemberRole` and `removeTeamMember` server actions with full RBAC: OWNER/ADMIN can act, OWNER rows are immutable, self-remove blocked
-- Members page server component fetches team with ordered members and passes structured props to client table
-- MembersTable shows role badge (read-only) for VIEWER/EDITOR/COMMENTER/OWNER; shows RoleSelect + RemoveMemberButton for OWNER/ADMIN managing non-owner rows
-- RoleSelect uses `useTransition` for pending state; errors surface inline below the select
-- RemoveMemberButton shows inline confirm (no modal library) before calling action; row disappears on router.refresh()
+- `changeTeamMemberRole` and `removeTeamMember` server actions with three-layer protection: auth check, OWNER/ADMIN gate, OWNER-row freeze
+- Members page server component fetches full member+user relation and passes role context to client table
+- MembersTable renders role controls only for OWNER/ADMIN viewers; OWNER rows are always read-only
+- RoleSelect uses `useTransition` for pending state; RemoveMemberButton uses inline confirm — both call `router.refresh()` for immediate row sync
+- All 8 Phase 5 end-to-end human verification tests passed
 
 ## Task Commits
 
 1. **Task 1: Server actions — changeTeamMemberRole + removeTeamMember** - `ba0799f` (feat)
-2. **Task 2: Members page + table + role/remove client components** - `5985758` (feat)
+2. **Task 2: Members page + MembersTable + RoleSelect + RemoveMemberButton** - `5985758` (feat)
+3. **Task 3: Human verify — full Phase 5 end-to-end flow** - approved (no code commit; verification only)
 
 ## Files Created/Modified
 
-- `apps/editor/app/dashboard/actions.ts` — added changeTeamMemberRole + removeTeamMember (appended to existing file)
-- `apps/editor/app/dashboard/teams/[teamId]/members/page.tsx` — server component; fetches team.members with user relation, guards access, passes to MembersTable
-- `apps/editor/app/dashboard/teams/[teamId]/members/_components/MembersTable.tsx` — grid table with Avatar+Name, Email, Role, Actions columns; canManage logic gates controls
-- `apps/editor/app/dashboard/teams/[teamId]/members/_components/RoleSelect.tsx` — select with ADMIN/EDITOR/COMMENTER/VIEWER options, useTransition, error display
-- `apps/editor/app/dashboard/teams/[teamId]/members/_components/RemoveMemberButton.tsx` — confirm-then-remove inline pattern, pending state, error display
+- `apps/editor/app/dashboard/actions.ts` - Added changeTeamMemberRole + removeTeamMember with full RBAC + OWNER protection
+- `apps/editor/app/dashboard/teams/[teamId]/members/page.tsx` - Server component: fetches team+members, determines currentUserRole, renders header + MembersTable
+- `apps/editor/app/dashboard/teams/[teamId]/members/_components/MembersTable.tsx` - Client table: role-gated RoleSelect/RemoveMemberButton per row
+- `apps/editor/app/dashboard/teams/[teamId]/members/_components/RoleSelect.tsx` - Client select: useTransition + changeTeamMemberRole + router.refresh()
+- `apps/editor/app/dashboard/teams/[teamId]/members/_components/RemoveMemberButton.tsx` - Client button: inline confirm + removeTeamMember + router.refresh()
 
 ## Decisions Made
 
-- OWNER role fully protected at action level: `if (role === "OWNER") throw` and `if (targetMembership.role === "OWNER") throw` — no UI bypass possible
-- Self-remove blocked (`targetUserId === actorId` check) — leave-team flow deferred to future phase
-- `router.refresh()` over optimistic UI — simpler and consistent with server-driven data model; avoids stale optimistic state
-- Inline confirm in RemoveMemberButton rather than importing DeleteConfirmModal — avoids cross-component coupling
+- `router.refresh()` chosen over optimistic UI — simpler and consistent with the server-driven data model used throughout the dashboard
+- OWNER role protected at the action level (not just UI) — cannot be assigned, demoted, or removed regardless of caller
+- Self-remove blocked at action level; a "leave team" flow is deferred to a future phase
+- Inline confirm written directly in RemoveMemberButton to avoid importing DeleteConfirmModal across component boundaries
 
 ## Deviations from Plan
 
-None — plan executed exactly as written. Both server actions and all four UI files match plan specification.
+None - plan executed exactly as written.
 
 ## Issues Encountered
 
-Pre-existing TypeScript errors exist in `packages/editor` (3D editor package) unrelated to dashboard/teamspaces work. These are not regressions introduced by this plan.
+None.
 
-## Human Verification Status
+## User Setup Required
 
-Task 3 (human-verify checkpoint) is pending. See 05-03-PLAN.md for 8 test scenarios covering TEAM-01 through TEAM-06 and authorization edge cases.
+None - no external service configuration required.
+
+## Human Verification Results
+
+All 8 test scenarios passed:
+- Test 1: TEAM-01 — Create teamspace, sidebar highlight
+- Test 2: TEAM-02 + TEAM-03 — Invite member, accept invite, member appears with correct role
+- Test 3: TEAM-04 — Role change + removal without page reload
+- Test 4: TEAM-05 — Shared projects visible to invited member
+- Test 5: TEAM-06 — Multi-team switching, project grid + sidebar highlight update
+- Test 6: Authorization gates — VIEWER sees read-only; direct API call returns 403
+- Test 7: Token edge cases — already-used token error redirect; wrong-account token error redirect
+- Test 8: OWNER protection — no controls on OWNER row; direct action call throws "Cannot remove team owner"
+
+## Self-Check: PASSED
+
+- `ba0799f` commit exists in git log
+- `5985758` commit exists in git log
+- `apps/editor/app/dashboard/teams/[teamId]/members/page.tsx` exists
+- `apps/editor/app/dashboard/teams/[teamId]/members/_components/MembersTable.tsx` exists
+- `apps/editor/app/dashboard/teams/[teamId]/members/_components/RoleSelect.tsx` exists
+- `apps/editor/app/dashboard/teams/[teamId]/members/_components/RemoveMemberButton.tsx` exists
+- `apps/editor/app/dashboard/actions.ts` contains changeTeamMemberRole + removeTeamMember
 
 ## Next Phase Readiness
 
-- Full Phase 5 teamspaces stack is code-complete pending human verification
-- TEAM-01 (create team), TEAM-02/03 (invite+accept), TEAM-04 (role change+remove), TEAM-05 (shared projects), TEAM-06 (multi-team switching) all implemented
-- Phase 6 can begin after human verification approval
+Phase 5 (Teamspaces) is fully complete — all 6 TEAM requirements (TEAM-01 through TEAM-06) satisfied and human-verified. Phase 6 (Editor) can begin immediately. No blockers.
 
 ---
 *Phase: 05-teamspaces*
