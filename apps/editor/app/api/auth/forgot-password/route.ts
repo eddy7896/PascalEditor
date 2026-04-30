@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { randomBytes } from "node:crypto";
+import { randomBytes, createHash } from "node:crypto";
+import { sendEmail } from "@/lib/email";
+import { PasswordResetEmail } from "@/emails/PasswordResetEmail";
 
 const TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
 
@@ -16,23 +18,27 @@ export async function POST(req: Request) {
     // But only generate a token if the user actually exists.
     const user = await prisma.user.findUnique({ where: { email: emailLower } });
 
-    let resetUrl: string | undefined;
     if (user) {
-      const token = randomBytes(32).toString("hex");
+      const raw = randomBytes(32).toString("hex");
+      const hashed = createHash("sha256").update(raw).digest("hex");
       const expiresAt = new Date(Date.now() + TOKEN_TTL_MS);
       await prisma.passwordResetToken.create({
-        data: { token, email: emailLower, expiresAt },
+        data: { token: hashed, email: emailLower, expiresAt },
       });
       const base = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-      resetUrl = `${base}/reset-password?token=${token}`;
-      // v1: no email provider — log to server console for dev convenience.
-      console.log(`[forgot-password] reset URL for ${emailLower}: ${resetUrl}`);
+      const resetUrl = `${base}/reset-password?token=${raw}`;
+
+      // Send reset email asynchronously (fire-and-forget for enumeration safety)
+      sendEmail({
+        to: emailLower,
+        subject: "Reset your Pascal password",
+        react: <PasswordResetEmail resetUrl={resetUrl} name={user.name ?? undefined} />,
+      }).catch((err) =>
+        console.error("[forgot-password] email send failed:", err)
+      );
     }
 
-    // v1 quirk: we DO return the resetUrl in the response so the UI can display it
-    // (per locked decision — no email provider for v1). This is a v1 dev/staging shortcut
-    // and MUST be removed before any production launch — track as a v2 task.
-    return NextResponse.json({ success: true, resetUrl });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("forgot-password error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

@@ -3,6 +3,8 @@ import { randomBytes } from "node:crypto"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { sendEmail } from "@/lib/email"
+import { TeamInviteEmail } from "@/emails/TeamInviteEmail"
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
@@ -53,5 +55,29 @@ export async function POST(req: Request) {
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000"
   const inviteUrl = `${baseUrl}/api/teams/invite/accept?token=${token}`
 
-  return NextResponse.json({ success: true, inviteUrl, expiresAt })
+  // Fetch team and actor info for the invite email
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    select: { name: true },
+  })
+  const actor = await prisma.user.findUnique({
+    where: { id: actorId },
+    select: { name: true },
+  })
+
+  // Send invite email asynchronously (fire-and-forget)
+  sendEmail({
+    to: email.toLowerCase(),
+    subject: `You've been invited to join ${team?.name ?? "a Pascal team"}`,
+    react: (
+      <TeamInviteEmail
+        inviteUrl={inviteUrl}
+        teamName={team?.name ?? "a team"}
+        inviterName={actor?.name ?? undefined}
+        role={role}
+      />
+    ),
+  }).catch((err) => console.error("[team-invite] email send failed:", err))
+
+  return NextResponse.json({ success: true, expiresAt })
 }
