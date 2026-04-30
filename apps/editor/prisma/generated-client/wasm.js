@@ -203,7 +203,8 @@ exports.Prisma.ProjectScalarFieldEnum = {
   isPublic: 'isPublic',
   lastOpenedAt: 'lastOpenedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ProjectMemberScalarFieldEnum = {
@@ -255,6 +256,14 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
   email: 'email',
   expiresAt: 'expiresAt',
   usedAt: 'usedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.EmailVerificationTokenScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  email: 'email',
+  expiresAt: 'expiresAt',
   createdAt: 'createdAt'
 };
 
@@ -330,6 +339,7 @@ exports.Prisma.ModelName = {
   ProjectClone: 'ProjectClone',
   EarlyAccessApplication: 'EarlyAccessApplication',
   PasswordResetToken: 'PasswordResetToken',
+  EmailVerificationToken: 'EmailVerificationToken',
   StarredProject: 'StarredProject'
 };
 

@@ -84,6 +84,11 @@ export type EarlyAccessApplication = $Result.DefaultSelection<Prisma.$EarlyAcces
  */
 export type PasswordResetToken = $Result.DefaultSelection<Prisma.$PasswordResetTokenPayload>
 /**
+ * Model EmailVerificationToken
+ * 
+ */
+export type EmailVerificationToken = $Result.DefaultSelection<Prisma.$EmailVerificationTokenPayload>
+/**
  * Model StarredProject
  * 
  */
@@ -410,6 +415,16 @@ export class PrismaClient<
     * ```
     */
   get passwordResetToken(): Prisma.PasswordResetTokenDelegate<ExtArgs>;
+
+  /**
+   * `prisma.emailVerificationToken`: Exposes CRUD operations for the **EmailVerificationToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EmailVerificationTokens
+    * const emailVerificationTokens = await prisma.emailVerificationToken.findMany()
+    * ```
+    */
+  get emailVerificationToken(): Prisma.EmailVerificationTokenDelegate<ExtArgs>;
 
   /**
    * `prisma.starredProject`: Exposes CRUD operations for the **StarredProject** model.
@@ -904,6 +919,7 @@ export namespace Prisma {
     ProjectClone: 'ProjectClone',
     EarlyAccessApplication: 'EarlyAccessApplication',
     PasswordResetToken: 'PasswordResetToken',
+    EmailVerificationToken: 'EmailVerificationToken',
     StarredProject: 'StarredProject'
   };
 
@@ -921,7 +937,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'onboardingProgress' | 'organization' | 'organizationMember' | 'organizationInviteToken' | 'team' | 'teamMember' | 'teamInviteToken' | 'project' | 'projectMember' | 'marketplaceAsset' | 'projectClone' | 'earlyAccessApplication' | 'passwordResetToken' | 'starredProject'
+      modelProps: 'user' | 'onboardingProgress' | 'organization' | 'organizationMember' | 'organizationInviteToken' | 'team' | 'teamMember' | 'teamInviteToken' | 'project' | 'projectMember' | 'marketplaceAsset' | 'projectClone' | 'earlyAccessApplication' | 'passwordResetToken' | 'emailVerificationToken' | 'starredProject'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1846,6 +1862,72 @@ export namespace Prisma {
           count: {
             args: Prisma.PasswordResetTokenCountArgs<ExtArgs>,
             result: $Utils.Optional<PasswordResetTokenCountAggregateOutputType> | number
+          }
+        }
+      }
+      EmailVerificationToken: {
+        payload: Prisma.$EmailVerificationTokenPayload<ExtArgs>
+        fields: Prisma.EmailVerificationTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EmailVerificationTokenFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EmailVerificationTokenFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.EmailVerificationTokenFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EmailVerificationTokenFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          findMany: {
+            args: Prisma.EmailVerificationTokenFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>[]
+          }
+          create: {
+            args: Prisma.EmailVerificationTokenCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          createMany: {
+            args: Prisma.EmailVerificationTokenCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.EmailVerificationTokenDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          update: {
+            args: Prisma.EmailVerificationTokenUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.EmailVerificationTokenDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EmailVerificationTokenUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.EmailVerificationTokenUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.EmailVerificationTokenAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateEmailVerificationToken>
+          }
+          groupBy: {
+            args: Prisma.EmailVerificationTokenGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<EmailVerificationTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EmailVerificationTokenCountArgs<ExtArgs>,
+            result: $Utils.Optional<EmailVerificationTokenCountAggregateOutputType> | number
           }
         }
       }
@@ -10319,6 +10401,7 @@ export namespace Prisma {
     lastOpenedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ProjectMaxAggregateOutputType = {
@@ -10332,6 +10415,7 @@ export namespace Prisma {
     lastOpenedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ProjectCountAggregateOutputType = {
@@ -10345,6 +10429,7 @@ export namespace Prisma {
     lastOpenedAt: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -10360,6 +10445,7 @@ export namespace Prisma {
     lastOpenedAt?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type ProjectMaxAggregateInputType = {
@@ -10373,6 +10459,7 @@ export namespace Prisma {
     lastOpenedAt?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type ProjectCountAggregateInputType = {
@@ -10386,6 +10473,7 @@ export namespace Prisma {
     lastOpenedAt?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -10472,6 +10560,7 @@ export namespace Prisma {
     lastOpenedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: ProjectCountAggregateOutputType | null
     _min: ProjectMinAggregateOutputType | null
     _max: ProjectMaxAggregateOutputType | null
@@ -10502,6 +10591,7 @@ export namespace Prisma {
     lastOpenedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     team?: boolean | TeamDefaultArgs<ExtArgs>
     members?: boolean | Project$membersArgs<ExtArgs>
     publishedAsset?: boolean | Project$publishedAssetArgs<ExtArgs>
@@ -10521,6 +10611,7 @@ export namespace Prisma {
     lastOpenedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10553,6 +10644,7 @@ export namespace Prisma {
       lastOpenedAt: Date | null
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["project"]>
     composites: {}
   }
@@ -10966,6 +11058,7 @@ export namespace Prisma {
     readonly lastOpenedAt: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
+    readonly deletedAt: FieldRef<"Project", 'DateTime'>
   }
     
 
@@ -16106,6 +16199,876 @@ export namespace Prisma {
 
 
   /**
+   * Model EmailVerificationToken
+   */
+
+  export type AggregateEmailVerificationToken = {
+    _count: EmailVerificationTokenCountAggregateOutputType | null
+    _min: EmailVerificationTokenMinAggregateOutputType | null
+    _max: EmailVerificationTokenMaxAggregateOutputType | null
+  }
+
+  export type EmailVerificationTokenMinAggregateOutputType = {
+    id: string | null
+    token: string | null
+    email: string | null
+    expiresAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type EmailVerificationTokenMaxAggregateOutputType = {
+    id: string | null
+    token: string | null
+    email: string | null
+    expiresAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type EmailVerificationTokenCountAggregateOutputType = {
+    id: number
+    token: number
+    email: number
+    expiresAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type EmailVerificationTokenMinAggregateInputType = {
+    id?: true
+    token?: true
+    email?: true
+    expiresAt?: true
+    createdAt?: true
+  }
+
+  export type EmailVerificationTokenMaxAggregateInputType = {
+    id?: true
+    token?: true
+    email?: true
+    expiresAt?: true
+    createdAt?: true
+  }
+
+  export type EmailVerificationTokenCountAggregateInputType = {
+    id?: true
+    token?: true
+    email?: true
+    expiresAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type EmailVerificationTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailVerificationToken to aggregate.
+     */
+    where?: EmailVerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailVerificationTokens to fetch.
+     */
+    orderBy?: EmailVerificationTokenOrderByWithRelationInput | EmailVerificationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EmailVerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailVerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailVerificationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EmailVerificationTokens
+    **/
+    _count?: true | EmailVerificationTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EmailVerificationTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EmailVerificationTokenMaxAggregateInputType
+  }
+
+  export type GetEmailVerificationTokenAggregateType<T extends EmailVerificationTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateEmailVerificationToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEmailVerificationToken[P]>
+      : GetScalarType<T[P], AggregateEmailVerificationToken[P]>
+  }
+
+
+
+
+  export type EmailVerificationTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailVerificationTokenWhereInput
+    orderBy?: EmailVerificationTokenOrderByWithAggregationInput | EmailVerificationTokenOrderByWithAggregationInput[]
+    by: EmailVerificationTokenScalarFieldEnum[] | EmailVerificationTokenScalarFieldEnum
+    having?: EmailVerificationTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EmailVerificationTokenCountAggregateInputType | true
+    _min?: EmailVerificationTokenMinAggregateInputType
+    _max?: EmailVerificationTokenMaxAggregateInputType
+  }
+
+  export type EmailVerificationTokenGroupByOutputType = {
+    id: string
+    token: string
+    email: string
+    expiresAt: Date
+    createdAt: Date
+    _count: EmailVerificationTokenCountAggregateOutputType | null
+    _min: EmailVerificationTokenMinAggregateOutputType | null
+    _max: EmailVerificationTokenMaxAggregateOutputType | null
+  }
+
+  type GetEmailVerificationTokenGroupByPayload<T extends EmailVerificationTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EmailVerificationTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EmailVerificationTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EmailVerificationTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], EmailVerificationTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EmailVerificationTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    email?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["emailVerificationToken"]>
+
+  export type EmailVerificationTokenSelectScalar = {
+    id?: boolean
+    token?: boolean
+    email?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+  }
+
+
+  export type $EmailVerificationTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EmailVerificationToken"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      token: string
+      email: string
+      expiresAt: Date
+      createdAt: Date
+    }, ExtArgs["result"]["emailVerificationToken"]>
+    composites: {}
+  }
+
+
+  type EmailVerificationTokenGetPayload<S extends boolean | null | undefined | EmailVerificationTokenDefaultArgs> = $Result.GetResult<Prisma.$EmailVerificationTokenPayload, S>
+
+  type EmailVerificationTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<EmailVerificationTokenFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: EmailVerificationTokenCountAggregateInputType | true
+    }
+
+  export interface EmailVerificationTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EmailVerificationToken'], meta: { name: 'EmailVerificationToken' } }
+    /**
+     * Find zero or one EmailVerificationToken that matches the filter.
+     * @param {EmailVerificationTokenFindUniqueArgs} args - Arguments to find a EmailVerificationToken
+     * @example
+     * // Get one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends EmailVerificationTokenFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenFindUniqueArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one EmailVerificationToken that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {EmailVerificationTokenFindUniqueOrThrowArgs} args - Arguments to find a EmailVerificationToken
+     * @example
+     * // Get one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends EmailVerificationTokenFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first EmailVerificationToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenFindFirstArgs} args - Arguments to find a EmailVerificationToken
+     * @example
+     * // Get one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends EmailVerificationTokenFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenFindFirstArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first EmailVerificationToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenFindFirstOrThrowArgs} args - Arguments to find a EmailVerificationToken
+     * @example
+     * // Get one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends EmailVerificationTokenFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more EmailVerificationTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EmailVerificationTokens
+     * const emailVerificationTokens = await prisma.emailVerificationToken.findMany()
+     * 
+     * // Get first 10 EmailVerificationTokens
+     * const emailVerificationTokens = await prisma.emailVerificationToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const emailVerificationTokenWithIdOnly = await prisma.emailVerificationToken.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends EmailVerificationTokenFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a EmailVerificationToken.
+     * @param {EmailVerificationTokenCreateArgs} args - Arguments to create a EmailVerificationToken.
+     * @example
+     * // Create one EmailVerificationToken
+     * const EmailVerificationToken = await prisma.emailVerificationToken.create({
+     *   data: {
+     *     // ... data to create a EmailVerificationToken
+     *   }
+     * })
+     * 
+    **/
+    create<T extends EmailVerificationTokenCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenCreateArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many EmailVerificationTokens.
+     *     @param {EmailVerificationTokenCreateManyArgs} args - Arguments to create many EmailVerificationTokens.
+     *     @example
+     *     // Create many EmailVerificationTokens
+     *     const emailVerificationToken = await prisma.emailVerificationToken.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends EmailVerificationTokenCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a EmailVerificationToken.
+     * @param {EmailVerificationTokenDeleteArgs} args - Arguments to delete one EmailVerificationToken.
+     * @example
+     * // Delete one EmailVerificationToken
+     * const EmailVerificationToken = await prisma.emailVerificationToken.delete({
+     *   where: {
+     *     // ... filter to delete one EmailVerificationToken
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends EmailVerificationTokenDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenDeleteArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one EmailVerificationToken.
+     * @param {EmailVerificationTokenUpdateArgs} args - Arguments to update one EmailVerificationToken.
+     * @example
+     * // Update one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends EmailVerificationTokenUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenUpdateArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more EmailVerificationTokens.
+     * @param {EmailVerificationTokenDeleteManyArgs} args - Arguments to filter EmailVerificationTokens to delete.
+     * @example
+     * // Delete a few EmailVerificationTokens
+     * const { count } = await prisma.emailVerificationToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends EmailVerificationTokenDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmailVerificationTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EmailVerificationTokens
+     * const emailVerificationToken = await prisma.emailVerificationToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends EmailVerificationTokenUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one EmailVerificationToken.
+     * @param {EmailVerificationTokenUpsertArgs} args - Arguments to update or create a EmailVerificationToken.
+     * @example
+     * // Update or create a EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.upsert({
+     *   create: {
+     *     // ... data to create a EmailVerificationToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EmailVerificationToken we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends EmailVerificationTokenUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenUpsertArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of EmailVerificationTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenCountArgs} args - Arguments to filter EmailVerificationTokens to count.
+     * @example
+     * // Count the number of EmailVerificationTokens
+     * const count = await prisma.emailVerificationToken.count({
+     *   where: {
+     *     // ... the filter for the EmailVerificationTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends EmailVerificationTokenCountArgs>(
+      args?: Subset<T, EmailVerificationTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EmailVerificationTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EmailVerificationToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EmailVerificationTokenAggregateArgs>(args: Subset<T, EmailVerificationTokenAggregateArgs>): Prisma.PrismaPromise<GetEmailVerificationTokenAggregateType<T>>
+
+    /**
+     * Group by EmailVerificationToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EmailVerificationTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EmailVerificationTokenGroupByArgs['orderBy'] }
+        : { orderBy?: EmailVerificationTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EmailVerificationTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEmailVerificationTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EmailVerificationToken model
+   */
+  readonly fields: EmailVerificationTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EmailVerificationToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EmailVerificationTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the EmailVerificationToken model
+   */ 
+  interface EmailVerificationTokenFieldRefs {
+    readonly id: FieldRef<"EmailVerificationToken", 'String'>
+    readonly token: FieldRef<"EmailVerificationToken", 'String'>
+    readonly email: FieldRef<"EmailVerificationToken", 'String'>
+    readonly expiresAt: FieldRef<"EmailVerificationToken", 'DateTime'>
+    readonly createdAt: FieldRef<"EmailVerificationToken", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+
+  /**
+   * EmailVerificationToken findUnique
+   */
+  export type EmailVerificationTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationToken to fetch.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * EmailVerificationToken findUniqueOrThrow
+   */
+  export type EmailVerificationTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationToken to fetch.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * EmailVerificationToken findFirst
+   */
+  export type EmailVerificationTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationToken to fetch.
+     */
+    where?: EmailVerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailVerificationTokens to fetch.
+     */
+    orderBy?: EmailVerificationTokenOrderByWithRelationInput | EmailVerificationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailVerificationTokens.
+     */
+    cursor?: EmailVerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailVerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailVerificationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailVerificationTokens.
+     */
+    distinct?: EmailVerificationTokenScalarFieldEnum | EmailVerificationTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * EmailVerificationToken findFirstOrThrow
+   */
+  export type EmailVerificationTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationToken to fetch.
+     */
+    where?: EmailVerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailVerificationTokens to fetch.
+     */
+    orderBy?: EmailVerificationTokenOrderByWithRelationInput | EmailVerificationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailVerificationTokens.
+     */
+    cursor?: EmailVerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailVerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailVerificationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailVerificationTokens.
+     */
+    distinct?: EmailVerificationTokenScalarFieldEnum | EmailVerificationTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * EmailVerificationToken findMany
+   */
+  export type EmailVerificationTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationTokens to fetch.
+     */
+    where?: EmailVerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailVerificationTokens to fetch.
+     */
+    orderBy?: EmailVerificationTokenOrderByWithRelationInput | EmailVerificationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EmailVerificationTokens.
+     */
+    cursor?: EmailVerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailVerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailVerificationTokens.
+     */
+    skip?: number
+    distinct?: EmailVerificationTokenScalarFieldEnum | EmailVerificationTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * EmailVerificationToken create
+   */
+  export type EmailVerificationTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * The data needed to create a EmailVerificationToken.
+     */
+    data: XOR<EmailVerificationTokenCreateInput, EmailVerificationTokenUncheckedCreateInput>
+  }
+
+
+  /**
+   * EmailVerificationToken createMany
+   */
+  export type EmailVerificationTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EmailVerificationTokens.
+     */
+    data: EmailVerificationTokenCreateManyInput | EmailVerificationTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * EmailVerificationToken update
+   */
+  export type EmailVerificationTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * The data needed to update a EmailVerificationToken.
+     */
+    data: XOR<EmailVerificationTokenUpdateInput, EmailVerificationTokenUncheckedUpdateInput>
+    /**
+     * Choose, which EmailVerificationToken to update.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * EmailVerificationToken updateMany
+   */
+  export type EmailVerificationTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EmailVerificationTokens.
+     */
+    data: XOR<EmailVerificationTokenUpdateManyMutationInput, EmailVerificationTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which EmailVerificationTokens to update
+     */
+    where?: EmailVerificationTokenWhereInput
+  }
+
+
+  /**
+   * EmailVerificationToken upsert
+   */
+  export type EmailVerificationTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * The filter to search for the EmailVerificationToken to update in case it exists.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+    /**
+     * In case the EmailVerificationToken found by the `where` argument doesn't exist, create a new EmailVerificationToken with this data.
+     */
+    create: XOR<EmailVerificationTokenCreateInput, EmailVerificationTokenUncheckedCreateInput>
+    /**
+     * In case the EmailVerificationToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EmailVerificationTokenUpdateInput, EmailVerificationTokenUncheckedUpdateInput>
+  }
+
+
+  /**
+   * EmailVerificationToken delete
+   */
+  export type EmailVerificationTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter which EmailVerificationToken to delete.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * EmailVerificationToken deleteMany
+   */
+  export type EmailVerificationTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailVerificationTokens to delete
+     */
+    where?: EmailVerificationTokenWhereInput
+  }
+
+
+  /**
+   * EmailVerificationToken without action
+   */
+  export type EmailVerificationTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+  }
+
+
+
+  /**
    * Model StarredProject
    */
 
@@ -17140,7 +18103,8 @@ export namespace Prisma {
     isPublic: 'isPublic',
     lastOpenedAt: 'lastOpenedAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -17211,6 +18175,17 @@ export namespace Prisma {
   };
 
   export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+  export const EmailVerificationTokenScalarFieldEnum: {
+    id: 'id',
+    token: 'token',
+    email: 'email',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt'
+  };
+
+  export type EmailVerificationTokenScalarFieldEnum = (typeof EmailVerificationTokenScalarFieldEnum)[keyof typeof EmailVerificationTokenScalarFieldEnum]
 
 
   export const StarredProjectScalarFieldEnum: {
@@ -18003,6 +18978,7 @@ export namespace Prisma {
     lastOpenedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     team?: XOR<TeamRelationFilter, TeamWhereInput>
     members?: ProjectMemberListRelationFilter
     publishedAsset?: XOR<MarketplaceAssetNullableRelationFilter, MarketplaceAssetWhereInput> | null
@@ -18021,6 +18997,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     team?: TeamOrderByWithRelationInput
     members?: ProjectMemberOrderByRelationAggregateInput
     publishedAsset?: MarketplaceAssetOrderByWithRelationInput
@@ -18042,6 +19019,7 @@ export namespace Prisma {
     lastOpenedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     team?: XOR<TeamRelationFilter, TeamWhereInput>
     members?: ProjectMemberListRelationFilter
     publishedAsset?: XOR<MarketplaceAssetNullableRelationFilter, MarketplaceAssetWhereInput> | null
@@ -18060,6 +19038,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
     _min?: ProjectMinOrderByAggregateInput
@@ -18079,6 +19058,7 @@ export namespace Prisma {
     lastOpenedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   }
 
   export type ProjectMemberWhereInput = {
@@ -18428,6 +19408,58 @@ export namespace Prisma {
     expiresAt?: DateTimeWithAggregatesFilter<"PasswordResetToken"> | Date | string
     usedAt?: DateTimeNullableWithAggregatesFilter<"PasswordResetToken"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"PasswordResetToken"> | Date | string
+  }
+
+  export type EmailVerificationTokenWhereInput = {
+    AND?: EmailVerificationTokenWhereInput | EmailVerificationTokenWhereInput[]
+    OR?: EmailVerificationTokenWhereInput[]
+    NOT?: EmailVerificationTokenWhereInput | EmailVerificationTokenWhereInput[]
+    id?: StringFilter<"EmailVerificationToken"> | string
+    token?: StringFilter<"EmailVerificationToken"> | string
+    email?: StringFilter<"EmailVerificationToken"> | string
+    expiresAt?: DateTimeFilter<"EmailVerificationToken"> | Date | string
+    createdAt?: DateTimeFilter<"EmailVerificationToken"> | Date | string
+  }
+
+  export type EmailVerificationTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailVerificationTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    token?: string
+    AND?: EmailVerificationTokenWhereInput | EmailVerificationTokenWhereInput[]
+    OR?: EmailVerificationTokenWhereInput[]
+    NOT?: EmailVerificationTokenWhereInput | EmailVerificationTokenWhereInput[]
+    email?: StringFilter<"EmailVerificationToken"> | string
+    expiresAt?: DateTimeFilter<"EmailVerificationToken"> | Date | string
+    createdAt?: DateTimeFilter<"EmailVerificationToken"> | Date | string
+  }, "id" | "token">
+
+  export type EmailVerificationTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    _count?: EmailVerificationTokenCountOrderByAggregateInput
+    _max?: EmailVerificationTokenMaxOrderByAggregateInput
+    _min?: EmailVerificationTokenMinOrderByAggregateInput
+  }
+
+  export type EmailVerificationTokenScalarWhereWithAggregatesInput = {
+    AND?: EmailVerificationTokenScalarWhereWithAggregatesInput | EmailVerificationTokenScalarWhereWithAggregatesInput[]
+    OR?: EmailVerificationTokenScalarWhereWithAggregatesInput[]
+    NOT?: EmailVerificationTokenScalarWhereWithAggregatesInput | EmailVerificationTokenScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"EmailVerificationToken"> | string
+    token?: StringWithAggregatesFilter<"EmailVerificationToken"> | string
+    email?: StringWithAggregatesFilter<"EmailVerificationToken"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"EmailVerificationToken"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"EmailVerificationToken"> | Date | string
   }
 
   export type StarredProjectWhereInput = {
@@ -19135,6 +20167,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
@@ -19153,6 +20186,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
@@ -19169,6 +20203,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
@@ -19187,6 +20222,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
@@ -19204,6 +20240,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ProjectUpdateManyMutationInput = {
@@ -19216,6 +20253,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectUncheckedUpdateManyInput = {
@@ -19229,6 +20267,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectMemberCreateInput = {
@@ -19589,6 +20628,62 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailVerificationTokenCreateInput = {
+    id?: string
+    token: string
+    email: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type EmailVerificationTokenUncheckedCreateInput = {
+    id?: string
+    token: string
+    email: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type EmailVerificationTokenUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailVerificationTokenUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailVerificationTokenCreateManyInput = {
+    id?: string
+    token: string
+    email: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type EmailVerificationTokenUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailVerificationTokenUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20306,6 +21401,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ProjectMaxOrderByAggregateInput = {
@@ -20319,6 +21415,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
@@ -20332,6 +21429,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type EnumProjectRoleFilter<$PrismaModel = never> = {
@@ -20541,6 +21639,30 @@ export namespace Prisma {
     email?: SortOrder
     expiresAt?: SortOrder
     usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailVerificationTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailVerificationTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailVerificationTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -22791,6 +23913,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneCreateNestedOneWithoutClonedProjectInput
@@ -22807,6 +23930,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
@@ -22940,6 +24064,7 @@ export namespace Prisma {
     lastOpenedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
   }
 
   export type TeamInviteTokenUpsertWithWhereUniqueWithoutTeamInput = {
@@ -23472,6 +24597,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneCreateNestedOneWithoutClonedProjectInput
@@ -23489,6 +24615,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
     starredBy?: StarredProjectUncheckedCreateNestedManyWithoutProjectInput
@@ -23563,6 +24690,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUpdateOneWithoutClonedProjectNestedInput
@@ -23580,6 +24708,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
     starredBy?: StarredProjectUncheckedUpdateManyWithoutProjectNestedInput
@@ -23644,6 +24773,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     clonedFrom?: ProjectCloneCreateNestedOneWithoutClonedProjectInput
@@ -23661,6 +24791,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
     starredBy?: StarredProjectUncheckedCreateNestedManyWithoutProjectInput
@@ -23759,6 +24890,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUpdateOneWithoutClonedProjectNestedInput
@@ -23776,6 +24908,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
     starredBy?: StarredProjectUncheckedUpdateManyWithoutProjectNestedInput
@@ -23889,6 +25022,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
@@ -23906,6 +25040,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     starredBy?: StarredProjectUncheckedCreateNestedManyWithoutProjectInput
@@ -24019,6 +25154,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
@@ -24036,6 +25172,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     starredBy?: StarredProjectUncheckedUpdateManyWithoutProjectNestedInput
@@ -24143,6 +25280,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
@@ -24160,6 +25298,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
@@ -24240,6 +25379,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
@@ -24257,6 +25397,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
@@ -24592,6 +25733,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type TeamInviteTokenCreateManyTeamInput = {
@@ -24640,6 +25782,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUpdateOneWithoutClonedProjectNestedInput
@@ -24656,6 +25799,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
@@ -24672,6 +25816,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TeamInviteTokenUpdateWithoutTeamInput = {
@@ -24867,6 +26012,10 @@ export namespace Prisma {
      * @deprecated Use PasswordResetTokenDefaultArgs instead
      */
     export type PasswordResetTokenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PasswordResetTokenDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use EmailVerificationTokenDefaultArgs instead
+     */
+    export type EmailVerificationTokenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EmailVerificationTokenDefaultArgs<ExtArgs>
     /**
      * @deprecated Use StarredProjectDefaultArgs instead
      */
