@@ -4,9 +4,17 @@ import bcrypt from "bcryptjs";
 import { randomBytes, createHash } from "node:crypto";
 import { sendEmail } from "@/lib/email";
 import { VerificationEmail } from "@/emails/VerificationEmail";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
   try {
+    const ipHeader = req.headers.get('x-forwarded-for');
+    const ip = (ipHeader?.split(',')[0] ?? 'unknown').trim()
+    const { allowed } = await rateLimit(`rl:signup:${ip}`, 5, 60)
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+    }
+
     const { email, password, name } = await req.json();
 
     if (!email || !password || !name) {

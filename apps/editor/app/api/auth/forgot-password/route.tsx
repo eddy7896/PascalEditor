@@ -3,11 +3,19 @@ import { prisma } from "@/lib/prisma";
 import { randomBytes, createHash } from "node:crypto";
 import { sendEmail } from "@/lib/email";
 import { PasswordResetEmail } from "@/emails/PasswordResetEmail";
+import { rateLimit } from "@/lib/rate-limit";
 
 const TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 export async function POST(req: Request) {
   try {
+    const ipHeader = req.headers.get('x-forwarded-for');
+    const ip = (ipHeader?.split(',')[0] ?? 'unknown').trim()
+    const { allowed } = await rateLimit(`rl:forgot-password:${ip}`, 5, 60)
+    if (!allowed) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+    }
+
     const { email } = await req.json();
     if (!email || typeof email !== "string") {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
