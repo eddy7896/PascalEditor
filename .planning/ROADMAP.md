@@ -14,10 +14,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Landing** - Visitor-facing marketing page that converts to sign-up ✓ 2026-04-29
 - [x] **Phase 2: Authentication** - Email/password polish + Google OAuth + password reset ✓ 2026-04-29
-- [ ] **Phase 3: Onboarding** - Multi-step first-run flow that contextualizes the product
-- [ ] **Phase 4: Dashboard** - Figma-styled project home with grid, recents, starred, and sidebar
+- [x] **Phase 3: Onboarding** - Multi-step first-run flow that contextualizes the product
+- [x] **Phase 4: Dashboard** - Figma-styled project home with grid, recents, starred, and sidebar
 - [x] **Phase 5: Teamspaces** - Create teams, invite members by role, and switch between them ✓ 2026-04-30
-- [ ] **Phase 5.1: Email + Auth Hardening** [INSERTED] - Resend email provider, email verification, rate limiting on auth endpoints
+- [x] **Phase 5.1: Email + Auth Hardening** [INSERTED] - Resend email provider, email verification, rate limiting on auth endpoints ✓ 2026-04-30
 - [ ] **Phase 5.2: RBAC Enforcement + Soft Delete** [INSERTED] - Enforce roles in all server actions, archive/soft-delete for projects
 - [ ] **Phase 5.3: Search, Navigation + Settings** [INSERTED] - Server-side search, sort/filter on project grid, breadcrumbs, settings page
 - [ ] **Phase 5.4: Audit Log + Notifications** [INSERTED] - Append-only audit events table, in-app notification bell + email notifications
@@ -128,9 +128,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05.1-01-PLAN.md � Resend integration + password reset email + team invite email (SHA-256 tokens)
-- [ ] 05.1-02-PLAN.md � Email verification flow on credentials signup + verify-email endpoint + NextAuth gate
-- [ ] 05.1-03-PLAN.md � Redis rate limiting on signup, forgot-password, and credentials login route handlers
+- [x] 05.1-01-PLAN.md — Resend integration + password reset email + team invite email (SHA-256 tokens) ✓ 2026-04-30
+- [x] 05.1-02-PLAN.md — Email verification flow on credentials signup + verify-email endpoint + NextAuth gate ✓ 2026-04-30
+- [x] 05.1-03-PLAN.md — Redis rate limiting on signup, forgot-password, and credentials login route handlers ✓ 2026-04-30
 
 ---
 
@@ -143,12 +143,13 @@ Plans:
   2. An EDITOR can rename and delete their own team's projects
   3. Deleted projects are moved to an "Archived" state (deletedAt timestamp) and hidden from default views, not hard-deleted
   4. Team OWNER and ADMIN distinction is clearly defined: ADMIN cannot delete the team or transfer ownership
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 05.2-01: Add role guard helper + enforce in renameProject, deleteProject, createProject server actions
-- [ ] 05.2-02: Soft delete — add deletedAt to Project schema, filter from all list queries, add archive/restore actions
-- [ ] 05.2-03: Clarify OWNER vs ADMIN permissions in team server actions
+- [ ] 05.2-01-PLAN.md — Create rbac-guards.ts with role hierarchy validators (requireTeamRole, requireProjectRole)
+- [ ] 05.2-02-PLAN.md — Add deletedAt to Project schema, create Prisma soft-delete extension, apply to client
+- [ ] 05.2-03-PLAN.md — Enforce RBAC in createProject, renameProject, deleteProject; add archiveProject, restoreProject actions
+- [ ] 05.2-04-PLAN.md — Document OWNER vs ADMIN distinction with JSDoc and inline comments
 
 ---
 
