@@ -44,6 +44,17 @@ export async function getDashboardData() {
   };
 }
 
+/**
+ * Creates a new team and automatically makes the creator the OWNER.
+ *
+ * The creator is the only way to become OWNER — the role cannot be assigned or transferred
+ * via any other action. OWNER status is set once at creation and is immutable thereafter.
+ *
+ * Role Hierarchy: OWNER > ADMIN > EDITOR > COMMENTER > VIEWER
+ *
+ * @param input - Team creation input (name, optional avatarUrl, optional organizationId)
+ * @returns Newly created team's ID
+ */
 export async function createTeam(input: { name: string; avatarUrl?: string; organizationId?: string }): Promise<{ id: string }> {
   const session = await getServerSession(authOptions);
   const userId = (session?.user as { id?: string } | undefined)?.id;
@@ -192,6 +203,25 @@ export async function updateLastOpened(projectId: string) {
   revalidatePath("/dashboard");
 }
 
+/**
+ * Changes a team member's role within the team.
+ *
+ * Role Hierarchy: OWNER > ADMIN > EDITOR > COMMENTER > VIEWER
+ *
+ * Constraints:
+ * - OWNER role CANNOT be assigned via UI (owner is only set at team creation)
+ * - OWNER role CANNOT be demoted (if the target is OWNER, this throws an error)
+ * - Only OWNER and ADMIN can change roles
+ * - ADMIN can change roles of EDITOR, COMMENTER, and VIEWER members
+ * - Only OWNER can effectively manage ADMIN-level members (ADMIN cannot demote other ADMINs)
+ *
+ * @param teamId - The team to change the member's role in
+ * @param targetUserId - The user whose role is being changed
+ * @param role - The new role to assign (cannot be OWNER)
+ * @throws {Error} if caller is not OWNER/ADMIN
+ * @throws {Error} if trying to assign OWNER role (OWNER is immutable post-creation)
+ * @throws {Error} if trying to demote the OWNER
+ */
 export async function changeTeamMemberRole(
   teamId: string,
   targetUserId: string,
@@ -201,8 +231,10 @@ export async function changeTeamMemberRole(
   const actorId = (session?.user as { id?: string } | undefined)?.id;
   if (!actorId) throw new Error("Unauthorized");
 
-  // Disallow assigning OWNER via this action — owner only set at team creation
-  if (role === "OWNER") throw new Error("Cannot assign OWNER role via UI");
+  // OWNER role is immutable — can only be set at team creation, never reassigned via UI
+  if (role === "OWNER") {
+    throw new Error("Cannot assign OWNER role via UI");
+  }
 
   const actorMembership = await prisma.teamMember.findUnique({
     where: { teamId_userId: { teamId, userId: actorId } },
@@ -216,7 +248,8 @@ export async function changeTeamMemberRole(
   });
   if (!targetMembership) throw new Error("Member not found");
 
-  // Disallow demoting an OWNER
+  // Cannot demote the team OWNER — they hold this role for the team's lifetime
+  // This prevents accidentally stranding a team without an owner
   if (targetMembership.role === "OWNER") {
     throw new Error("Cannot change OWNER role");
   }
@@ -231,6 +264,21 @@ export async function changeTeamMemberRole(
   revalidatePath(`/dashboard`);
 }
 
+/**
+ * Removes a team member from the team.
+ *
+ * Constraints:
+ * - OWNER cannot be removed (prevents leaving the team owner-less)
+ * - A member cannot remove themselves (use a dedicated leave-team action for self-removal)
+ * - Only OWNER and ADMIN can remove members
+ * - ADMIN can remove EDITOR, COMMENTER, and VIEWER members but not the OWNER
+ *
+ * @param teamId - The team to remove the member from
+ * @param targetUserId - The user to remove
+ * @throws {Error} if caller is not OWNER/ADMIN
+ * @throws {Error} if trying to remove the OWNER (OWNER is permanent for the team's lifetime)
+ * @throws {Error} if trying to remove themselves (self-removal deferred to leave-team flow)
+ */
 export async function removeTeamMember(teamId: string, targetUserId: string) {
   const session = await getServerSession(authOptions);
   const actorId = (session?.user as { id?: string } | undefined)?.id;
@@ -248,12 +296,14 @@ export async function removeTeamMember(teamId: string, targetUserId: string) {
   });
   if (!targetMembership) throw new Error("Member not found");
 
-  // Cannot remove the OWNER
+  // Cannot remove the team OWNER — ensures the team always has an owner
+  // OWNER is the only role that cannot be removed; all other roles (ADMIN, EDITOR, COMMENTER, VIEWER) can be removed
   if (targetMembership.role === "OWNER") {
     throw new Error("Cannot remove team owner");
   }
 
-  // Cannot remove yourself via this action
+  // Prevent removing yourself — use dedicated leave-team action instead
+  // Self-removal has different UX requirements (confirmation, data transfer prompts)
   if (targetUserId === actorId) {
     throw new Error("Cannot remove yourself");
   }
