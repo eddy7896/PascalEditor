@@ -6,17 +6,18 @@ import { prisma } from '@/lib/prisma'
 import { ProjectsGrid } from '../../_components/ProjectsGrid'
 
 interface TeamPageProps {
-  params: { teamId: string }
+  params: Promise<{ teamId: string }>
 }
 
 export default async function TeamPage({ params }: TeamPageProps) {
+  const { teamId } = await params
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/login')
 
   const userId = (session.user as { id: string }).id
 
   const team = await prisma.team.findUnique({
-    where: { id: params.teamId },
+    where: { id: teamId },
     include: {
       projects: {
         orderBy: { updatedAt: 'desc' },
@@ -29,7 +30,6 @@ export default async function TeamPage({ params }: TeamPageProps) {
 
   if (!team) notFound()
 
-  // Defense-in-depth: verify caller is a member
   const isMember = team.members.some((m) => m.userId === userId)
   if (!isMember) redirect('/dashboard?error=not_member')
 

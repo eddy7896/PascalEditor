@@ -6,17 +6,18 @@ import { MembersTable } from "./_components/MembersTable"
 import { InviteMemberModalWrapper } from "./_components/InviteMemberModalWrapper"
 
 interface MembersPageProps {
-  params: { teamId: string }
+  params: Promise<{ teamId: string }>
 }
 
 export default async function MembersPage({ params }: MembersPageProps) {
+  const { teamId } = await params
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect("/login")
 
   const userId = (session.user as { id: string }).id
 
   const team = await prisma.team.findUnique({
-    where: { id: params.teamId },
+    where: { id: teamId },
     include: {
       members: {
         include: { user: true },
@@ -58,12 +59,12 @@ export default async function MembersPage({ params }: MembersPageProps) {
             {team.members.length === 1 ? "member" : "members"}
           </p>
         </div>
-        {canManage && <InviteMemberModalWrapper teamId={params.teamId} />}
+        {canManage && <InviteMemberModalWrapper teamId={teamId} />}
       </div>
 
       <MembersTable
         members={members}
-        teamId={params.teamId}
+        teamId={teamId}
         currentUserRole={currentUserMembership.role}
         currentUserId={userId}
       />
