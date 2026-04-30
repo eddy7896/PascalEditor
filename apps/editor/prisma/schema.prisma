@@ -274,6 +274,17 @@ model PasswordResetToken {
   @@index([token])
 }
 
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique   // stores SHA-256 hash of raw token
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([token])
+}
+
 model StarredProject {
   userId    String
   projectId String
