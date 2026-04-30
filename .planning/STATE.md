@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 ## Current Position
 
 Phase: 5.1 of 7 (Email Auth Hardening) — IN PROGRESS
-Plan: 2 of 3 — COMPLETE
-Status: Phase 5.1 Plan 02 complete; Email verification gating implemented; Plan 03 (email rate limiting) ready
-Last activity: 2026-04-30 — 05.1-02 email verification complete; credentials signup requires email verification
+Plan: 3 of 3 — COMPLETE
+Status: Phase 5.1 Plan 03 complete; Email rate limiting on 3 auth endpoints implemented
+Last activity: 2026-04-30 — 05.1-03 rate limiting complete; Redis Lua script in place for signup (5/60s), forgot-password (5/60s), login (10/60s)
 
-Progress: [████████░░] 87% (5.0 complete, 5.1 started)
+Progress: [████████░░] 87% (5.0 complete, 5.1 in final plan)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 18 min
-- Total execution time: 18 min (0.3 hours)
+- Total plans completed: 2
+- Average duration: 22 min
+- Total execution time: 43 min (0.7 hours)
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 05.1 | 1 | 18 min | 18 min |
+| 05.1 | 2 | 43 min | 21.5 min |
 
 **Recent Trend:**
-- Last 5 plans: [05.1-01: 18 min]
-- Trend: Accelerating (planned phases ahead)
+- Last 5 plans: [05.1-03: 30 min, 05.1-02: 25 min, 05.1-01: 18 min]
+- Trend: Consistent velocity (~25 min/plan)
 
 *Updated after each plan completion*
 
@@ -96,5 +96,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Completed 05.1-01-PLAN.md — Resend integration and email auth hardening complete
-Resume file: Begin Phase 5.1 Plan 02 (Email Verification) or continue to Phase 06 (Editor)
+Stopped at: Completed 05.1-03-PLAN.md — Email rate limiting complete; all 3 auth endpoints protected
+Resume file: Phase 5.1 (Email Auth Hardening) COMPLETE; ready for Phase 5.2 or later
