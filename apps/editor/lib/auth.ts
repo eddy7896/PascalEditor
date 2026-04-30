@@ -19,8 +19,9 @@ export const authOptions: NextAuthOptions = {
 
         const email = credentials.email.toLowerCase();
 
-        let user = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
           where: { email },
+          select: { id: true, email: true, name: true, password: true, emailVerified: true },
         });
 
         if (!user || !user.password) {
@@ -31,6 +32,11 @@ export const authOptions: NextAuthOptions = {
 
         if (!isValid) {
           throw new Error("Invalid email or password");
+        }
+
+        // Ensure user has verified their email
+        if (!user.emailVerified) {
+          throw new Error("EMAIL_NOT_VERIFIED");
         }
 
         return { id: user.id, email: user.email, name: user.name };
@@ -57,6 +63,7 @@ export const authOptions: NextAuthOptions = {
             email,
             name: user.name ?? null,
             image: user.image ?? null,
+            emailVerified: new Date(), // Google has verified this email
             // password intentionally null — OAuth-only account
           },
         });

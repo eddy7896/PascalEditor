@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { randomBytes, createHash } from "node:crypto";
+import { sendEmail } from "@/lib/email";
+import { VerificationEmail } from "@/emails/VerificationEmail";
 
 export async function POST(req: Request) {
   try {
@@ -23,7 +26,30 @@ export async function POST(req: Request) {
       data: { email: emailLower, name, password: hashedPassword },
     });
 
-    return NextResponse.json({ success: true });
+    // Create verification token
+    const raw = randomBytes(32).toString("hex");
+    const hashed = createHash("sha256").update(raw).digest("hex");
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
+
+    await prisma.emailVerificationToken.create({
+      data: { token: hashed, email: emailLower, expiresAt },
+    });
+
+    const base = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+    const verifyUrl = `${base}/api/auth/verify-email?token=${raw}`;
+
+    sendEmail({
+      to: emailLower,
+      subject: "Verify your Pascal email address",
+      react: <VerificationEmail verifyUrl={verifyUrl} name={name} />,
+    }).catch((err) =>
+      console.error("[signup] verification email send failed:", err)
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: "Check your email to verify your account.",
+    });
   } catch (error) {
     console.error("Signup error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
