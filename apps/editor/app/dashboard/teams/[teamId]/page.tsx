@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { ProjectsGrid } from '../../_components/ProjectsGrid'
@@ -64,12 +65,19 @@ export default async function TeamPage({ params }: TeamPageProps) {
             {team.name[0]?.toUpperCase()}
           </div>
         )}
-        <div>
+        <div className="flex-1">
           <h1 className="text-2xl font-bold text-white">{team.name}</h1>
           <p className="text-sm text-zinc-500 mt-0.5">
             {team.members.length} {team.members.length === 1 ? 'member' : 'members'} &middot; {team.projects.length} {team.projects.length === 1 ? 'project' : 'projects'}
           </p>
         </div>
+        <Link
+          href={`/dashboard/teams/${teamId}/members`}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-sm text-zinc-300 hover:text-white hover:border-zinc-600 transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Members
+        </Link>
       </div>
 
       {/* Projects */}
