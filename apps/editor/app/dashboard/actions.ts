@@ -168,6 +168,21 @@ export async function renameProject(projectId: string, name: string) {
   const session = await getServerSession(authOptions);
   const userId = (session?.user as { id?: string } | undefined)?.id;
   if (!userId) throw new Error("Unauthorized");
+
+  // Fetch project to get teamId
+  const project = await prisma.project.findUnique({ where: { id: projectId } });
+  if (!project) throw new Error("Project not found");
+
+  // Check caller has EDITOR+ role in the project's team
+  try {
+    await requireTeamRole(project.teamId, userId, "EDITOR");
+  } catch (error) {
+    if (error instanceof PermissionError) {
+      throw new Error(error.message);
+    }
+    throw error;
+  }
+
   await prisma.project.update({
     where: { id: projectId },
     data: { name: name.trim() },
