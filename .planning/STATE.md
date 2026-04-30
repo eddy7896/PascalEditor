@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 
 ## Current Position
 
-Phase: 5.1 of 7 (Email Auth Hardening) — IN PROGRESS
-Plan: 3 of 3 — COMPLETE
-Status: Phase 5.1 Plan 03 complete; Email rate limiting on 3 auth endpoints implemented
-Last activity: 2026-04-30 — 05.1-03 rate limiting complete; Redis Lua script in place for signup (5/60s), forgot-password (5/60s), login (10/60s)
+Phase: 5.2 of 7 (RBAC Enforcement + Soft Delete) — IN PROGRESS
+Plan: 1 of 3 — COMPLETE
+Status: Phase 5.2 Plan 01 complete; shared rbac-guards.ts with PermissionError and role hierarchy validators created
+Last activity: 2026-04-30 — 05.2-01 RBAC guards library complete; requireTeamRole, requireProjectRole, assertTeamMember exported from lib/rbac-guards.ts
 
-Progress: [████████░░] 87% (5.0 complete, 5.1 in final plan)
+Progress: [████████░░] 90% (5.0, 5.1 complete; 5.2 plan 01 of 3 done)
 
 ## Performance Metrics
 
@@ -84,6 +84,9 @@ Recent decisions affecting current work:
 - Verification tokens use same security pattern as password reset: raw hex in URL, SHA-256 hash in DB
 - Google OAuth users auto-verified on signup (Google has already verified their email)
 - Grandfather migration sets emailVerified = createdAt for existing password users (no lockout)
+- requireTeamRole used for mutations (rename, delete); assertTeamMember for createProject (any role gate, not role-specific)
+- Role ranks stored as Record<TeamRole|ProjectRole, number> — easy to extend when new roles added to schema
+- PermissionError extends Error with Object.setPrototypeOf to restore prototype chain in TS/ES5 compilation targets
 
 ### Pending Todos
 
@@ -96,5 +99,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Completed 05.1-03-PLAN.md — Email rate limiting complete; all 3 auth endpoints protected
-Resume file: Phase 5.1 (Email Auth Hardening) COMPLETE; ready for Phase 5.2 or later
+Stopped at: Completed 05.2-01-PLAN.md — RBAC guards library created; requireTeamRole/requireProjectRole/assertTeamMember in lib/rbac-guards.ts
+Resume file: Phase 5.2 (RBAC Enforcement + Soft Delete) Plan 01 complete; ready for Plan 02 (wire guards into dashboard/actions.ts)
