@@ -1,8 +1,14 @@
-import { getDashboardData } from "../actions";
+import { getDashboardData, searchProjects } from "../actions";
 import { ProjectsGrid } from "../_components/ProjectsGrid";
 import { CreateProjectModal } from "../_components/CreateProjectModal";
+import { SearchInput } from "../_components/SearchInput";
 
-export default async function ProjectsPage() {
+export default async function ProjectsPage(props: {
+  searchParams?: Promise<{ q?: string; sort?: string; filter?: string; teamId?: string }>;
+}) {
+  const sp = await props.searchParams ?? {};
+
+  // getDashboardData provides teams (for CreateProjectModal) and starredProjectIds
   const data = await getDashboardData();
 
   const org = data?.organizations?.[0]?.organization;
@@ -20,26 +26,21 @@ export default async function ProjectsPage() {
     name: t.name,
   }));
 
-  const allProjects = org.teams.flatMap(
-    (team: {
-      id: string;
-      name: string;
-      projects: Array<{
-        id: string;
-        name: string;
-        updatedAt: Date;
-        lastOpenedAt: Date | null;
-        description: string | null;
-        thumbnailUrl: string | null;
-      }>;
-    }) =>
-      team.projects.map((proj) => ({
-        ...proj,
-        teamName: team.name,
-      }))
-  );
-
   const starredProjectIds = data?.starredProjectIds ?? [];
+
+  // searchProjects handles team membership + soft-delete + case-insensitive name filter
+  const rawProjects = await searchProjects({
+    query: sp.q,
+    sort: sp.sort as "name" | "modified" | "opened" | undefined,
+    filter: sp.filter as "all" | "recent" | "starred" | "archived" | undefined,
+    teamId: sp.teamId ?? null,
+  });
+
+  const allProjects = rawProjects.map((proj) => ({
+    ...proj,
+    teamName: proj.team.name,
+    description: null as string | null,
+  }));
 
   return (
     <div className="flex-1 overflow-y-auto p-8">
@@ -51,6 +52,9 @@ export default async function ProjectsPage() {
           </div>
           <CreateProjectModal teams={teams} />
         </header>
+        <div className="mb-6">
+          <SearchInput />
+        </div>
         <ProjectsGrid
           projects={allProjects}
           starredProjectIds={starredProjectIds}
