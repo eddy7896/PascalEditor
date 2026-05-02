@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { DashboardSidebar } from './_components/DashboardSidebar'
+import { BreadcrumbProvider } from './_components/breadcrumb-context'
+import { BreadcrumbNav } from './_components/BreadcrumbNav'
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const session = await getServerSession(authOptions)
@@ -67,7 +69,10 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         storageLimitGb={500}
       />
       <main className="flex-1 ml-[220px] overflow-y-auto min-h-screen">
-        {children}
+        <BreadcrumbProvider>
+          <BreadcrumbNav />
+          {children}
+        </BreadcrumbProvider>
       </main>
     </div>
   )

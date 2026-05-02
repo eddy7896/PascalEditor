@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { ProjectsGrid } from '../../_components/ProjectsGrid'
+import { BreadcrumbLabelSetter } from '../../_components/BreadcrumbLabelSetter'
 
 interface TeamPageProps {
   params: Promise<{ teamId: string }>
@@ -52,6 +53,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
 
   return (
     <div className="p-8">
+      <BreadcrumbLabelSetter segment={teamId} label={team.name} />
       {/* Team header */}
       <div className="flex items-center gap-4 mb-8">
         {team.avatarUrl ? (
