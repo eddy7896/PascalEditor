@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import type { TeamRole } from "@/prisma/generated-client";
+import type { TeamRole, Prisma } from "@/prisma/generated-client";
 import { requireTeamRole, assertTeamMember, PermissionError } from "@/lib/rbac-guards";
 
 export async function getDashboardData() {
@@ -240,6 +240,86 @@ export async function unstarProject(projectId: string) {
   });
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/projects");
+}
+
+/**
+ * Searches projects scoped to the calling user's team memberships.
+ *
+ * Filters:
+ * - Team membership: only projects on teams the user belongs to
+ * - Soft-delete: excludes deleted projects unless filter === 'archived'
+ * - Case-insensitive name contains match (PostgreSQL mode: 'insensitive')
+ * - Optional teamId narrows to a single team
+ *
+ * @param input.query - Partial name to match (case-insensitive)
+ * @param input.sort  - 'name' (asc) | 'modified' (updatedAt desc) | 'opened' (lastOpenedAt desc)
+ * @param input.filter - 'all' | 'recent' | 'starred' | 'archived'
+ * @param input.teamId - Narrow results to a single team
+ */
+export async function searchProjects(input: {
+  query?: string;
+  sort?: "name" | "modified" | "opened";
+  filter?: "all" | "recent" | "starred" | "archived";
+  teamId?: string | null;
+}) {
+  const session = await getServerSession(authOptions);
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!userId) throw new Error("Unauthorized");
+
+  const where: Prisma.ProjectWhereInput = {
+    team: {
+      members: {
+        some: { userId },
+      },
+    },
+  };
+
+  // Narrow to a single team if requested
+  if (input.teamId) {
+    where.teamId = input.teamId;
+  }
+
+  // Soft-delete: archived filter shows deleted projects; all others hide them
+  if (input.filter === "archived") {
+    where.deletedAt = { not: null };
+  } else {
+    where.deletedAt = null;
+  }
+
+  // Case-insensitive name search (PostgreSQL supports mode: 'insensitive')
+  if (input.query?.trim()) {
+    where.name = { contains: input.query.trim(), mode: "insensitive" };
+  }
+
+  // Sort mapping
+  let orderBy: Prisma.ProjectOrderByWithRelationInput | Prisma.ProjectOrderByWithRelationInput[];
+  if (input.sort === "modified") {
+    orderBy = { updatedAt: "desc" };
+  } else if (input.sort === "opened") {
+    // lastOpenedAt exists on Project model; nulls sorted last via desc with null coalescing by Prisma
+    orderBy = [{ lastOpenedAt: { sort: "desc", nulls: "last" } }];
+  } else {
+    // Default: name ascending
+    orderBy = { name: "asc" };
+  }
+
+  const projects = await prisma.project.findMany({
+    where,
+    orderBy,
+    select: {
+      id: true,
+      name: true,
+      teamId: true,
+      team: { select: { id: true, name: true } },
+      thumbnailUrl: true,
+      updatedAt: true,
+      lastOpenedAt: true,
+      deletedAt: true,
+      createdAt: true,
+    },
+  });
+
+  return projects;
 }
 
 export async function updateLastOpened(projectId: string) {
