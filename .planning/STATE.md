@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 
 ## Current Position
 
-Phase: 5.2 of 7 (RBAC Enforcement + Soft Delete) — IN PROGRESS
-Plan: 4 of 4 — COMPLETE
-Status: Phase 5.2 Plan 04 complete; JSDoc + inline comments documenting OWNER immutability in createTeam, changeTeamMemberRole, removeTeamMember
-Last activity: 2026-04-30 — 05.2-04 documentation plan complete; role hierarchy and OWNER protection fully documented in code
+Phase: 5.3 of 7 (Search, Navigation + Settings) — IN PROGRESS
+Plan: 1 of 3 — COMPLETE
+Status: Phase 5.3 Plan 01 complete; server-side debounced search via URL searchParams + Prisma
+Last activity: 2026-04-30 — 05.3-01 complete; searchProjects action + SearchInput component + projects page wired to searchParams
 
-Progress: [█████████░] 96% (5.0, 5.1 complete; 5.2 plans 01-04 of 4 done)
+Progress: [█████████░] 97% (5.0, 5.1, 5.2 complete; 5.3 plan 01 of 3 done)
 
 ## Performance Metrics
 
@@ -91,6 +91,10 @@ Recent decisions affecting current work:
 - findUnique soft-delete filter uses direct field spread (deletedAt:null) not AND wrapping — ProjectWhereUniqueInput requires id; AND breaks type safety
 - createPrismaClient() wrapper used in prisma.ts for correct ReturnType inference of $extends() extended client
 - JSDoc on server actions documents OWNER immutability; each guard comment explains WHY (team stability, security, audit clarity)
+- URL searchParams (?q=) as single source of truth for search state — bookmarkable and SSR-compatible
+- searchProjects uses Prisma mode:'insensitive' (PostgreSQL-specific) for case-insensitive contains
+- Projects page keeps getDashboardData for teams/starredProjectIds; searchProjects replaces project list fetch
+- description not selected in searchProjects (not needed for grid display) — hardcoded null in map
 
 ### Pending Todos
 
@@ -103,5 +107,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Completed 05.2-03-PLAN.md — RBAC enforcement on project mutations (createProject, renameProject, deleteProject with soft-delete)
-Resume file: Phase 5.2 (RBAC Enforcement + Soft Delete) plans 01-04 complete; ready for Phase 5.3
+Stopped at: Completed 05.3-01-PLAN.md — server-side debounced search via URL searchParams + Prisma
+Resume file: Phase 5.3 (Search, Navigation + Settings) plan 01 complete; ready for plan 02 (sort/filter UI)
