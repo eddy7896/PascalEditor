@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 ## Current Position
 
 Phase: 5.4 of 7 (Audit + Notifications) — IN PROGRESS
-Plan: 1 of ? — COMPLETE
-Status: Phase 5.4 plan 01 complete; TeamAuditLog + Notification schema + helper modules
-Last activity: 2026-05-03 — 05.4-01 complete; Prisma schema extended, writeAuditLog + createNotification + read helpers
+Plan: 3 of ? — COMPLETE
+Status: Phase 5.4 plan 03 complete; /api/notifications GET+PATCH + NotificationBell component mounted in dashboard layout
+Last activity: 2026-05-03 — 05.4-03 complete; notification bell UI polls every 30s, shows badge + dropdown, marks-all-read on open
 
 Progress: [██████████] 100% (5.0, 5.1, 5.2, 5.3 complete; 5.4-01 complete)
 
@@ -99,6 +99,9 @@ Recent decisions affecting current work:
 - OAuth-only users (password=null) see disabled password section with v1 explanation message
 - Session remains valid after password change (NextAuth JWT) — acknowledged in success message; re-auth deferred to future phase
 - Email field read-only in settings v1 — changing email requires re-verification flow not yet built
+- Notification bell placed in new sticky header row above main content (no pre-existing top-bar in dashboard layout)
+- Relative timestamps use Intl.RelativeTimeFormat — no date-fns in project
+- Optimistic badge zero on bell click — reconciles on next 30s poll if PATCH fails
 
 ### Pending Todos
 
@@ -111,5 +114,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-03
-Stopped at: Completed 05.3-04-PLAN.md — settings page with profile edit + password change
-Resume file: Phase 5.3 fully complete; ready for Phase 5.4 or next phase
+Stopped at: Completed 05.4-03-PLAN.md — notification bell API + UI mounted in dashboard
+Resume file: Phase 5.4 plan 03 complete; bell visible across dashboard, polls + marks-all-read
