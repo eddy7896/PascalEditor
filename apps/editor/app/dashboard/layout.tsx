@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { DashboardSidebar } from './_components/DashboardSidebar'
 import { BreadcrumbProvider } from './_components/breadcrumb-context'
 import { BreadcrumbNav } from './_components/BreadcrumbNav'
+import { NotificationBell } from './_components/NotificationBell'
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const session = await getServerSession(authOptions)
@@ -69,6 +70,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         storageLimitGb={500}
       />
       <main className="flex-1 ml-[220px] overflow-y-auto min-h-screen">
+        <header className="sticky top-0 z-30 flex items-center justify-end px-6 py-2 border-b border-zinc-800 bg-[#0A0A0A]">
+          <NotificationBell />
+        </header>
         <BreadcrumbProvider>
           <BreadcrumbNav />
           {children}
