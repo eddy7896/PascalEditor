@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 
 ## Current Position
 
-Phase: 5.3 of 7 (Search, Navigation + Settings) — IN PROGRESS
-Plan: 3 of 4 — COMPLETE
-Status: Phase 5.3 Plan 03 complete; breadcrumb navigation with React Context and DB-aware label injection
-Last activity: 2026-05-03 — 05.3-03 complete; BreadcrumbContext, BreadcrumbNav, BreadcrumbLabelSetter implemented; layout and team page wired
+Phase: 5.3 of 7 (Search, Navigation + Settings) — COMPLETE
+Plan: 4 of 4 — COMPLETE
+Status: Phase 5.3 fully complete; settings page with profile edit + password change
+Last activity: 2026-05-03 — 05.3-04 complete; /dashboard/settings page, updateUserProfile + changePassword server actions, EditProfileForm + ChangePasswordForm
 
-Progress: [█████████░] 98% (5.0, 5.1, 5.2 complete; 5.3 plan 02 of 4 done)
+Progress: [██████████] 100% (5.0, 5.1, 5.2, 5.3 complete)
 
 ## Performance Metrics
 
@@ -95,6 +95,10 @@ Recent decisions affecting current work:
 - searchProjects uses Prisma mode:'insensitive' (PostgreSQL-specific) for case-insensitive contains
 - Projects page keeps getDashboardData for teams/starredProjectIds; searchProjects replaces project list fetch
 - description not selected in searchProjects (not needed for grid display) — hardcoded null in map
+- hasPassword boolean (not hash) sent to client from settings page — password hash never leaves server
+- OAuth-only users (password=null) see disabled password section with v1 explanation message
+- Session remains valid after password change (NextAuth JWT) — acknowledged in success message; re-auth deferred to future phase
+- Email field read-only in settings v1 — changing email requires re-verification flow not yet built
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-02
-Stopped at: Completed 05.3-03-PLAN.md — breadcrumb navigation via React Context
-Resume file: Phase 5.3 (Search, Navigation + Settings) plan 03 complete; ready for plan 04 (settings page)
+Last session: 2026-05-03
+Stopped at: Completed 05.3-04-PLAN.md — settings page with profile edit + password change
+Resume file: Phase 5.3 fully complete; ready for Phase 5.4 or next phase
