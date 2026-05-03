@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-04-28)
 
 ## Current Position
 
-Phase: 5.4 of 7 (Audit + Notifications) — IN PROGRESS
-Plan: 3 of ? — COMPLETE
-Status: Phase 5.4 plan 03 complete; /api/notifications GET+PATCH + NotificationBell component mounted in dashboard layout
-Last activity: 2026-05-03 — 05.4-03 complete; notification bell UI polls every 30s, shows badge + dropdown, marks-all-read on open
+Phase: 5.4 of 7 (Audit + Notifications) — COMPLETE
+Plan: 4 of 4 — COMPLETE
+Status: Phase 5.4 complete; all 4 success criteria satisfied — audit log, notification bell, role-change email, team-join email
+Last activity: 2026-05-03 — 05.4-04 complete; RoleChangedEmail + TeamAddedEmail templates, ROLE_CHANGED/ADDED_TO_TEAM/SCENE_DUPLICATED notifications wired
 
 Progress: [██████████] 100% (5.0, 5.1, 5.2, 5.3 complete; 5.4-01 complete)
 
@@ -114,5 +114,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-05-03
-Stopped at: Completed 05.4-03-PLAN.md — notification bell API + UI mounted in dashboard
-Resume file: Phase 5.4 plan 03 complete; bell visible across dashboard, polls + marks-all-read
+Stopped at: Completed 05.4-04-PLAN.md — RoleChangedEmail + TeamAddedEmail + all 3 notification triggers
+Resume file: Phase 5.4 complete; next is Phase 5.5 or next phase per roadmap
