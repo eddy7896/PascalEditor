@@ -6,13 +6,18 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { ProjectsGrid } from '../../_components/ProjectsGrid'
 import { BreadcrumbLabelSetter } from '../../_components/BreadcrumbLabelSetter'
+import { SearchInput } from '../../_components/SearchInput'
+import { SortFilterControls } from '../../_components/SortFilterControls'
+import { searchProjects } from '../../actions'
 
 interface TeamPageProps {
   params: Promise<{ teamId: string }>
+  searchParams?: Promise<{ q?: string; sort?: string; filter?: string }>
 }
 
-export default async function TeamPage({ params }: TeamPageProps) {
-  const { teamId } = await params
+export default async function TeamPage(props: TeamPageProps) {
+  const { teamId } = await props.params
+  const sp = await props.searchParams ?? {}
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/login')
 
@@ -21,9 +26,6 @@ export default async function TeamPage({ params }: TeamPageProps) {
   const team = await prisma.team.findUnique({
     where: { id: teamId },
     include: {
-      projects: {
-        orderBy: { updatedAt: 'desc' },
-      },
       members: {
         include: { user: { select: { id: true, name: true, image: true } } },
       },
@@ -41,13 +43,20 @@ export default async function TeamPage({ params }: TeamPageProps) {
   })
   const starredProjectIds = starredData.map((s) => s.projectId)
 
-  const projects = team.projects.map((p) => ({
+  const rawProjects = await searchProjects({
+    query: sp.q,
+    sort: sp.sort as "name" | "modified" | "opened" | undefined,
+    filter: sp.filter as "all" | "recent" | "starred" | "archived" | undefined,
+    teamId: teamId,
+  })
+
+  const projects = rawProjects.map((p) => ({
     id: p.id,
     name: p.name,
     updatedAt: p.updatedAt,
     lastOpenedAt: p.lastOpenedAt ?? null,
     teamName: team.name,
-    description: p.description ?? null,
+    description: null,
     thumbnailUrl: p.thumbnailUrl ?? null,
   }))
 
@@ -70,7 +79,7 @@ export default async function TeamPage({ params }: TeamPageProps) {
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-white">{team.name}</h1>
           <p className="text-sm text-zinc-500 mt-0.5">
-            {team.members.length} {team.members.length === 1 ? 'member' : 'members'} &middot; {team.projects.length} {team.projects.length === 1 ? 'project' : 'projects'}
+            {team.members.length} {team.members.length === 1 ? 'member' : 'members'}
           </p>
         </div>
         <Link
@@ -80,6 +89,16 @@ export default async function TeamPage({ params }: TeamPageProps) {
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           Members
         </Link>
+      </div>
+
+      <div className="mb-6 flex items-center justify-between">
+        <div className="w-full max-w-md">
+          <SearchInput />
+        </div>
+        <SortFilterControls
+          currentSort={(sp.sort as "name" | "modified" | "opened") ?? "name"}
+          currentFilter={(sp.filter as "all" | "recent" | "starred" | "archived") ?? "all"}
+        />
       </div>
 
       {/* Projects */}

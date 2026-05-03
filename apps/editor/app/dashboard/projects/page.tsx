@@ -2,6 +2,7 @@ import { getDashboardData, searchProjects } from "../actions";
 import { ProjectsGrid } from "../_components/ProjectsGrid";
 import { CreateProjectModal } from "../_components/CreateProjectModal";
 import { SearchInput } from "../_components/SearchInput";
+import { SortFilterControls } from "../_components/SortFilterControls";
 
 export default async function ProjectsPage(props: {
   searchParams?: Promise<{ q?: string; sort?: string; filter?: string; teamId?: string }>;
@@ -52,8 +53,14 @@ export default async function ProjectsPage(props: {
           </div>
           <CreateProjectModal teams={teams} />
         </header>
-        <div className="mb-6">
-          <SearchInput />
+        <div className="mb-6 flex items-center justify-between">
+          <div className="w-full max-w-md">
+            <SearchInput />
+          </div>
+          <SortFilterControls
+            currentSort={(sp.sort as "name" | "modified" | "opened") ?? "name"}
+            currentFilter={(sp.filter as "all" | "recent" | "starred" | "archived") ?? "all"}
+          />
         </div>
         <ProjectsGrid
           projects={allProjects}
