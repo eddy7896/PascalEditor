@@ -13,20 +13,42 @@ bun dev
 
 The editor will be running at **http://localhost:3000**.
 
-## Environment Variables (optional)
+## Environment Variables
 
-Copy `.env.example` to `.env` if you need:
+### Development
+
+Copy `.env.example` to `.env` in the project root:
 
 ```bash
 cp .env.example .env
 ```
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | No | Enables address search in the editor |
-| `PORT` | No | Dev server port (default: 3000) |
+Fill in values for:
 
-The editor works fully without any environment variables.
+- `DATABASE_URL` — PostgreSQL connection string
+- `NEXTAUTH_SECRET` — Generate with `openssl rand -base64 32`
+- `REDIS_URL` — Redis connection string (for rate limiting)
+- `R2_*` — Cloudflare R2 credentials (for file storage)
+
+The editor runs with reasonable defaults for local dev if these are omitted.
+
+### Production / Docker Deployment
+
+Copy `.env.production` to `.env` on your VPS or Docker container:
+
+```bash
+cp .env.production .env
+```
+
+Update with your actual credentials:
+
+- `DOMAIN` — Your production domain
+- `DATABASE_URL` — Prod PostgreSQL (e.g., `postgresql://user:pass@db-host:5432/pascal_db`)
+- `NEXTAUTH_SECRET` — Generate a new secret
+- `R2_*` — Production R2 credentials
+- `NEXTAUTH_URL` — Must match `DOMAIN` (`https://yourdomain.com`)
+
+All variables are sourced from the root `.env` file by both the monorepo orchestrator (Turbo) and the Next.js app.
 
 ## Monorepo Structure
 
