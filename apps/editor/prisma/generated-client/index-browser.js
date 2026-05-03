@@ -273,6 +273,25 @@ exports.Prisma.StarredProjectScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.TeamAuditLogScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  actorId: 'actorId',
+  targetId: 'targetId',
+  event: 'event',
+  meta: 'meta',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  meta: 'meta',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -324,6 +343,20 @@ exports.ProjectRole = exports.$Enums.ProjectRole = {
   COMMENTER: 'COMMENTER'
 };
 
+exports.AuditEventType = exports.$Enums.AuditEventType = {
+  MEMBER_JOINED: 'MEMBER_JOINED',
+  MEMBER_REMOVED: 'MEMBER_REMOVED',
+  ROLE_CHANGED: 'ROLE_CHANGED',
+  PROJECT_CREATED: 'PROJECT_CREATED',
+  PROJECT_DELETED: 'PROJECT_DELETED'
+};
+
+exports.NotificationType = exports.$Enums.NotificationType = {
+  SCENE_DUPLICATED: 'SCENE_DUPLICATED',
+  ADDED_TO_TEAM: 'ADDED_TO_TEAM',
+  ROLE_CHANGED: 'ROLE_CHANGED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OnboardingProgress: 'OnboardingProgress',
@@ -340,7 +373,9 @@ exports.Prisma.ModelName = {
   EarlyAccessApplication: 'EarlyAccessApplication',
   PasswordResetToken: 'PasswordResetToken',
   EmailVerificationToken: 'EmailVerificationToken',
-  StarredProject: 'StarredProject'
+  StarredProject: 'StarredProject',
+  TeamAuditLog: 'TeamAuditLog',
+  Notification: 'Notification'
 };
 
 /**

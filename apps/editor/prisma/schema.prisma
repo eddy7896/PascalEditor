@@ -27,6 +27,7 @@ model User {
   clonedProjects   ProjectClone[]
 
   starredProjects  StarredProject[]
+  notifications    Notification[]
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -124,6 +125,7 @@ model Team {
   members        TeamMember[]
   projects       Project[]
   inviteTokens   TeamInviteToken[]
+  auditLogs      TeamAuditLog[]
 
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -294,4 +296,47 @@ model StarredProject {
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   @@id([userId, projectId])
   @@index([userId])
+}
+
+enum AuditEventType {
+  MEMBER_JOINED
+  MEMBER_REMOVED
+  ROLE_CHANGED
+  PROJECT_CREATED
+  PROJECT_DELETED
+}
+
+enum NotificationType {
+  SCENE_DUPLICATED
+  ADDED_TO_TEAM
+  ROLE_CHANGED
+}
+
+model TeamAuditLog {
+  id        String         @id @default(cuid())
+  teamId    String
+  actorId   String?
+  targetId  String?
+  event     AuditEventType
+  meta      Json           @default("{}")
+  createdAt DateTime       @default(now())
+
+  team      Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId, createdAt(sort: Desc)])
+  @@index([teamId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  meta      Json             @default("{}")
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, readAt])
 }
