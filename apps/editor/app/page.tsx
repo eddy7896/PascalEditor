@@ -156,7 +156,7 @@ function Stat({ value, label }: { value: string; label: string }) {
 function FeatureCard({
   icon: Icon, title, desc, accent: cardAccent = accent, span = 1, children, delay = 0,
 }: {
-  icon: React.ElementType; title: string; desc: string; accent?: string; span?: 1 | 2; children?: React.ReactNode; delay?: number
+  icon: any; title: string; desc: string; accent?: string; span?: 1 | 2; children?: React.ReactNode; delay?: number
 }) {
   const { ref, inView } = useReveal()
   return (
@@ -510,7 +510,7 @@ export default function LandingPage() {
       {/* ── STATS ───────────────────────────────────────────── */}
       <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 divide-x"
-          style={{ borderTop: `1px solid ${line}`, borderBottom: `1px solid ${line}`, divideColor: line }}>
+          style={{ borderTop: `1px solid ${line}`, borderBottom: `1px solid ${line}`, '--tw-divide-color': line } as React.CSSProperties}>
           {[
             { value: '2,400+', label: 'Teams using Archly' },
             { value: '98ms',   label: 'Avg. collaboration latency' },
@@ -530,7 +530,7 @@ export default function LandingPage() {
           <div className="text-center mb-16">
             <SectionLabel><Sparkles className="w-3 h-3" /> Platform</SectionLabel>
             <motion.h2
-              {...fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+              variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold tracking-[-0.03em] mt-5"
             >
               Built for teams who<br />
@@ -608,7 +608,7 @@ export default function LandingPage() {
           <div className="text-center mb-20">
             <SectionLabel><Workflow className="w-3 h-3" /> How It Works</SectionLabel>
             <motion.h2
-              {...fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+              variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold tracking-[-0.03em] mt-5"
             >
               From import to shipped
@@ -658,7 +658,7 @@ export default function LandingPage() {
           <div className="text-center mb-16">
             <SectionLabel><Star className="w-3 h-3" /> Testimonials</SectionLabel>
             <motion.h2
-              {...fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+              variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
               className="text-4xl font-bold tracking-tight mt-5"
             >
               Loved by architects who{' '}
@@ -679,7 +679,7 @@ export default function LandingPage() {
           <div className="text-center mb-16">
             <SectionLabel><BarChart3 className="w-3 h-3" /> Pricing</SectionLabel>
             <motion.h2
-              {...fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+              variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold tracking-[-0.03em] mt-5 mb-4"
             >
               Start free.{' '}
@@ -721,7 +721,7 @@ export default function LandingPage() {
       <section className="py-32 px-6">
         <div className="max-w-4xl mx-auto">
           <motion.div
-            {...fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+            variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true                    }}
             className="relative rounded-[32px] p-16 md:p-24 text-center overflow-hidden"
             style={{ border: `1px solid rgba(61,203,255,0.2)` }}
           >
