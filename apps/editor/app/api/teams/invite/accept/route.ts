@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { writeAuditLog } from "@/lib/audit"
 
 export async function GET(req: Request) {
   const url = new URL(req.url)
@@ -48,6 +49,14 @@ export async function GET(req: Request) {
       data: { usedAt: new Date(), usedByUserId: userId },
     }),
   ])
+
+  writeAuditLog({
+    teamId: invite.teamId,
+    actorId: userId,
+    targetId: userId,
+    event: "MEMBER_JOINED",
+    meta: { role: invite.role },
+  }).catch((err) => console.error("[audit] MEMBER_JOINED write failed:", err))
 
   return NextResponse.redirect(`${baseUrl}/dashboard/teams/${invite.teamId}`)
 }

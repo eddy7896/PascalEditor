@@ -6,6 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import type { TeamRole, Prisma } from "@/prisma/generated-client";
 import { requireTeamRole, assertTeamMember, PermissionError } from "@/lib/rbac-guards";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function getDashboardData() {
   const session = await getServerSession(authOptions);
@@ -115,6 +116,16 @@ export async function createProject(teamId: string, name: string, description: s
     },
   });
 
+  if (project.teamId) {
+    writeAuditLog({
+      teamId: project.teamId,
+      actorId: userId,
+      targetId: project.id,
+      event: "PROJECT_CREATED",
+      meta: { projectName: project.name },
+    }).catch((err) => console.error("[audit] PROJECT_CREATED write failed:", err));
+  }
+
   revalidatePath("/dashboard/projects");
   revalidatePath("/dashboard");
   return { id: project.id, success: true };
@@ -215,6 +226,16 @@ export async function deleteProject(projectId: string) {
     where: { id: projectId },
     data: { deletedAt: new Date() },
   });
+
+  if (project.teamId) {
+    writeAuditLog({
+      teamId: project.teamId,
+      actorId: userId,
+      targetId: projectId,
+      event: "PROJECT_DELETED",
+      meta: { projectName: project.name },
+    }).catch((err) => console.error("[audit] PROJECT_DELETED write failed:", err));
+  }
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/projects");
@@ -389,6 +410,14 @@ export async function changeTeamMemberRole(
     data: { role },
   });
 
+  writeAuditLog({
+    teamId,
+    actorId,
+    targetId: targetUserId,
+    event: "ROLE_CHANGED",
+    meta: { oldRole: targetMembership.role, newRole: role },
+  }).catch((err) => console.error("[audit] ROLE_CHANGED write failed:", err));
+
   revalidatePath(`/dashboard/teams/${teamId}/members`);
   revalidatePath(`/dashboard/teams/${teamId}`);
   revalidatePath(`/dashboard`);
@@ -441,6 +470,14 @@ export async function removeTeamMember(teamId: string, targetUserId: string) {
   await prisma.teamMember.delete({
     where: { teamId_userId: { teamId, userId: targetUserId } },
   });
+
+  writeAuditLog({
+    teamId,
+    actorId,
+    targetId: targetUserId,
+    event: "MEMBER_REMOVED",
+    meta: { removedRole: targetMembership.role },
+  }).catch((err) => console.error("[audit] MEMBER_REMOVED write failed:", err));
 
   revalidatePath(`/dashboard/teams/${teamId}/members`);
   revalidatePath(`/dashboard/teams/${teamId}`);
