@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import type { TeamRole, Prisma } from "@/prisma/generated-client";
 import { requireTeamRole, assertTeamMember, PermissionError } from "@/lib/rbac-guards";
 import { writeAuditLog } from "@/lib/audit";
+import { createNotification } from "@/lib/notifications";
+import { sendRoleChangedEmail } from "@/lib/emails/role-changed";
 
 export async function getDashboardData() {
   const session = await getServerSession(authOptions);
@@ -417,6 +419,32 @@ export async function changeTeamMemberRole(
     event: "ROLE_CHANGED",
     meta: { oldRole: targetMembership.role, newRole: role },
   }).catch((err) => console.error("[audit] ROLE_CHANGED write failed:", err));
+
+  // Fire-and-forget: email + in-app notification for role change
+  const [target, team, actor] = await Promise.all([
+    prisma.user.findUnique({ where: { id: targetUserId }, select: { email: true, name: true } }),
+    prisma.team.findUnique({ where: { id: teamId }, select: { name: true } }),
+    prisma.user.findUnique({ where: { id: actorId }, select: { name: true } }),
+  ]);
+
+  const teamUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/dashboard/teams/${teamId}`;
+
+  if (target?.email && team) {
+    sendRoleChangedEmail({
+      to: target.email,
+      teamName: team.name,
+      newRole: role,
+      oldRole: targetMembership.role,
+      changedByName: actor?.name ?? undefined,
+      teamUrl,
+    }).catch((err) => console.error("[role-changed] email send failed:", err));
+  }
+
+  createNotification({
+    userId: targetUserId,
+    type: "ROLE_CHANGED",
+    meta: { teamName: team?.name, newRole: role, oldRole: targetMembership.role },
+  }).catch((err) => console.error("[role-changed] notification failed:", err));
 
   revalidatePath(`/dashboard/teams/${teamId}/members`);
   revalidatePath(`/dashboard/teams/${teamId}`);

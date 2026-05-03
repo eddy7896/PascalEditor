@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { writeAuditLog } from "@/lib/audit"
+import { createNotification } from "@/lib/notifications"
+import { sendTeamAddedEmail } from "@/lib/emails/team-added"
 
 export async function GET(req: Request) {
   const url = new URL(req.url)
@@ -57,6 +59,32 @@ export async function GET(req: Request) {
     event: "MEMBER_JOINED",
     meta: { role: invite.role },
   }).catch((err) => console.error("[audit] MEMBER_JOINED write failed:", err))
+
+  // Fire-and-forget: email + in-app notification for joining team
+  const [team, inviter] = await Promise.all([
+    prisma.team.findUnique({ where: { id: invite.teamId }, select: { name: true } }),
+    invite.createdByUserId
+      ? prisma.user.findUnique({ where: { id: invite.createdByUserId }, select: { name: true } })
+      : Promise.resolve(null),
+  ])
+
+  const teamUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/dashboard/teams/${invite.teamId}`
+
+  if (sessionEmail && team) {
+    sendTeamAddedEmail({
+      to: sessionEmail,
+      teamName: team.name,
+      role: invite.role,
+      teamUrl,
+      inviterName: inviter?.name ?? undefined,
+    }).catch((err) => console.error("[team-added] email send failed:", err))
+  }
+
+  createNotification({
+    userId,
+    type: "ADDED_TO_TEAM",
+    meta: { teamName: team?.name, role: invite.role },
+  }).catch((err) => console.error("[team-added] notification failed:", err))
 
   return NextResponse.redirect(`${baseUrl}/dashboard/teams/${invite.teamId}`)
 }

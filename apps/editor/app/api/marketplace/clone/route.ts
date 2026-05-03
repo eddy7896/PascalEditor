@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { s3 } from '@/lib/s3'
+import { createNotification } from '@/lib/notifications'
 
 const BUCKET = process.env.R2_BUCKET_NAME ?? ''
 
@@ -34,7 +35,13 @@ export async function POST(req: Request) {
 
   const asset = await prisma.marketplaceAsset.findUnique({
     where: { id: assetId },
-    include: { project: { select: { name: true, stateUrl: true } } },
+    select: {
+      id: true,
+      title: true,
+      isPublished: true,
+      authorId: true,
+      project: { select: { name: true, stateUrl: true } },
+    },
   })
   if (!asset || !asset.isPublished) {
     return NextResponse.json({ error: 'Asset not found or not published' }, { status: 404 })
@@ -100,6 +107,15 @@ export async function POST(req: Request) {
       data: { cloneCount: { increment: 1 } },
     }),
   ])
+
+  // Fire-and-forget: notify original author when their asset is cloned
+  if (asset.authorId && asset.authorId !== userId) {
+    createNotification({
+      userId: asset.authorId,
+      type: "SCENE_DUPLICATED",
+      meta: { assetTitle: asset.title, byUserId: userId },
+    }).catch((err) => console.error("[scene-duplicated] notification failed:", err))
+  }
 
   return NextResponse.json({ projectId: newProject.id })
 }
