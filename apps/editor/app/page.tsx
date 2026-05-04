@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import {
   ArrowRight, Building2, Box, Users2, Eye, Download,
   Check, ChevronRight, Sparkles, Play, Shield, Zap, Grid3X3,
+  FolderOpen,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -31,8 +32,8 @@ export default function LandingPage() {
   const [activeUseCase, setActiveUseCase] = useState(0)
   const useCases = [
     { title: 'Architecture', icon: <Building2 className="w-5 h-5" />, desc: 'Create detailed building models with parametric walls, slabs, roofs, and intelligent room layouts. Iterate with your team in real-time.', features: ['Parametric building elements', 'Multi-level editing', 'Material library'] },
-    { title: 'Real Estate', icon: <LayoutGrid className="w-5 h-5" />, desc: 'Present interactive 3D walkthroughs to clients. Showcase properties with photorealistic materials and lighting before construction begins.', features: ['Interactive presentations', 'First-person walkthroughs', 'One-click sharing'] },
-    { title: 'Construction', icon: <Grid3X3 className="w-5 h-5" />, desc: 'Coordinate across teams with shared project workspaces. Track changes, manage versions, and keep everyone aligned on the latest design.', features: ['Version history', 'Team permissions', 'Export to CAD formats'] },
+    { title: 'Real Estate', icon: <Eye className="w-5 h-5" />, desc: 'Present interactive 3D walkthroughs to clients. Showcase properties with photorealistic materials and lighting before construction begins.', features: ['Interactive presentations', 'First-person walkthroughs', 'One-click sharing'] },
+    { title: 'Construction', icon: <Users2 className="w-5 h-5" />, desc: 'Coordinate across teams with shared project workspaces. Track changes, manage versions, and keep everyone aligned on the latest design.', features: ['Version history', 'Team permissions', 'Export to CAD formats'] },
   ]
 
   return (
