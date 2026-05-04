@@ -165,6 +165,8 @@ exports.Prisma.TeamScalarFieldEnum = {
   organizationId: 'organizationId',
   name: 'name',
   description: 'description',
+  avatarUrl: 'avatarUrl',
+  slug: 'slug',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -173,8 +175,22 @@ exports.Prisma.TeamMemberScalarFieldEnum = {
   id: 'id',
   teamId: 'teamId',
   userId: 'userId',
+  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TeamInviteTokenScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  teamId: 'teamId',
+  inviteeEmail: 'inviteeEmail',
+  role: 'role',
+  createdByUserId: 'createdByUserId',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  usedByUserId: 'usedByUserId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
@@ -187,7 +203,8 @@ exports.Prisma.ProjectScalarFieldEnum = {
   isPublic: 'isPublic',
   lastOpenedAt: 'lastOpenedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ProjectMemberScalarFieldEnum = {
@@ -242,9 +259,36 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.EmailVerificationTokenScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  email: 'email',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.StarredProjectScalarFieldEnum = {
   userId: 'userId',
   projectId: 'projectId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TeamAuditLogScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  actorId: 'actorId',
+  targetId: 'targetId',
+  event: 'event',
+  meta: 'meta',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  meta: 'meta',
+  readAt: 'readAt',
   createdAt: 'createdAt'
 };
 
@@ -284,11 +328,33 @@ exports.OrgRole = exports.$Enums.OrgRole = {
   MEMBER: 'MEMBER'
 };
 
+exports.TeamRole = exports.$Enums.TeamRole = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR',
+  COMMENTER: 'COMMENTER',
+  VIEWER: 'VIEWER'
+};
+
 exports.ProjectRole = exports.$Enums.ProjectRole = {
   OWNER: 'OWNER',
   EDITOR: 'EDITOR',
   VIEWER: 'VIEWER',
   COMMENTER: 'COMMENTER'
+};
+
+exports.AuditEventType = exports.$Enums.AuditEventType = {
+  MEMBER_JOINED: 'MEMBER_JOINED',
+  MEMBER_REMOVED: 'MEMBER_REMOVED',
+  ROLE_CHANGED: 'ROLE_CHANGED',
+  PROJECT_CREATED: 'PROJECT_CREATED',
+  PROJECT_DELETED: 'PROJECT_DELETED'
+};
+
+exports.NotificationType = exports.$Enums.NotificationType = {
+  SCENE_DUPLICATED: 'SCENE_DUPLICATED',
+  ADDED_TO_TEAM: 'ADDED_TO_TEAM',
+  ROLE_CHANGED: 'ROLE_CHANGED'
 };
 
 exports.Prisma.ModelName = {
@@ -299,13 +365,17 @@ exports.Prisma.ModelName = {
   OrganizationInviteToken: 'OrganizationInviteToken',
   Team: 'Team',
   TeamMember: 'TeamMember',
+  TeamInviteToken: 'TeamInviteToken',
   Project: 'Project',
   ProjectMember: 'ProjectMember',
   MarketplaceAsset: 'MarketplaceAsset',
   ProjectClone: 'ProjectClone',
   EarlyAccessApplication: 'EarlyAccessApplication',
   PasswordResetToken: 'PasswordResetToken',
-  StarredProject: 'StarredProject'
+  EmailVerificationToken: 'EmailVerificationToken',
+  StarredProject: 'StarredProject',
+  TeamAuditLog: 'TeamAuditLog',
+  Notification: 'Notification'
 };
 
 /**

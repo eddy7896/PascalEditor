@@ -49,6 +49,11 @@ export type Team = $Result.DefaultSelection<Prisma.$TeamPayload>
  */
 export type TeamMember = $Result.DefaultSelection<Prisma.$TeamMemberPayload>
 /**
+ * Model TeamInviteToken
+ * 
+ */
+export type TeamInviteToken = $Result.DefaultSelection<Prisma.$TeamInviteTokenPayload>
+/**
  * Model Project
  * 
  */
@@ -79,10 +84,25 @@ export type EarlyAccessApplication = $Result.DefaultSelection<Prisma.$EarlyAcces
  */
 export type PasswordResetToken = $Result.DefaultSelection<Prisma.$PasswordResetTokenPayload>
 /**
+ * Model EmailVerificationToken
+ * 
+ */
+export type EmailVerificationToken = $Result.DefaultSelection<Prisma.$EmailVerificationTokenPayload>
+/**
  * Model StarredProject
  * 
  */
 export type StarredProject = $Result.DefaultSelection<Prisma.$StarredProjectPayload>
+/**
+ * Model TeamAuditLog
+ * 
+ */
+export type TeamAuditLog = $Result.DefaultSelection<Prisma.$TeamAuditLogPayload>
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
 
 /**
  * Enums
@@ -106,6 +126,17 @@ export const OrgRole: {
 export type OrgRole = (typeof OrgRole)[keyof typeof OrgRole]
 
 
+export const TeamRole: {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR',
+  COMMENTER: 'COMMENTER',
+  VIEWER: 'VIEWER'
+};
+
+export type TeamRole = (typeof TeamRole)[keyof typeof TeamRole]
+
+
 export const ProjectRole: {
   OWNER: 'OWNER',
   EDITOR: 'EDITOR',
@@ -114,6 +145,26 @@ export const ProjectRole: {
 };
 
 export type ProjectRole = (typeof ProjectRole)[keyof typeof ProjectRole]
+
+
+export const AuditEventType: {
+  MEMBER_JOINED: 'MEMBER_JOINED',
+  MEMBER_REMOVED: 'MEMBER_REMOVED',
+  ROLE_CHANGED: 'ROLE_CHANGED',
+  PROJECT_CREATED: 'PROJECT_CREATED',
+  PROJECT_DELETED: 'PROJECT_DELETED'
+};
+
+export type AuditEventType = (typeof AuditEventType)[keyof typeof AuditEventType]
+
+
+export const NotificationType: {
+  SCENE_DUPLICATED: 'SCENE_DUPLICATED',
+  ADDED_TO_TEAM: 'ADDED_TO_TEAM',
+  ROLE_CHANGED: 'ROLE_CHANGED'
+};
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
 
 }
 
@@ -125,9 +176,21 @@ export type OrgRole = $Enums.OrgRole
 
 export const OrgRole: typeof $Enums.OrgRole
 
+export type TeamRole = $Enums.TeamRole
+
+export const TeamRole: typeof $Enums.TeamRole
+
 export type ProjectRole = $Enums.ProjectRole
 
 export const ProjectRole: typeof $Enums.ProjectRole
+
+export type AuditEventType = $Enums.AuditEventType
+
+export const AuditEventType: typeof $Enums.AuditEventType
+
+export type NotificationType = $Enums.NotificationType
+
+export const NotificationType: typeof $Enums.NotificationType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -322,6 +385,16 @@ export class PrismaClient<
   get teamMember(): Prisma.TeamMemberDelegate<ExtArgs>;
 
   /**
+   * `prisma.teamInviteToken`: Exposes CRUD operations for the **TeamInviteToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TeamInviteTokens
+    * const teamInviteTokens = await prisma.teamInviteToken.findMany()
+    * ```
+    */
+  get teamInviteToken(): Prisma.TeamInviteTokenDelegate<ExtArgs>;
+
+  /**
    * `prisma.project`: Exposes CRUD operations for the **Project** model.
     * Example usage:
     * ```ts
@@ -382,6 +455,16 @@ export class PrismaClient<
   get passwordResetToken(): Prisma.PasswordResetTokenDelegate<ExtArgs>;
 
   /**
+   * `prisma.emailVerificationToken`: Exposes CRUD operations for the **EmailVerificationToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EmailVerificationTokens
+    * const emailVerificationTokens = await prisma.emailVerificationToken.findMany()
+    * ```
+    */
+  get emailVerificationToken(): Prisma.EmailVerificationTokenDelegate<ExtArgs>;
+
+  /**
    * `prisma.starredProject`: Exposes CRUD operations for the **StarredProject** model.
     * Example usage:
     * ```ts
@@ -390,6 +473,26 @@ export class PrismaClient<
     * ```
     */
   get starredProject(): Prisma.StarredProjectDelegate<ExtArgs>;
+
+  /**
+   * `prisma.teamAuditLog`: Exposes CRUD operations for the **TeamAuditLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TeamAuditLogs
+    * const teamAuditLogs = await prisma.teamAuditLog.findMany()
+    * ```
+    */
+  get teamAuditLog(): Prisma.TeamAuditLogDelegate<ExtArgs>;
+
+  /**
+   * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notifications
+    * const notifications = await prisma.notification.findMany()
+    * ```
+    */
+  get notification(): Prisma.NotificationDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -867,13 +970,17 @@ export namespace Prisma {
     OrganizationInviteToken: 'OrganizationInviteToken',
     Team: 'Team',
     TeamMember: 'TeamMember',
+    TeamInviteToken: 'TeamInviteToken',
     Project: 'Project',
     ProjectMember: 'ProjectMember',
     MarketplaceAsset: 'MarketplaceAsset',
     ProjectClone: 'ProjectClone',
     EarlyAccessApplication: 'EarlyAccessApplication',
     PasswordResetToken: 'PasswordResetToken',
-    StarredProject: 'StarredProject'
+    EmailVerificationToken: 'EmailVerificationToken',
+    StarredProject: 'StarredProject',
+    TeamAuditLog: 'TeamAuditLog',
+    Notification: 'Notification'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -890,7 +997,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'onboardingProgress' | 'organization' | 'organizationMember' | 'organizationInviteToken' | 'team' | 'teamMember' | 'project' | 'projectMember' | 'marketplaceAsset' | 'projectClone' | 'earlyAccessApplication' | 'passwordResetToken' | 'starredProject'
+      modelProps: 'user' | 'onboardingProgress' | 'organization' | 'organizationMember' | 'organizationInviteToken' | 'team' | 'teamMember' | 'teamInviteToken' | 'project' | 'projectMember' | 'marketplaceAsset' | 'projectClone' | 'earlyAccessApplication' | 'passwordResetToken' | 'emailVerificationToken' | 'starredProject' | 'teamAuditLog' | 'notification'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1356,6 +1463,72 @@ export namespace Prisma {
           }
         }
       }
+      TeamInviteToken: {
+        payload: Prisma.$TeamInviteTokenPayload<ExtArgs>
+        fields: Prisma.TeamInviteTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TeamInviteTokenFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TeamInviteTokenFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.TeamInviteTokenFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TeamInviteTokenFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload>
+          }
+          findMany: {
+            args: Prisma.TeamInviteTokenFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload>[]
+          }
+          create: {
+            args: Prisma.TeamInviteTokenCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload>
+          }
+          createMany: {
+            args: Prisma.TeamInviteTokenCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.TeamInviteTokenDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload>
+          }
+          update: {
+            args: Prisma.TeamInviteTokenUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.TeamInviteTokenDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TeamInviteTokenUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.TeamInviteTokenUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamInviteTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.TeamInviteTokenAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateTeamInviteToken>
+          }
+          groupBy: {
+            args: Prisma.TeamInviteTokenGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<TeamInviteTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TeamInviteTokenCountArgs<ExtArgs>,
+            result: $Utils.Optional<TeamInviteTokenCountAggregateOutputType> | number
+          }
+        }
+      }
       Project: {
         payload: Prisma.$ProjectPayload<ExtArgs>
         fields: Prisma.ProjectFieldRefs
@@ -1752,6 +1925,72 @@ export namespace Prisma {
           }
         }
       }
+      EmailVerificationToken: {
+        payload: Prisma.$EmailVerificationTokenPayload<ExtArgs>
+        fields: Prisma.EmailVerificationTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EmailVerificationTokenFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EmailVerificationTokenFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.EmailVerificationTokenFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EmailVerificationTokenFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          findMany: {
+            args: Prisma.EmailVerificationTokenFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>[]
+          }
+          create: {
+            args: Prisma.EmailVerificationTokenCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          createMany: {
+            args: Prisma.EmailVerificationTokenCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.EmailVerificationTokenDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          update: {
+            args: Prisma.EmailVerificationTokenUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.EmailVerificationTokenDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EmailVerificationTokenUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.EmailVerificationTokenUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EmailVerificationTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.EmailVerificationTokenAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateEmailVerificationToken>
+          }
+          groupBy: {
+            args: Prisma.EmailVerificationTokenGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<EmailVerificationTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EmailVerificationTokenCountArgs<ExtArgs>,
+            result: $Utils.Optional<EmailVerificationTokenCountAggregateOutputType> | number
+          }
+        }
+      }
       StarredProject: {
         payload: Prisma.$StarredProjectPayload<ExtArgs>
         fields: Prisma.StarredProjectFieldRefs
@@ -1815,6 +2054,138 @@ export namespace Prisma {
           count: {
             args: Prisma.StarredProjectCountArgs<ExtArgs>,
             result: $Utils.Optional<StarredProjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      TeamAuditLog: {
+        payload: Prisma.$TeamAuditLogPayload<ExtArgs>
+        fields: Prisma.TeamAuditLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TeamAuditLogFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TeamAuditLogFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload>
+          }
+          findFirst: {
+            args: Prisma.TeamAuditLogFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TeamAuditLogFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload>
+          }
+          findMany: {
+            args: Prisma.TeamAuditLogFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload>[]
+          }
+          create: {
+            args: Prisma.TeamAuditLogCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload>
+          }
+          createMany: {
+            args: Prisma.TeamAuditLogCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.TeamAuditLogDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload>
+          }
+          update: {
+            args: Prisma.TeamAuditLogUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.TeamAuditLogDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TeamAuditLogUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.TeamAuditLogUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TeamAuditLogPayload>
+          }
+          aggregate: {
+            args: Prisma.TeamAuditLogAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateTeamAuditLog>
+          }
+          groupBy: {
+            args: Prisma.TeamAuditLogGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<TeamAuditLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TeamAuditLogCountArgs<ExtArgs>,
+            result: $Utils.Optional<TeamAuditLogCountAggregateOutputType> | number
+          }
+        }
+      }
+      Notification: {
+        payload: Prisma.$NotificationPayload<ExtArgs>
+        fields: Prisma.NotificationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NotificationFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NotificationFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          findFirst: {
+            args: Prisma.NotificationFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NotificationFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          findMany: {
+            args: Prisma.NotificationFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+          }
+          create: {
+            args: Prisma.NotificationCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          createMany: {
+            args: Prisma.NotificationCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.NotificationDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          update: {
+            args: Prisma.NotificationUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          deleteMany: {
+            args: Prisma.NotificationDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NotificationUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.NotificationUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          aggregate: {
+            args: Prisma.NotificationAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateNotification>
+          }
+          groupBy: {
+            args: Prisma.NotificationGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<NotificationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NotificationCountArgs<ExtArgs>,
+            result: $Utils.Optional<NotificationCountAggregateOutputType> | number
           }
         }
       }
@@ -1983,6 +2354,7 @@ export namespace Prisma {
     publishedAssets: number
     clonedProjects: number
     starredProjects: number
+    notifications: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1992,6 +2364,7 @@ export namespace Prisma {
     publishedAssets?: boolean | UserCountOutputTypeCountPublishedAssetsArgs
     clonedProjects?: boolean | UserCountOutputTypeCountClonedProjectsArgs
     starredProjects?: boolean | UserCountOutputTypeCountStarredProjectsArgs
+    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   }
 
   // Custom InputTypes
@@ -2052,6 +2425,14 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountStarredProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StarredProjectWhereInput
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
   }
 
 
@@ -2117,11 +2498,15 @@ export namespace Prisma {
   export type TeamCountOutputType = {
     members: number
     projects: number
+    inviteTokens: number
+    auditLogs: number
   }
 
   export type TeamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | TeamCountOutputTypeCountMembersArgs
     projects?: boolean | TeamCountOutputTypeCountProjectsArgs
+    inviteTokens?: boolean | TeamCountOutputTypeCountInviteTokensArgs
+    auditLogs?: boolean | TeamCountOutputTypeCountAuditLogsArgs
   }
 
   // Custom InputTypes
@@ -2150,6 +2535,22 @@ export namespace Prisma {
    */
   export type TeamCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
+  }
+
+
+  /**
+   * TeamCountOutputType without action
+   */
+  export type TeamCountOutputTypeCountInviteTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeamInviteTokenWhereInput
+  }
+
+
+  /**
+   * TeamCountOutputType without action
+   */
+  export type TeamCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeamAuditLogWhereInput
   }
 
 
@@ -2447,6 +2848,7 @@ export namespace Prisma {
     publishedAssets?: boolean | User$publishedAssetsArgs<ExtArgs>
     clonedProjects?: boolean | User$clonedProjectsArgs<ExtArgs>
     starredProjects?: boolean | User$starredProjectsArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2471,6 +2873,7 @@ export namespace Prisma {
     publishedAssets?: boolean | User$publishedAssetsArgs<ExtArgs>
     clonedProjects?: boolean | User$clonedProjectsArgs<ExtArgs>
     starredProjects?: boolean | User$starredProjectsArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2485,6 +2888,7 @@ export namespace Prisma {
       publishedAssets: Prisma.$MarketplaceAssetPayload<ExtArgs>[]
       clonedProjects: Prisma.$ProjectClonePayload<ExtArgs>[]
       starredProjects: Prisma.$StarredProjectPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2875,6 +3279,8 @@ export namespace Prisma {
     clonedProjects<T extends User$clonedProjectsArgs<ExtArgs> = {}>(args?: Subset<T, User$clonedProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectClonePayload<ExtArgs>, T, 'findMany'> | Null>;
 
     starredProjects<T extends User$starredProjectsArgs<ExtArgs> = {}>(args?: Subset<T, User$starredProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StarredProjectPayload<ExtArgs>, T, 'findMany'> | Null>;
+
+    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3364,6 +3770,27 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StarredProjectScalarFieldEnum | StarredProjectScalarFieldEnum[]
+  }
+
+
+  /**
+   * User.notifications
+   */
+  export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
   }
 
 
@@ -7268,6 +7695,8 @@ export namespace Prisma {
     organizationId: string | null
     name: string | null
     description: string | null
+    avatarUrl: string | null
+    slug: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7277,6 +7706,8 @@ export namespace Prisma {
     organizationId: string | null
     name: string | null
     description: string | null
+    avatarUrl: string | null
+    slug: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7286,6 +7717,8 @@ export namespace Prisma {
     organizationId: number
     name: number
     description: number
+    avatarUrl: number
+    slug: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7297,6 +7730,8 @@ export namespace Prisma {
     organizationId?: true
     name?: true
     description?: true
+    avatarUrl?: true
+    slug?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7306,6 +7741,8 @@ export namespace Prisma {
     organizationId?: true
     name?: true
     description?: true
+    avatarUrl?: true
+    slug?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7315,6 +7752,8 @@ export namespace Prisma {
     organizationId?: true
     name?: true
     description?: true
+    avatarUrl?: true
+    slug?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7397,6 +7836,8 @@ export namespace Prisma {
     organizationId: string
     name: string
     description: string | null
+    avatarUrl: string | null
+    slug: string | null
     createdAt: Date
     updatedAt: Date
     _count: TeamCountAggregateOutputType | null
@@ -7423,11 +7864,15 @@ export namespace Prisma {
     organizationId?: boolean
     name?: boolean
     description?: boolean
+    avatarUrl?: boolean
+    slug?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     members?: boolean | Team$membersArgs<ExtArgs>
     projects?: boolean | Team$projectsArgs<ExtArgs>
+    inviteTokens?: boolean | Team$inviteTokensArgs<ExtArgs>
+    auditLogs?: boolean | Team$auditLogsArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["team"]>
 
@@ -7436,6 +7881,8 @@ export namespace Prisma {
     organizationId?: boolean
     name?: boolean
     description?: boolean
+    avatarUrl?: boolean
+    slug?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -7444,6 +7891,8 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     members?: boolean | Team$membersArgs<ExtArgs>
     projects?: boolean | Team$projectsArgs<ExtArgs>
+    inviteTokens?: boolean | Team$inviteTokensArgs<ExtArgs>
+    auditLogs?: boolean | Team$auditLogsArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -7454,12 +7903,16 @@ export namespace Prisma {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       members: Prisma.$TeamMemberPayload<ExtArgs>[]
       projects: Prisma.$ProjectPayload<ExtArgs>[]
+      inviteTokens: Prisma.$TeamInviteTokenPayload<ExtArgs>[]
+      auditLogs: Prisma.$TeamAuditLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       organizationId: string
       name: string
       description: string | null
+      avatarUrl: string | null
+      slug: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["team"]>
@@ -7833,6 +8286,10 @@ export namespace Prisma {
 
     projects<T extends Team$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Team$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, 'findMany'> | Null>;
 
+    inviteTokens<T extends Team$inviteTokensArgs<ExtArgs> = {}>(args?: Subset<T, Team$inviteTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'findMany'> | Null>;
+
+    auditLogs<T extends Team$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Team$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'findMany'> | Null>;
+
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7865,6 +8322,8 @@ export namespace Prisma {
     readonly organizationId: FieldRef<"Team", 'String'>
     readonly name: FieldRef<"Team", 'String'>
     readonly description: FieldRef<"Team", 'String'>
+    readonly avatarUrl: FieldRef<"Team", 'String'>
+    readonly slug: FieldRef<"Team", 'String'>
     readonly createdAt: FieldRef<"Team", 'DateTime'>
     readonly updatedAt: FieldRef<"Team", 'DateTime'>
   }
@@ -8221,6 +8680,48 @@ export namespace Prisma {
 
 
   /**
+   * Team.inviteTokens
+   */
+  export type Team$inviteTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    where?: TeamInviteTokenWhereInput
+    orderBy?: TeamInviteTokenOrderByWithRelationInput | TeamInviteTokenOrderByWithRelationInput[]
+    cursor?: TeamInviteTokenWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TeamInviteTokenScalarFieldEnum | TeamInviteTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * Team.auditLogs
+   */
+  export type Team$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    where?: TeamAuditLogWhereInput
+    orderBy?: TeamAuditLogOrderByWithRelationInput | TeamAuditLogOrderByWithRelationInput[]
+    cursor?: TeamAuditLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TeamAuditLogScalarFieldEnum | TeamAuditLogScalarFieldEnum[]
+  }
+
+
+  /**
    * Team without action
    */
   export type TeamDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8250,6 +8751,7 @@ export namespace Prisma {
     id: string | null
     teamId: string | null
     userId: string | null
+    role: $Enums.TeamRole | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8258,6 +8760,7 @@ export namespace Prisma {
     id: string | null
     teamId: string | null
     userId: string | null
+    role: $Enums.TeamRole | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8266,6 +8769,7 @@ export namespace Prisma {
     id: number
     teamId: number
     userId: number
+    role: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8276,6 +8780,7 @@ export namespace Prisma {
     id?: true
     teamId?: true
     userId?: true
+    role?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8284,6 +8789,7 @@ export namespace Prisma {
     id?: true
     teamId?: true
     userId?: true
+    role?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8292,6 +8798,7 @@ export namespace Prisma {
     id?: true
     teamId?: true
     userId?: true
+    role?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8373,6 +8880,7 @@ export namespace Prisma {
     id: string
     teamId: string
     userId: string
+    role: $Enums.TeamRole
     createdAt: Date
     updatedAt: Date
     _count: TeamMemberCountAggregateOutputType | null
@@ -8398,6 +8906,7 @@ export namespace Prisma {
     id?: boolean
     teamId?: boolean
     userId?: boolean
+    role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     team?: boolean | TeamDefaultArgs<ExtArgs>
@@ -8408,6 +8917,7 @@ export namespace Prisma {
     id?: boolean
     teamId?: boolean
     userId?: boolean
+    role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -8428,6 +8938,7 @@ export namespace Prisma {
       id: string
       teamId: string
       userId: string
+      role: $Enums.TeamRole
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["teamMember"]>
@@ -8830,6 +9341,7 @@ export namespace Prisma {
     readonly id: FieldRef<"TeamMember", 'String'>
     readonly teamId: FieldRef<"TeamMember", 'String'>
     readonly userId: FieldRef<"TeamMember", 'String'>
+    readonly role: FieldRef<"TeamMember", 'TeamRole'>
     readonly createdAt: FieldRef<"TeamMember", 'DateTime'>
     readonly updatedAt: FieldRef<"TeamMember", 'DateTime'>
   }
@@ -9160,6 +9672,979 @@ export namespace Prisma {
 
 
   /**
+   * Model TeamInviteToken
+   */
+
+  export type AggregateTeamInviteToken = {
+    _count: TeamInviteTokenCountAggregateOutputType | null
+    _min: TeamInviteTokenMinAggregateOutputType | null
+    _max: TeamInviteTokenMaxAggregateOutputType | null
+  }
+
+  export type TeamInviteTokenMinAggregateOutputType = {
+    id: string | null
+    token: string | null
+    teamId: string | null
+    inviteeEmail: string | null
+    role: $Enums.TeamRole | null
+    createdByUserId: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    usedByUserId: string | null
+    createdAt: Date | null
+  }
+
+  export type TeamInviteTokenMaxAggregateOutputType = {
+    id: string | null
+    token: string | null
+    teamId: string | null
+    inviteeEmail: string | null
+    role: $Enums.TeamRole | null
+    createdByUserId: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    usedByUserId: string | null
+    createdAt: Date | null
+  }
+
+  export type TeamInviteTokenCountAggregateOutputType = {
+    id: number
+    token: number
+    teamId: number
+    inviteeEmail: number
+    role: number
+    createdByUserId: number
+    expiresAt: number
+    usedAt: number
+    usedByUserId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TeamInviteTokenMinAggregateInputType = {
+    id?: true
+    token?: true
+    teamId?: true
+    inviteeEmail?: true
+    role?: true
+    createdByUserId?: true
+    expiresAt?: true
+    usedAt?: true
+    usedByUserId?: true
+    createdAt?: true
+  }
+
+  export type TeamInviteTokenMaxAggregateInputType = {
+    id?: true
+    token?: true
+    teamId?: true
+    inviteeEmail?: true
+    role?: true
+    createdByUserId?: true
+    expiresAt?: true
+    usedAt?: true
+    usedByUserId?: true
+    createdAt?: true
+  }
+
+  export type TeamInviteTokenCountAggregateInputType = {
+    id?: true
+    token?: true
+    teamId?: true
+    inviteeEmail?: true
+    role?: true
+    createdByUserId?: true
+    expiresAt?: true
+    usedAt?: true
+    usedByUserId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TeamInviteTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeamInviteToken to aggregate.
+     */
+    where?: TeamInviteTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamInviteTokens to fetch.
+     */
+    orderBy?: TeamInviteTokenOrderByWithRelationInput | TeamInviteTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TeamInviteTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamInviteTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamInviteTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TeamInviteTokens
+    **/
+    _count?: true | TeamInviteTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TeamInviteTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TeamInviteTokenMaxAggregateInputType
+  }
+
+  export type GetTeamInviteTokenAggregateType<T extends TeamInviteTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateTeamInviteToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTeamInviteToken[P]>
+      : GetScalarType<T[P], AggregateTeamInviteToken[P]>
+  }
+
+
+
+
+  export type TeamInviteTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeamInviteTokenWhereInput
+    orderBy?: TeamInviteTokenOrderByWithAggregationInput | TeamInviteTokenOrderByWithAggregationInput[]
+    by: TeamInviteTokenScalarFieldEnum[] | TeamInviteTokenScalarFieldEnum
+    having?: TeamInviteTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TeamInviteTokenCountAggregateInputType | true
+    _min?: TeamInviteTokenMinAggregateInputType
+    _max?: TeamInviteTokenMaxAggregateInputType
+  }
+
+  export type TeamInviteTokenGroupByOutputType = {
+    id: string
+    token: string
+    teamId: string
+    inviteeEmail: string
+    role: $Enums.TeamRole
+    createdByUserId: string
+    expiresAt: Date
+    usedAt: Date | null
+    usedByUserId: string | null
+    createdAt: Date
+    _count: TeamInviteTokenCountAggregateOutputType | null
+    _min: TeamInviteTokenMinAggregateOutputType | null
+    _max: TeamInviteTokenMaxAggregateOutputType | null
+  }
+
+  type GetTeamInviteTokenGroupByPayload<T extends TeamInviteTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TeamInviteTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TeamInviteTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TeamInviteTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], TeamInviteTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TeamInviteTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    teamId?: boolean
+    inviteeEmail?: boolean
+    role?: boolean
+    createdByUserId?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    usedByUserId?: boolean
+    createdAt?: boolean
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["teamInviteToken"]>
+
+  export type TeamInviteTokenSelectScalar = {
+    id?: boolean
+    token?: boolean
+    teamId?: boolean
+    inviteeEmail?: boolean
+    role?: boolean
+    createdByUserId?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    usedByUserId?: boolean
+    createdAt?: boolean
+  }
+
+  export type TeamInviteTokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }
+
+
+  export type $TeamInviteTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TeamInviteToken"
+    objects: {
+      team: Prisma.$TeamPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      token: string
+      teamId: string
+      inviteeEmail: string
+      role: $Enums.TeamRole
+      createdByUserId: string
+      expiresAt: Date
+      usedAt: Date | null
+      usedByUserId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["teamInviteToken"]>
+    composites: {}
+  }
+
+
+  type TeamInviteTokenGetPayload<S extends boolean | null | undefined | TeamInviteTokenDefaultArgs> = $Result.GetResult<Prisma.$TeamInviteTokenPayload, S>
+
+  type TeamInviteTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<TeamInviteTokenFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TeamInviteTokenCountAggregateInputType | true
+    }
+
+  export interface TeamInviteTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TeamInviteToken'], meta: { name: 'TeamInviteToken' } }
+    /**
+     * Find zero or one TeamInviteToken that matches the filter.
+     * @param {TeamInviteTokenFindUniqueArgs} args - Arguments to find a TeamInviteToken
+     * @example
+     * // Get one TeamInviteToken
+     * const teamInviteToken = await prisma.teamInviteToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends TeamInviteTokenFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamInviteTokenFindUniqueArgs<ExtArgs>>
+    ): Prisma__TeamInviteTokenClient<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one TeamInviteToken that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {TeamInviteTokenFindUniqueOrThrowArgs} args - Arguments to find a TeamInviteToken
+     * @example
+     * // Get one TeamInviteToken
+     * const teamInviteToken = await prisma.teamInviteToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends TeamInviteTokenFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamInviteTokenFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__TeamInviteTokenClient<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first TeamInviteToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamInviteTokenFindFirstArgs} args - Arguments to find a TeamInviteToken
+     * @example
+     * // Get one TeamInviteToken
+     * const teamInviteToken = await prisma.teamInviteToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends TeamInviteTokenFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamInviteTokenFindFirstArgs<ExtArgs>>
+    ): Prisma__TeamInviteTokenClient<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first TeamInviteToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamInviteTokenFindFirstOrThrowArgs} args - Arguments to find a TeamInviteToken
+     * @example
+     * // Get one TeamInviteToken
+     * const teamInviteToken = await prisma.teamInviteToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends TeamInviteTokenFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamInviteTokenFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__TeamInviteTokenClient<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more TeamInviteTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamInviteTokenFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TeamInviteTokens
+     * const teamInviteTokens = await prisma.teamInviteToken.findMany()
+     * 
+     * // Get first 10 TeamInviteTokens
+     * const teamInviteTokens = await prisma.teamInviteToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const teamInviteTokenWithIdOnly = await prisma.teamInviteToken.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends TeamInviteTokenFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamInviteTokenFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a TeamInviteToken.
+     * @param {TeamInviteTokenCreateArgs} args - Arguments to create a TeamInviteToken.
+     * @example
+     * // Create one TeamInviteToken
+     * const TeamInviteToken = await prisma.teamInviteToken.create({
+     *   data: {
+     *     // ... data to create a TeamInviteToken
+     *   }
+     * })
+     * 
+    **/
+    create<T extends TeamInviteTokenCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamInviteTokenCreateArgs<ExtArgs>>
+    ): Prisma__TeamInviteTokenClient<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many TeamInviteTokens.
+     *     @param {TeamInviteTokenCreateManyArgs} args - Arguments to create many TeamInviteTokens.
+     *     @example
+     *     // Create many TeamInviteTokens
+     *     const teamInviteToken = await prisma.teamInviteToken.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends TeamInviteTokenCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamInviteTokenCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a TeamInviteToken.
+     * @param {TeamInviteTokenDeleteArgs} args - Arguments to delete one TeamInviteToken.
+     * @example
+     * // Delete one TeamInviteToken
+     * const TeamInviteToken = await prisma.teamInviteToken.delete({
+     *   where: {
+     *     // ... filter to delete one TeamInviteToken
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends TeamInviteTokenDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamInviteTokenDeleteArgs<ExtArgs>>
+    ): Prisma__TeamInviteTokenClient<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one TeamInviteToken.
+     * @param {TeamInviteTokenUpdateArgs} args - Arguments to update one TeamInviteToken.
+     * @example
+     * // Update one TeamInviteToken
+     * const teamInviteToken = await prisma.teamInviteToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends TeamInviteTokenUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamInviteTokenUpdateArgs<ExtArgs>>
+    ): Prisma__TeamInviteTokenClient<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more TeamInviteTokens.
+     * @param {TeamInviteTokenDeleteManyArgs} args - Arguments to filter TeamInviteTokens to delete.
+     * @example
+     * // Delete a few TeamInviteTokens
+     * const { count } = await prisma.teamInviteToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends TeamInviteTokenDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamInviteTokenDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TeamInviteTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamInviteTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TeamInviteTokens
+     * const teamInviteToken = await prisma.teamInviteToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends TeamInviteTokenUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamInviteTokenUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TeamInviteToken.
+     * @param {TeamInviteTokenUpsertArgs} args - Arguments to update or create a TeamInviteToken.
+     * @example
+     * // Update or create a TeamInviteToken
+     * const teamInviteToken = await prisma.teamInviteToken.upsert({
+     *   create: {
+     *     // ... data to create a TeamInviteToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TeamInviteToken we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends TeamInviteTokenUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamInviteTokenUpsertArgs<ExtArgs>>
+    ): Prisma__TeamInviteTokenClient<$Result.GetResult<Prisma.$TeamInviteTokenPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of TeamInviteTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamInviteTokenCountArgs} args - Arguments to filter TeamInviteTokens to count.
+     * @example
+     * // Count the number of TeamInviteTokens
+     * const count = await prisma.teamInviteToken.count({
+     *   where: {
+     *     // ... the filter for the TeamInviteTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends TeamInviteTokenCountArgs>(
+      args?: Subset<T, TeamInviteTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TeamInviteTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TeamInviteToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamInviteTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TeamInviteTokenAggregateArgs>(args: Subset<T, TeamInviteTokenAggregateArgs>): Prisma.PrismaPromise<GetTeamInviteTokenAggregateType<T>>
+
+    /**
+     * Group by TeamInviteToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamInviteTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TeamInviteTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TeamInviteTokenGroupByArgs['orderBy'] }
+        : { orderBy?: TeamInviteTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TeamInviteTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTeamInviteTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TeamInviteToken model
+   */
+  readonly fields: TeamInviteTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TeamInviteToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TeamInviteTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    team<T extends TeamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeamDefaultArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the TeamInviteToken model
+   */ 
+  interface TeamInviteTokenFieldRefs {
+    readonly id: FieldRef<"TeamInviteToken", 'String'>
+    readonly token: FieldRef<"TeamInviteToken", 'String'>
+    readonly teamId: FieldRef<"TeamInviteToken", 'String'>
+    readonly inviteeEmail: FieldRef<"TeamInviteToken", 'String'>
+    readonly role: FieldRef<"TeamInviteToken", 'TeamRole'>
+    readonly createdByUserId: FieldRef<"TeamInviteToken", 'String'>
+    readonly expiresAt: FieldRef<"TeamInviteToken", 'DateTime'>
+    readonly usedAt: FieldRef<"TeamInviteToken", 'DateTime'>
+    readonly usedByUserId: FieldRef<"TeamInviteToken", 'String'>
+    readonly createdAt: FieldRef<"TeamInviteToken", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+
+  /**
+   * TeamInviteToken findUnique
+   */
+  export type TeamInviteTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamInviteToken to fetch.
+     */
+    where: TeamInviteTokenWhereUniqueInput
+  }
+
+
+  /**
+   * TeamInviteToken findUniqueOrThrow
+   */
+  export type TeamInviteTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamInviteToken to fetch.
+     */
+    where: TeamInviteTokenWhereUniqueInput
+  }
+
+
+  /**
+   * TeamInviteToken findFirst
+   */
+  export type TeamInviteTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamInviteToken to fetch.
+     */
+    where?: TeamInviteTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamInviteTokens to fetch.
+     */
+    orderBy?: TeamInviteTokenOrderByWithRelationInput | TeamInviteTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeamInviteTokens.
+     */
+    cursor?: TeamInviteTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamInviteTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamInviteTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeamInviteTokens.
+     */
+    distinct?: TeamInviteTokenScalarFieldEnum | TeamInviteTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * TeamInviteToken findFirstOrThrow
+   */
+  export type TeamInviteTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamInviteToken to fetch.
+     */
+    where?: TeamInviteTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamInviteTokens to fetch.
+     */
+    orderBy?: TeamInviteTokenOrderByWithRelationInput | TeamInviteTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeamInviteTokens.
+     */
+    cursor?: TeamInviteTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamInviteTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamInviteTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeamInviteTokens.
+     */
+    distinct?: TeamInviteTokenScalarFieldEnum | TeamInviteTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * TeamInviteToken findMany
+   */
+  export type TeamInviteTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamInviteTokens to fetch.
+     */
+    where?: TeamInviteTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamInviteTokens to fetch.
+     */
+    orderBy?: TeamInviteTokenOrderByWithRelationInput | TeamInviteTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TeamInviteTokens.
+     */
+    cursor?: TeamInviteTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamInviteTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamInviteTokens.
+     */
+    skip?: number
+    distinct?: TeamInviteTokenScalarFieldEnum | TeamInviteTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * TeamInviteToken create
+   */
+  export type TeamInviteTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TeamInviteToken.
+     */
+    data: XOR<TeamInviteTokenCreateInput, TeamInviteTokenUncheckedCreateInput>
+  }
+
+
+  /**
+   * TeamInviteToken createMany
+   */
+  export type TeamInviteTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TeamInviteTokens.
+     */
+    data: TeamInviteTokenCreateManyInput | TeamInviteTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * TeamInviteToken update
+   */
+  export type TeamInviteTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TeamInviteToken.
+     */
+    data: XOR<TeamInviteTokenUpdateInput, TeamInviteTokenUncheckedUpdateInput>
+    /**
+     * Choose, which TeamInviteToken to update.
+     */
+    where: TeamInviteTokenWhereUniqueInput
+  }
+
+
+  /**
+   * TeamInviteToken updateMany
+   */
+  export type TeamInviteTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TeamInviteTokens.
+     */
+    data: XOR<TeamInviteTokenUpdateManyMutationInput, TeamInviteTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which TeamInviteTokens to update
+     */
+    where?: TeamInviteTokenWhereInput
+  }
+
+
+  /**
+   * TeamInviteToken upsert
+   */
+  export type TeamInviteTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TeamInviteToken to update in case it exists.
+     */
+    where: TeamInviteTokenWhereUniqueInput
+    /**
+     * In case the TeamInviteToken found by the `where` argument doesn't exist, create a new TeamInviteToken with this data.
+     */
+    create: XOR<TeamInviteTokenCreateInput, TeamInviteTokenUncheckedCreateInput>
+    /**
+     * In case the TeamInviteToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TeamInviteTokenUpdateInput, TeamInviteTokenUncheckedUpdateInput>
+  }
+
+
+  /**
+   * TeamInviteToken delete
+   */
+  export type TeamInviteTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+    /**
+     * Filter which TeamInviteToken to delete.
+     */
+    where: TeamInviteTokenWhereUniqueInput
+  }
+
+
+  /**
+   * TeamInviteToken deleteMany
+   */
+  export type TeamInviteTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeamInviteTokens to delete
+     */
+    where?: TeamInviteTokenWhereInput
+  }
+
+
+  /**
+   * TeamInviteToken without action
+   */
+  export type TeamInviteTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamInviteToken
+     */
+    select?: TeamInviteTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamInviteTokenInclude<ExtArgs> | null
+  }
+
+
+
+  /**
    * Model Project
    */
 
@@ -9180,6 +10665,7 @@ export namespace Prisma {
     lastOpenedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ProjectMaxAggregateOutputType = {
@@ -9193,6 +10679,7 @@ export namespace Prisma {
     lastOpenedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ProjectCountAggregateOutputType = {
@@ -9206,6 +10693,7 @@ export namespace Prisma {
     lastOpenedAt: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -9221,6 +10709,7 @@ export namespace Prisma {
     lastOpenedAt?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type ProjectMaxAggregateInputType = {
@@ -9234,6 +10723,7 @@ export namespace Prisma {
     lastOpenedAt?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type ProjectCountAggregateInputType = {
@@ -9247,6 +10737,7 @@ export namespace Prisma {
     lastOpenedAt?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -9333,6 +10824,7 @@ export namespace Prisma {
     lastOpenedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: ProjectCountAggregateOutputType | null
     _min: ProjectMinAggregateOutputType | null
     _max: ProjectMaxAggregateOutputType | null
@@ -9363,6 +10855,7 @@ export namespace Prisma {
     lastOpenedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     team?: boolean | TeamDefaultArgs<ExtArgs>
     members?: boolean | Project$membersArgs<ExtArgs>
     publishedAsset?: boolean | Project$publishedAssetArgs<ExtArgs>
@@ -9382,6 +10875,7 @@ export namespace Prisma {
     lastOpenedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9414,6 +10908,7 @@ export namespace Prisma {
       lastOpenedAt: Date | null
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["project"]>
     composites: {}
   }
@@ -9827,6 +11322,7 @@ export namespace Prisma {
     readonly lastOpenedAt: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
+    readonly deletedAt: FieldRef<"Project", 'DateTime'>
   }
     
 
@@ -14967,6 +16463,876 @@ export namespace Prisma {
 
 
   /**
+   * Model EmailVerificationToken
+   */
+
+  export type AggregateEmailVerificationToken = {
+    _count: EmailVerificationTokenCountAggregateOutputType | null
+    _min: EmailVerificationTokenMinAggregateOutputType | null
+    _max: EmailVerificationTokenMaxAggregateOutputType | null
+  }
+
+  export type EmailVerificationTokenMinAggregateOutputType = {
+    id: string | null
+    token: string | null
+    email: string | null
+    expiresAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type EmailVerificationTokenMaxAggregateOutputType = {
+    id: string | null
+    token: string | null
+    email: string | null
+    expiresAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type EmailVerificationTokenCountAggregateOutputType = {
+    id: number
+    token: number
+    email: number
+    expiresAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type EmailVerificationTokenMinAggregateInputType = {
+    id?: true
+    token?: true
+    email?: true
+    expiresAt?: true
+    createdAt?: true
+  }
+
+  export type EmailVerificationTokenMaxAggregateInputType = {
+    id?: true
+    token?: true
+    email?: true
+    expiresAt?: true
+    createdAt?: true
+  }
+
+  export type EmailVerificationTokenCountAggregateInputType = {
+    id?: true
+    token?: true
+    email?: true
+    expiresAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type EmailVerificationTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailVerificationToken to aggregate.
+     */
+    where?: EmailVerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailVerificationTokens to fetch.
+     */
+    orderBy?: EmailVerificationTokenOrderByWithRelationInput | EmailVerificationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EmailVerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailVerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailVerificationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EmailVerificationTokens
+    **/
+    _count?: true | EmailVerificationTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EmailVerificationTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EmailVerificationTokenMaxAggregateInputType
+  }
+
+  export type GetEmailVerificationTokenAggregateType<T extends EmailVerificationTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateEmailVerificationToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEmailVerificationToken[P]>
+      : GetScalarType<T[P], AggregateEmailVerificationToken[P]>
+  }
+
+
+
+
+  export type EmailVerificationTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailVerificationTokenWhereInput
+    orderBy?: EmailVerificationTokenOrderByWithAggregationInput | EmailVerificationTokenOrderByWithAggregationInput[]
+    by: EmailVerificationTokenScalarFieldEnum[] | EmailVerificationTokenScalarFieldEnum
+    having?: EmailVerificationTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EmailVerificationTokenCountAggregateInputType | true
+    _min?: EmailVerificationTokenMinAggregateInputType
+    _max?: EmailVerificationTokenMaxAggregateInputType
+  }
+
+  export type EmailVerificationTokenGroupByOutputType = {
+    id: string
+    token: string
+    email: string
+    expiresAt: Date
+    createdAt: Date
+    _count: EmailVerificationTokenCountAggregateOutputType | null
+    _min: EmailVerificationTokenMinAggregateOutputType | null
+    _max: EmailVerificationTokenMaxAggregateOutputType | null
+  }
+
+  type GetEmailVerificationTokenGroupByPayload<T extends EmailVerificationTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EmailVerificationTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EmailVerificationTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EmailVerificationTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], EmailVerificationTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EmailVerificationTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    email?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["emailVerificationToken"]>
+
+  export type EmailVerificationTokenSelectScalar = {
+    id?: boolean
+    token?: boolean
+    email?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+  }
+
+
+  export type $EmailVerificationTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EmailVerificationToken"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      token: string
+      email: string
+      expiresAt: Date
+      createdAt: Date
+    }, ExtArgs["result"]["emailVerificationToken"]>
+    composites: {}
+  }
+
+
+  type EmailVerificationTokenGetPayload<S extends boolean | null | undefined | EmailVerificationTokenDefaultArgs> = $Result.GetResult<Prisma.$EmailVerificationTokenPayload, S>
+
+  type EmailVerificationTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<EmailVerificationTokenFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: EmailVerificationTokenCountAggregateInputType | true
+    }
+
+  export interface EmailVerificationTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EmailVerificationToken'], meta: { name: 'EmailVerificationToken' } }
+    /**
+     * Find zero or one EmailVerificationToken that matches the filter.
+     * @param {EmailVerificationTokenFindUniqueArgs} args - Arguments to find a EmailVerificationToken
+     * @example
+     * // Get one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends EmailVerificationTokenFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenFindUniqueArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one EmailVerificationToken that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {EmailVerificationTokenFindUniqueOrThrowArgs} args - Arguments to find a EmailVerificationToken
+     * @example
+     * // Get one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends EmailVerificationTokenFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first EmailVerificationToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenFindFirstArgs} args - Arguments to find a EmailVerificationToken
+     * @example
+     * // Get one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends EmailVerificationTokenFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenFindFirstArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first EmailVerificationToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenFindFirstOrThrowArgs} args - Arguments to find a EmailVerificationToken
+     * @example
+     * // Get one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends EmailVerificationTokenFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more EmailVerificationTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EmailVerificationTokens
+     * const emailVerificationTokens = await prisma.emailVerificationToken.findMany()
+     * 
+     * // Get first 10 EmailVerificationTokens
+     * const emailVerificationTokens = await prisma.emailVerificationToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const emailVerificationTokenWithIdOnly = await prisma.emailVerificationToken.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends EmailVerificationTokenFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a EmailVerificationToken.
+     * @param {EmailVerificationTokenCreateArgs} args - Arguments to create a EmailVerificationToken.
+     * @example
+     * // Create one EmailVerificationToken
+     * const EmailVerificationToken = await prisma.emailVerificationToken.create({
+     *   data: {
+     *     // ... data to create a EmailVerificationToken
+     *   }
+     * })
+     * 
+    **/
+    create<T extends EmailVerificationTokenCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenCreateArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many EmailVerificationTokens.
+     *     @param {EmailVerificationTokenCreateManyArgs} args - Arguments to create many EmailVerificationTokens.
+     *     @example
+     *     // Create many EmailVerificationTokens
+     *     const emailVerificationToken = await prisma.emailVerificationToken.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends EmailVerificationTokenCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a EmailVerificationToken.
+     * @param {EmailVerificationTokenDeleteArgs} args - Arguments to delete one EmailVerificationToken.
+     * @example
+     * // Delete one EmailVerificationToken
+     * const EmailVerificationToken = await prisma.emailVerificationToken.delete({
+     *   where: {
+     *     // ... filter to delete one EmailVerificationToken
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends EmailVerificationTokenDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenDeleteArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one EmailVerificationToken.
+     * @param {EmailVerificationTokenUpdateArgs} args - Arguments to update one EmailVerificationToken.
+     * @example
+     * // Update one EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends EmailVerificationTokenUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenUpdateArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more EmailVerificationTokens.
+     * @param {EmailVerificationTokenDeleteManyArgs} args - Arguments to filter EmailVerificationTokens to delete.
+     * @example
+     * // Delete a few EmailVerificationTokens
+     * const { count } = await prisma.emailVerificationToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends EmailVerificationTokenDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, EmailVerificationTokenDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmailVerificationTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EmailVerificationTokens
+     * const emailVerificationToken = await prisma.emailVerificationToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends EmailVerificationTokenUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one EmailVerificationToken.
+     * @param {EmailVerificationTokenUpsertArgs} args - Arguments to update or create a EmailVerificationToken.
+     * @example
+     * // Update or create a EmailVerificationToken
+     * const emailVerificationToken = await prisma.emailVerificationToken.upsert({
+     *   create: {
+     *     // ... data to create a EmailVerificationToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EmailVerificationToken we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends EmailVerificationTokenUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, EmailVerificationTokenUpsertArgs<ExtArgs>>
+    ): Prisma__EmailVerificationTokenClient<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of EmailVerificationTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenCountArgs} args - Arguments to filter EmailVerificationTokens to count.
+     * @example
+     * // Count the number of EmailVerificationTokens
+     * const count = await prisma.emailVerificationToken.count({
+     *   where: {
+     *     // ... the filter for the EmailVerificationTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends EmailVerificationTokenCountArgs>(
+      args?: Subset<T, EmailVerificationTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EmailVerificationTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EmailVerificationToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EmailVerificationTokenAggregateArgs>(args: Subset<T, EmailVerificationTokenAggregateArgs>): Prisma.PrismaPromise<GetEmailVerificationTokenAggregateType<T>>
+
+    /**
+     * Group by EmailVerificationToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailVerificationTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EmailVerificationTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EmailVerificationTokenGroupByArgs['orderBy'] }
+        : { orderBy?: EmailVerificationTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EmailVerificationTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEmailVerificationTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EmailVerificationToken model
+   */
+  readonly fields: EmailVerificationTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EmailVerificationToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EmailVerificationTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the EmailVerificationToken model
+   */ 
+  interface EmailVerificationTokenFieldRefs {
+    readonly id: FieldRef<"EmailVerificationToken", 'String'>
+    readonly token: FieldRef<"EmailVerificationToken", 'String'>
+    readonly email: FieldRef<"EmailVerificationToken", 'String'>
+    readonly expiresAt: FieldRef<"EmailVerificationToken", 'DateTime'>
+    readonly createdAt: FieldRef<"EmailVerificationToken", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+
+  /**
+   * EmailVerificationToken findUnique
+   */
+  export type EmailVerificationTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationToken to fetch.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * EmailVerificationToken findUniqueOrThrow
+   */
+  export type EmailVerificationTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationToken to fetch.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * EmailVerificationToken findFirst
+   */
+  export type EmailVerificationTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationToken to fetch.
+     */
+    where?: EmailVerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailVerificationTokens to fetch.
+     */
+    orderBy?: EmailVerificationTokenOrderByWithRelationInput | EmailVerificationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailVerificationTokens.
+     */
+    cursor?: EmailVerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailVerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailVerificationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailVerificationTokens.
+     */
+    distinct?: EmailVerificationTokenScalarFieldEnum | EmailVerificationTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * EmailVerificationToken findFirstOrThrow
+   */
+  export type EmailVerificationTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationToken to fetch.
+     */
+    where?: EmailVerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailVerificationTokens to fetch.
+     */
+    orderBy?: EmailVerificationTokenOrderByWithRelationInput | EmailVerificationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailVerificationTokens.
+     */
+    cursor?: EmailVerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailVerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailVerificationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailVerificationTokens.
+     */
+    distinct?: EmailVerificationTokenScalarFieldEnum | EmailVerificationTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * EmailVerificationToken findMany
+   */
+  export type EmailVerificationTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter, which EmailVerificationTokens to fetch.
+     */
+    where?: EmailVerificationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailVerificationTokens to fetch.
+     */
+    orderBy?: EmailVerificationTokenOrderByWithRelationInput | EmailVerificationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EmailVerificationTokens.
+     */
+    cursor?: EmailVerificationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailVerificationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailVerificationTokens.
+     */
+    skip?: number
+    distinct?: EmailVerificationTokenScalarFieldEnum | EmailVerificationTokenScalarFieldEnum[]
+  }
+
+
+  /**
+   * EmailVerificationToken create
+   */
+  export type EmailVerificationTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * The data needed to create a EmailVerificationToken.
+     */
+    data: XOR<EmailVerificationTokenCreateInput, EmailVerificationTokenUncheckedCreateInput>
+  }
+
+
+  /**
+   * EmailVerificationToken createMany
+   */
+  export type EmailVerificationTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EmailVerificationTokens.
+     */
+    data: EmailVerificationTokenCreateManyInput | EmailVerificationTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * EmailVerificationToken update
+   */
+  export type EmailVerificationTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * The data needed to update a EmailVerificationToken.
+     */
+    data: XOR<EmailVerificationTokenUpdateInput, EmailVerificationTokenUncheckedUpdateInput>
+    /**
+     * Choose, which EmailVerificationToken to update.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * EmailVerificationToken updateMany
+   */
+  export type EmailVerificationTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EmailVerificationTokens.
+     */
+    data: XOR<EmailVerificationTokenUpdateManyMutationInput, EmailVerificationTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which EmailVerificationTokens to update
+     */
+    where?: EmailVerificationTokenWhereInput
+  }
+
+
+  /**
+   * EmailVerificationToken upsert
+   */
+  export type EmailVerificationTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * The filter to search for the EmailVerificationToken to update in case it exists.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+    /**
+     * In case the EmailVerificationToken found by the `where` argument doesn't exist, create a new EmailVerificationToken with this data.
+     */
+    create: XOR<EmailVerificationTokenCreateInput, EmailVerificationTokenUncheckedCreateInput>
+    /**
+     * In case the EmailVerificationToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EmailVerificationTokenUpdateInput, EmailVerificationTokenUncheckedUpdateInput>
+  }
+
+
+  /**
+   * EmailVerificationToken delete
+   */
+  export type EmailVerificationTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+    /**
+     * Filter which EmailVerificationToken to delete.
+     */
+    where: EmailVerificationTokenWhereUniqueInput
+  }
+
+
+  /**
+   * EmailVerificationToken deleteMany
+   */
+  export type EmailVerificationTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailVerificationTokens to delete
+     */
+    where?: EmailVerificationTokenWhereInput
+  }
+
+
+  /**
+   * EmailVerificationToken without action
+   */
+  export type EmailVerificationTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailVerificationToken
+     */
+    select?: EmailVerificationTokenSelect<ExtArgs> | null
+  }
+
+
+
+  /**
    * Model StarredProject
    */
 
@@ -15868,6 +18234,1867 @@ export namespace Prisma {
 
 
   /**
+   * Model TeamAuditLog
+   */
+
+  export type AggregateTeamAuditLog = {
+    _count: TeamAuditLogCountAggregateOutputType | null
+    _min: TeamAuditLogMinAggregateOutputType | null
+    _max: TeamAuditLogMaxAggregateOutputType | null
+  }
+
+  export type TeamAuditLogMinAggregateOutputType = {
+    id: string | null
+    teamId: string | null
+    actorId: string | null
+    targetId: string | null
+    event: $Enums.AuditEventType | null
+    createdAt: Date | null
+  }
+
+  export type TeamAuditLogMaxAggregateOutputType = {
+    id: string | null
+    teamId: string | null
+    actorId: string | null
+    targetId: string | null
+    event: $Enums.AuditEventType | null
+    createdAt: Date | null
+  }
+
+  export type TeamAuditLogCountAggregateOutputType = {
+    id: number
+    teamId: number
+    actorId: number
+    targetId: number
+    event: number
+    meta: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TeamAuditLogMinAggregateInputType = {
+    id?: true
+    teamId?: true
+    actorId?: true
+    targetId?: true
+    event?: true
+    createdAt?: true
+  }
+
+  export type TeamAuditLogMaxAggregateInputType = {
+    id?: true
+    teamId?: true
+    actorId?: true
+    targetId?: true
+    event?: true
+    createdAt?: true
+  }
+
+  export type TeamAuditLogCountAggregateInputType = {
+    id?: true
+    teamId?: true
+    actorId?: true
+    targetId?: true
+    event?: true
+    meta?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TeamAuditLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeamAuditLog to aggregate.
+     */
+    where?: TeamAuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamAuditLogs to fetch.
+     */
+    orderBy?: TeamAuditLogOrderByWithRelationInput | TeamAuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TeamAuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamAuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamAuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TeamAuditLogs
+    **/
+    _count?: true | TeamAuditLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TeamAuditLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TeamAuditLogMaxAggregateInputType
+  }
+
+  export type GetTeamAuditLogAggregateType<T extends TeamAuditLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateTeamAuditLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTeamAuditLog[P]>
+      : GetScalarType<T[P], AggregateTeamAuditLog[P]>
+  }
+
+
+
+
+  export type TeamAuditLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TeamAuditLogWhereInput
+    orderBy?: TeamAuditLogOrderByWithAggregationInput | TeamAuditLogOrderByWithAggregationInput[]
+    by: TeamAuditLogScalarFieldEnum[] | TeamAuditLogScalarFieldEnum
+    having?: TeamAuditLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TeamAuditLogCountAggregateInputType | true
+    _min?: TeamAuditLogMinAggregateInputType
+    _max?: TeamAuditLogMaxAggregateInputType
+  }
+
+  export type TeamAuditLogGroupByOutputType = {
+    id: string
+    teamId: string
+    actorId: string | null
+    targetId: string | null
+    event: $Enums.AuditEventType
+    meta: JsonValue
+    createdAt: Date
+    _count: TeamAuditLogCountAggregateOutputType | null
+    _min: TeamAuditLogMinAggregateOutputType | null
+    _max: TeamAuditLogMaxAggregateOutputType | null
+  }
+
+  type GetTeamAuditLogGroupByPayload<T extends TeamAuditLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TeamAuditLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TeamAuditLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TeamAuditLogGroupByOutputType[P]>
+            : GetScalarType<T[P], TeamAuditLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TeamAuditLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    teamId?: boolean
+    actorId?: boolean
+    targetId?: boolean
+    event?: boolean
+    meta?: boolean
+    createdAt?: boolean
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["teamAuditLog"]>
+
+  export type TeamAuditLogSelectScalar = {
+    id?: boolean
+    teamId?: boolean
+    actorId?: boolean
+    targetId?: boolean
+    event?: boolean
+    meta?: boolean
+    createdAt?: boolean
+  }
+
+  export type TeamAuditLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    team?: boolean | TeamDefaultArgs<ExtArgs>
+  }
+
+
+  export type $TeamAuditLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TeamAuditLog"
+    objects: {
+      team: Prisma.$TeamPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      teamId: string
+      actorId: string | null
+      targetId: string | null
+      event: $Enums.AuditEventType
+      meta: Prisma.JsonValue
+      createdAt: Date
+    }, ExtArgs["result"]["teamAuditLog"]>
+    composites: {}
+  }
+
+
+  type TeamAuditLogGetPayload<S extends boolean | null | undefined | TeamAuditLogDefaultArgs> = $Result.GetResult<Prisma.$TeamAuditLogPayload, S>
+
+  type TeamAuditLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<TeamAuditLogFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TeamAuditLogCountAggregateInputType | true
+    }
+
+  export interface TeamAuditLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TeamAuditLog'], meta: { name: 'TeamAuditLog' } }
+    /**
+     * Find zero or one TeamAuditLog that matches the filter.
+     * @param {TeamAuditLogFindUniqueArgs} args - Arguments to find a TeamAuditLog
+     * @example
+     * // Get one TeamAuditLog
+     * const teamAuditLog = await prisma.teamAuditLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends TeamAuditLogFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamAuditLogFindUniqueArgs<ExtArgs>>
+    ): Prisma__TeamAuditLogClient<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one TeamAuditLog that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {TeamAuditLogFindUniqueOrThrowArgs} args - Arguments to find a TeamAuditLog
+     * @example
+     * // Get one TeamAuditLog
+     * const teamAuditLog = await prisma.teamAuditLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends TeamAuditLogFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamAuditLogFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__TeamAuditLogClient<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first TeamAuditLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamAuditLogFindFirstArgs} args - Arguments to find a TeamAuditLog
+     * @example
+     * // Get one TeamAuditLog
+     * const teamAuditLog = await prisma.teamAuditLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends TeamAuditLogFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamAuditLogFindFirstArgs<ExtArgs>>
+    ): Prisma__TeamAuditLogClient<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first TeamAuditLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamAuditLogFindFirstOrThrowArgs} args - Arguments to find a TeamAuditLog
+     * @example
+     * // Get one TeamAuditLog
+     * const teamAuditLog = await prisma.teamAuditLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends TeamAuditLogFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamAuditLogFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__TeamAuditLogClient<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more TeamAuditLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamAuditLogFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TeamAuditLogs
+     * const teamAuditLogs = await prisma.teamAuditLog.findMany()
+     * 
+     * // Get first 10 TeamAuditLogs
+     * const teamAuditLogs = await prisma.teamAuditLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const teamAuditLogWithIdOnly = await prisma.teamAuditLog.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends TeamAuditLogFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamAuditLogFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a TeamAuditLog.
+     * @param {TeamAuditLogCreateArgs} args - Arguments to create a TeamAuditLog.
+     * @example
+     * // Create one TeamAuditLog
+     * const TeamAuditLog = await prisma.teamAuditLog.create({
+     *   data: {
+     *     // ... data to create a TeamAuditLog
+     *   }
+     * })
+     * 
+    **/
+    create<T extends TeamAuditLogCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamAuditLogCreateArgs<ExtArgs>>
+    ): Prisma__TeamAuditLogClient<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many TeamAuditLogs.
+     *     @param {TeamAuditLogCreateManyArgs} args - Arguments to create many TeamAuditLogs.
+     *     @example
+     *     // Create many TeamAuditLogs
+     *     const teamAuditLog = await prisma.teamAuditLog.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends TeamAuditLogCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamAuditLogCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a TeamAuditLog.
+     * @param {TeamAuditLogDeleteArgs} args - Arguments to delete one TeamAuditLog.
+     * @example
+     * // Delete one TeamAuditLog
+     * const TeamAuditLog = await prisma.teamAuditLog.delete({
+     *   where: {
+     *     // ... filter to delete one TeamAuditLog
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends TeamAuditLogDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamAuditLogDeleteArgs<ExtArgs>>
+    ): Prisma__TeamAuditLogClient<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one TeamAuditLog.
+     * @param {TeamAuditLogUpdateArgs} args - Arguments to update one TeamAuditLog.
+     * @example
+     * // Update one TeamAuditLog
+     * const teamAuditLog = await prisma.teamAuditLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends TeamAuditLogUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamAuditLogUpdateArgs<ExtArgs>>
+    ): Prisma__TeamAuditLogClient<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more TeamAuditLogs.
+     * @param {TeamAuditLogDeleteManyArgs} args - Arguments to filter TeamAuditLogs to delete.
+     * @example
+     * // Delete a few TeamAuditLogs
+     * const { count } = await prisma.teamAuditLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends TeamAuditLogDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, TeamAuditLogDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TeamAuditLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamAuditLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TeamAuditLogs
+     * const teamAuditLog = await prisma.teamAuditLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends TeamAuditLogUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamAuditLogUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TeamAuditLog.
+     * @param {TeamAuditLogUpsertArgs} args - Arguments to update or create a TeamAuditLog.
+     * @example
+     * // Update or create a TeamAuditLog
+     * const teamAuditLog = await prisma.teamAuditLog.upsert({
+     *   create: {
+     *     // ... data to create a TeamAuditLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TeamAuditLog we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends TeamAuditLogUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, TeamAuditLogUpsertArgs<ExtArgs>>
+    ): Prisma__TeamAuditLogClient<$Result.GetResult<Prisma.$TeamAuditLogPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of TeamAuditLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamAuditLogCountArgs} args - Arguments to filter TeamAuditLogs to count.
+     * @example
+     * // Count the number of TeamAuditLogs
+     * const count = await prisma.teamAuditLog.count({
+     *   where: {
+     *     // ... the filter for the TeamAuditLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends TeamAuditLogCountArgs>(
+      args?: Subset<T, TeamAuditLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TeamAuditLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TeamAuditLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamAuditLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TeamAuditLogAggregateArgs>(args: Subset<T, TeamAuditLogAggregateArgs>): Prisma.PrismaPromise<GetTeamAuditLogAggregateType<T>>
+
+    /**
+     * Group by TeamAuditLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TeamAuditLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TeamAuditLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TeamAuditLogGroupByArgs['orderBy'] }
+        : { orderBy?: TeamAuditLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TeamAuditLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTeamAuditLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TeamAuditLog model
+   */
+  readonly fields: TeamAuditLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TeamAuditLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TeamAuditLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    team<T extends TeamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeamDefaultArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the TeamAuditLog model
+   */ 
+  interface TeamAuditLogFieldRefs {
+    readonly id: FieldRef<"TeamAuditLog", 'String'>
+    readonly teamId: FieldRef<"TeamAuditLog", 'String'>
+    readonly actorId: FieldRef<"TeamAuditLog", 'String'>
+    readonly targetId: FieldRef<"TeamAuditLog", 'String'>
+    readonly event: FieldRef<"TeamAuditLog", 'AuditEventType'>
+    readonly meta: FieldRef<"TeamAuditLog", 'Json'>
+    readonly createdAt: FieldRef<"TeamAuditLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+
+  /**
+   * TeamAuditLog findUnique
+   */
+  export type TeamAuditLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamAuditLog to fetch.
+     */
+    where: TeamAuditLogWhereUniqueInput
+  }
+
+
+  /**
+   * TeamAuditLog findUniqueOrThrow
+   */
+  export type TeamAuditLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamAuditLog to fetch.
+     */
+    where: TeamAuditLogWhereUniqueInput
+  }
+
+
+  /**
+   * TeamAuditLog findFirst
+   */
+  export type TeamAuditLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamAuditLog to fetch.
+     */
+    where?: TeamAuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamAuditLogs to fetch.
+     */
+    orderBy?: TeamAuditLogOrderByWithRelationInput | TeamAuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeamAuditLogs.
+     */
+    cursor?: TeamAuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamAuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamAuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeamAuditLogs.
+     */
+    distinct?: TeamAuditLogScalarFieldEnum | TeamAuditLogScalarFieldEnum[]
+  }
+
+
+  /**
+   * TeamAuditLog findFirstOrThrow
+   */
+  export type TeamAuditLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamAuditLog to fetch.
+     */
+    where?: TeamAuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamAuditLogs to fetch.
+     */
+    orderBy?: TeamAuditLogOrderByWithRelationInput | TeamAuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TeamAuditLogs.
+     */
+    cursor?: TeamAuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamAuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamAuditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TeamAuditLogs.
+     */
+    distinct?: TeamAuditLogScalarFieldEnum | TeamAuditLogScalarFieldEnum[]
+  }
+
+
+  /**
+   * TeamAuditLog findMany
+   */
+  export type TeamAuditLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * Filter, which TeamAuditLogs to fetch.
+     */
+    where?: TeamAuditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TeamAuditLogs to fetch.
+     */
+    orderBy?: TeamAuditLogOrderByWithRelationInput | TeamAuditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TeamAuditLogs.
+     */
+    cursor?: TeamAuditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TeamAuditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TeamAuditLogs.
+     */
+    skip?: number
+    distinct?: TeamAuditLogScalarFieldEnum | TeamAuditLogScalarFieldEnum[]
+  }
+
+
+  /**
+   * TeamAuditLog create
+   */
+  export type TeamAuditLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TeamAuditLog.
+     */
+    data: XOR<TeamAuditLogCreateInput, TeamAuditLogUncheckedCreateInput>
+  }
+
+
+  /**
+   * TeamAuditLog createMany
+   */
+  export type TeamAuditLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TeamAuditLogs.
+     */
+    data: TeamAuditLogCreateManyInput | TeamAuditLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * TeamAuditLog update
+   */
+  export type TeamAuditLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TeamAuditLog.
+     */
+    data: XOR<TeamAuditLogUpdateInput, TeamAuditLogUncheckedUpdateInput>
+    /**
+     * Choose, which TeamAuditLog to update.
+     */
+    where: TeamAuditLogWhereUniqueInput
+  }
+
+
+  /**
+   * TeamAuditLog updateMany
+   */
+  export type TeamAuditLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TeamAuditLogs.
+     */
+    data: XOR<TeamAuditLogUpdateManyMutationInput, TeamAuditLogUncheckedUpdateManyInput>
+    /**
+     * Filter which TeamAuditLogs to update
+     */
+    where?: TeamAuditLogWhereInput
+  }
+
+
+  /**
+   * TeamAuditLog upsert
+   */
+  export type TeamAuditLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TeamAuditLog to update in case it exists.
+     */
+    where: TeamAuditLogWhereUniqueInput
+    /**
+     * In case the TeamAuditLog found by the `where` argument doesn't exist, create a new TeamAuditLog with this data.
+     */
+    create: XOR<TeamAuditLogCreateInput, TeamAuditLogUncheckedCreateInput>
+    /**
+     * In case the TeamAuditLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TeamAuditLogUpdateInput, TeamAuditLogUncheckedUpdateInput>
+  }
+
+
+  /**
+   * TeamAuditLog delete
+   */
+  export type TeamAuditLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+    /**
+     * Filter which TeamAuditLog to delete.
+     */
+    where: TeamAuditLogWhereUniqueInput
+  }
+
+
+  /**
+   * TeamAuditLog deleteMany
+   */
+  export type TeamAuditLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TeamAuditLogs to delete
+     */
+    where?: TeamAuditLogWhereInput
+  }
+
+
+  /**
+   * TeamAuditLog without action
+   */
+  export type TeamAuditLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TeamAuditLog
+     */
+    select?: TeamAuditLogSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: TeamAuditLogInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model Notification
+   */
+
+  export type AggregateNotification = {
+    _count: NotificationCountAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  export type NotificationMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.NotificationType | null
+    readAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type NotificationMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.NotificationType | null
+    readAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type NotificationCountAggregateOutputType = {
+    id: number
+    userId: number
+    type: number
+    meta: number
+    readAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type NotificationMinAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    readAt?: true
+    createdAt?: true
+  }
+
+  export type NotificationMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    readAt?: true
+    createdAt?: true
+  }
+
+  export type NotificationCountAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    meta?: true
+    readAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type NotificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notification to aggregate.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Notifications
+    **/
+    _count?: true | NotificationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NotificationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type GetNotificationAggregateType<T extends NotificationAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotification]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotification[P]>
+      : GetScalarType<T[P], AggregateNotification[P]>
+  }
+
+
+
+
+  export type NotificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithAggregationInput | NotificationOrderByWithAggregationInput[]
+    by: NotificationScalarFieldEnum[] | NotificationScalarFieldEnum
+    having?: NotificationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NotificationCountAggregateInputType | true
+    _min?: NotificationMinAggregateInputType
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type NotificationGroupByOutputType = {
+    id: string
+    userId: string
+    type: $Enums.NotificationType
+    meta: JsonValue
+    readAt: Date | null
+    createdAt: Date
+    _count: NotificationCountAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  type GetNotificationGroupByPayload<T extends NotificationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NotificationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NotificationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+            : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    meta?: boolean
+    readAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notification"]>
+
+  export type NotificationSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    meta?: boolean
+    readAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+
+  export type $NotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Notification"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      type: $Enums.NotificationType
+      meta: Prisma.JsonValue
+      readAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["notification"]>
+    composites: {}
+  }
+
+
+  type NotificationGetPayload<S extends boolean | null | undefined | NotificationDefaultArgs> = $Result.GetResult<Prisma.$NotificationPayload, S>
+
+  type NotificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<NotificationFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: NotificationCountAggregateInputType | true
+    }
+
+  export interface NotificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Notification'], meta: { name: 'Notification' } }
+    /**
+     * Find zero or one Notification that matches the filter.
+     * @param {NotificationFindUniqueArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends NotificationFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, NotificationFindUniqueArgs<ExtArgs>>
+    ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one Notification that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {NotificationFindUniqueOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends NotificationFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, NotificationFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first Notification that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends NotificationFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, NotificationFindFirstArgs<ExtArgs>>
+    ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first Notification that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends NotificationFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, NotificationFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more Notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notifications
+     * const notifications = await prisma.notification.findMany()
+     * 
+     * // Get first 10 Notifications
+     * const notifications = await prisma.notification.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const notificationWithIdOnly = await prisma.notification.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends NotificationFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, NotificationFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a Notification.
+     * @param {NotificationCreateArgs} args - Arguments to create a Notification.
+     * @example
+     * // Create one Notification
+     * const Notification = await prisma.notification.create({
+     *   data: {
+     *     // ... data to create a Notification
+     *   }
+     * })
+     * 
+    **/
+    create<T extends NotificationCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, NotificationCreateArgs<ExtArgs>>
+    ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many Notifications.
+     *     @param {NotificationCreateManyArgs} args - Arguments to create many Notifications.
+     *     @example
+     *     // Create many Notifications
+     *     const notification = await prisma.notification.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends NotificationCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, NotificationCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Notification.
+     * @param {NotificationDeleteArgs} args - Arguments to delete one Notification.
+     * @example
+     * // Delete one Notification
+     * const Notification = await prisma.notification.delete({
+     *   where: {
+     *     // ... filter to delete one Notification
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends NotificationDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, NotificationDeleteArgs<ExtArgs>>
+    ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one Notification.
+     * @param {NotificationUpdateArgs} args - Arguments to update one Notification.
+     * @example
+     * // Update one Notification
+     * const notification = await prisma.notification.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends NotificationUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, NotificationUpdateArgs<ExtArgs>>
+    ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Notifications.
+     * @param {NotificationDeleteManyArgs} args - Arguments to filter Notifications to delete.
+     * @example
+     * // Delete a few Notifications
+     * const { count } = await prisma.notification.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends NotificationDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, NotificationDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notifications
+     * const notification = await prisma.notification.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends NotificationUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, NotificationUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Notification.
+     * @param {NotificationUpsertArgs} args - Arguments to update or create a Notification.
+     * @example
+     * // Update or create a Notification
+     * const notification = await prisma.notification.upsert({
+     *   create: {
+     *     // ... data to create a Notification
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notification we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends NotificationUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, NotificationUpsertArgs<ExtArgs>>
+    ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationCountArgs} args - Arguments to filter Notifications to count.
+     * @example
+     * // Count the number of Notifications
+     * const count = await prisma.notification.count({
+     *   where: {
+     *     // ... the filter for the Notifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends NotificationCountArgs>(
+      args?: Subset<T, NotificationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NotificationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NotificationAggregateArgs>(args: Subset<T, NotificationAggregateArgs>): Prisma.PrismaPromise<GetNotificationAggregateType<T>>
+
+    /**
+     * Group by Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NotificationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NotificationGroupByArgs['orderBy'] }
+        : { orderBy?: NotificationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Notification model
+   */
+  readonly fields: NotificationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Notification.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the Notification model
+   */ 
+  interface NotificationFieldRefs {
+    readonly id: FieldRef<"Notification", 'String'>
+    readonly userId: FieldRef<"Notification", 'String'>
+    readonly type: FieldRef<"Notification", 'NotificationType'>
+    readonly meta: FieldRef<"Notification", 'Json'>
+    readonly readAt: FieldRef<"Notification", 'DateTime'>
+    readonly createdAt: FieldRef<"Notification", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+
+  /**
+   * Notification findUnique
+   */
+  export type NotificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+
+  /**
+   * Notification findUniqueOrThrow
+   */
+  export type NotificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+
+  /**
+   * Notification findFirst
+   */
+  export type NotificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+
+  /**
+   * Notification findFirstOrThrow
+   */
+  export type NotificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+
+  /**
+   * Notification findMany
+   */
+  export type NotificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notifications to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+
+  /**
+   * Notification create
+   */
+  export type NotificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Notification.
+     */
+    data: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+  }
+
+
+  /**
+   * Notification createMany
+   */
+  export type NotificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Notifications.
+     */
+    data: NotificationCreateManyInput | NotificationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Notification update
+   */
+  export type NotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Notification.
+     */
+    data: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+    /**
+     * Choose, which Notification to update.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+
+  /**
+   * Notification updateMany
+   */
+  export type NotificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Notifications.
+     */
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which Notifications to update
+     */
+    where?: NotificationWhereInput
+  }
+
+
+  /**
+   * Notification upsert
+   */
+  export type NotificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Notification to update in case it exists.
+     */
+    where: NotificationWhereUniqueInput
+    /**
+     * In case the Notification found by the `where` argument doesn't exist, create a new Notification with this data.
+     */
+    create: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+    /**
+     * In case the Notification was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Notification delete
+   */
+  export type NotificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter which Notification to delete.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+
+  /**
+   * Notification deleteMany
+   */
+  export type NotificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notifications to delete
+     */
+    where?: NotificationWhereInput
+  }
+
+
+  /**
+   * Notification without action
+   */
+  export type NotificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: NotificationInclude<ExtArgs> | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -15954,6 +20181,8 @@ export namespace Prisma {
     organizationId: 'organizationId',
     name: 'name',
     description: 'description',
+    avatarUrl: 'avatarUrl',
+    slug: 'slug',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -15965,11 +20194,28 @@ export namespace Prisma {
     id: 'id',
     teamId: 'teamId',
     userId: 'userId',
+    role: 'role',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type TeamMemberScalarFieldEnum = (typeof TeamMemberScalarFieldEnum)[keyof typeof TeamMemberScalarFieldEnum]
+
+
+  export const TeamInviteTokenScalarFieldEnum: {
+    id: 'id',
+    token: 'token',
+    teamId: 'teamId',
+    inviteeEmail: 'inviteeEmail',
+    role: 'role',
+    createdByUserId: 'createdByUserId',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    usedByUserId: 'usedByUserId',
+    createdAt: 'createdAt'
+  };
+
+  export type TeamInviteTokenScalarFieldEnum = (typeof TeamInviteTokenScalarFieldEnum)[keyof typeof TeamInviteTokenScalarFieldEnum]
 
 
   export const ProjectScalarFieldEnum: {
@@ -15982,7 +20228,8 @@ export namespace Prisma {
     isPublic: 'isPublic',
     lastOpenedAt: 'lastOpenedAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -16055,6 +20302,17 @@ export namespace Prisma {
   export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
+  export const EmailVerificationTokenScalarFieldEnum: {
+    id: 'id',
+    token: 'token',
+    email: 'email',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt'
+  };
+
+  export type EmailVerificationTokenScalarFieldEnum = (typeof EmailVerificationTokenScalarFieldEnum)[keyof typeof EmailVerificationTokenScalarFieldEnum]
+
+
   export const StarredProjectScalarFieldEnum: {
     userId: 'userId',
     projectId: 'projectId',
@@ -16062,6 +20320,31 @@ export namespace Prisma {
   };
 
   export type StarredProjectScalarFieldEnum = (typeof StarredProjectScalarFieldEnum)[keyof typeof StarredProjectScalarFieldEnum]
+
+
+  export const TeamAuditLogScalarFieldEnum: {
+    id: 'id',
+    teamId: 'teamId',
+    actorId: 'actorId',
+    targetId: 'targetId',
+    event: 'event',
+    meta: 'meta',
+    createdAt: 'createdAt'
+  };
+
+  export type TeamAuditLogScalarFieldEnum = (typeof TeamAuditLogScalarFieldEnum)[keyof typeof TeamAuditLogScalarFieldEnum]
+
+
+  export const NotificationScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    type: 'type',
+    meta: 'meta',
+    readAt: 'readAt',
+    createdAt: 'createdAt'
+  };
+
+  export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -16194,6 +20477,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'TeamRole'
+   */
+  export type EnumTeamRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TeamRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'TeamRole[]'
+   */
+  export type ListEnumTeamRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TeamRole[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ProjectRole'
    */
   export type EnumProjectRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectRole'>
@@ -16204,6 +20501,34 @@ export namespace Prisma {
    * Reference to a field of type 'ProjectRole[]'
    */
   export type ListEnumProjectRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectRole[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AuditEventType'
+   */
+  export type EnumAuditEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditEventType'>
+    
+
+
+  /**
+   * Reference to a field of type 'AuditEventType[]'
+   */
+  export type ListEnumAuditEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditEventType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'NotificationType'
+   */
+  export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
+    
+
+
+  /**
+   * Reference to a field of type 'NotificationType[]'
+   */
+  export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
     
 
 
@@ -16245,6 +20570,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetListRelationFilter
     clonedProjects?: ProjectCloneListRelationFilter
     starredProjects?: StarredProjectListRelationFilter
+    notifications?: NotificationListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -16265,6 +20591,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetOrderByRelationAggregateInput
     clonedProjects?: ProjectCloneOrderByRelationAggregateInput
     starredProjects?: StarredProjectOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -16288,6 +20615,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetListRelationFilter
     clonedProjects?: ProjectCloneListRelationFilter
     starredProjects?: StarredProjectListRelationFilter
+    notifications?: NotificationListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -16602,11 +20930,15 @@ export namespace Prisma {
     organizationId?: StringFilter<"Team"> | string
     name?: StringFilter<"Team"> | string
     description?: StringNullableFilter<"Team"> | string | null
+    avatarUrl?: StringNullableFilter<"Team"> | string | null
+    slug?: StringNullableFilter<"Team"> | string | null
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
     organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
     members?: TeamMemberListRelationFilter
     projects?: ProjectListRelationFilter
+    inviteTokens?: TeamInviteTokenListRelationFilter
+    auditLogs?: TeamAuditLogListRelationFilter
   }
 
   export type TeamOrderByWithRelationInput = {
@@ -16614,11 +20946,15 @@ export namespace Prisma {
     organizationId?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
+    slug?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
     members?: TeamMemberOrderByRelationAggregateInput
     projects?: ProjectOrderByRelationAggregateInput
+    inviteTokens?: TeamInviteTokenOrderByRelationAggregateInput
+    auditLogs?: TeamAuditLogOrderByRelationAggregateInput
   }
 
   export type TeamWhereUniqueInput = Prisma.AtLeast<{
@@ -16629,11 +20965,15 @@ export namespace Prisma {
     organizationId?: StringFilter<"Team"> | string
     name?: StringFilter<"Team"> | string
     description?: StringNullableFilter<"Team"> | string | null
+    avatarUrl?: StringNullableFilter<"Team"> | string | null
+    slug?: StringNullableFilter<"Team"> | string | null
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
     organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
     members?: TeamMemberListRelationFilter
     projects?: ProjectListRelationFilter
+    inviteTokens?: TeamInviteTokenListRelationFilter
+    auditLogs?: TeamAuditLogListRelationFilter
   }, "id">
 
   export type TeamOrderByWithAggregationInput = {
@@ -16641,6 +20981,8 @@ export namespace Prisma {
     organizationId?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
+    slug?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TeamCountOrderByAggregateInput
@@ -16656,6 +20998,8 @@ export namespace Prisma {
     organizationId?: StringWithAggregatesFilter<"Team"> | string
     name?: StringWithAggregatesFilter<"Team"> | string
     description?: StringNullableWithAggregatesFilter<"Team"> | string | null
+    avatarUrl?: StringNullableWithAggregatesFilter<"Team"> | string | null
+    slug?: StringNullableWithAggregatesFilter<"Team"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Team"> | Date | string
   }
@@ -16667,6 +21011,7 @@ export namespace Prisma {
     id?: StringFilter<"TeamMember"> | string
     teamId?: StringFilter<"TeamMember"> | string
     userId?: StringFilter<"TeamMember"> | string
+    role?: EnumTeamRoleFilter<"TeamMember"> | $Enums.TeamRole
     createdAt?: DateTimeFilter<"TeamMember"> | Date | string
     updatedAt?: DateTimeFilter<"TeamMember"> | Date | string
     team?: XOR<TeamRelationFilter, TeamWhereInput>
@@ -16677,6 +21022,7 @@ export namespace Prisma {
     id?: SortOrder
     teamId?: SortOrder
     userId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     team?: TeamOrderByWithRelationInput
@@ -16691,6 +21037,7 @@ export namespace Prisma {
     NOT?: TeamMemberWhereInput | TeamMemberWhereInput[]
     teamId?: StringFilter<"TeamMember"> | string
     userId?: StringFilter<"TeamMember"> | string
+    role?: EnumTeamRoleFilter<"TeamMember"> | $Enums.TeamRole
     createdAt?: DateTimeFilter<"TeamMember"> | Date | string
     updatedAt?: DateTimeFilter<"TeamMember"> | Date | string
     team?: XOR<TeamRelationFilter, TeamWhereInput>
@@ -16701,6 +21048,7 @@ export namespace Prisma {
     id?: SortOrder
     teamId?: SortOrder
     userId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TeamMemberCountOrderByAggregateInput
@@ -16715,8 +21063,89 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"TeamMember"> | string
     teamId?: StringWithAggregatesFilter<"TeamMember"> | string
     userId?: StringWithAggregatesFilter<"TeamMember"> | string
+    role?: EnumTeamRoleWithAggregatesFilter<"TeamMember"> | $Enums.TeamRole
     createdAt?: DateTimeWithAggregatesFilter<"TeamMember"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TeamMember"> | Date | string
+  }
+
+  export type TeamInviteTokenWhereInput = {
+    AND?: TeamInviteTokenWhereInput | TeamInviteTokenWhereInput[]
+    OR?: TeamInviteTokenWhereInput[]
+    NOT?: TeamInviteTokenWhereInput | TeamInviteTokenWhereInput[]
+    id?: StringFilter<"TeamInviteToken"> | string
+    token?: StringFilter<"TeamInviteToken"> | string
+    teamId?: StringFilter<"TeamInviteToken"> | string
+    inviteeEmail?: StringFilter<"TeamInviteToken"> | string
+    role?: EnumTeamRoleFilter<"TeamInviteToken"> | $Enums.TeamRole
+    createdByUserId?: StringFilter<"TeamInviteToken"> | string
+    expiresAt?: DateTimeFilter<"TeamInviteToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"TeamInviteToken"> | Date | string | null
+    usedByUserId?: StringNullableFilter<"TeamInviteToken"> | string | null
+    createdAt?: DateTimeFilter<"TeamInviteToken"> | Date | string
+    team?: XOR<TeamRelationFilter, TeamWhereInput>
+  }
+
+  export type TeamInviteTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    teamId?: SortOrder
+    inviteeEmail?: SortOrder
+    role?: SortOrder
+    createdByUserId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    usedByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    team?: TeamOrderByWithRelationInput
+  }
+
+  export type TeamInviteTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    token?: string
+    AND?: TeamInviteTokenWhereInput | TeamInviteTokenWhereInput[]
+    OR?: TeamInviteTokenWhereInput[]
+    NOT?: TeamInviteTokenWhereInput | TeamInviteTokenWhereInput[]
+    teamId?: StringFilter<"TeamInviteToken"> | string
+    inviteeEmail?: StringFilter<"TeamInviteToken"> | string
+    role?: EnumTeamRoleFilter<"TeamInviteToken"> | $Enums.TeamRole
+    createdByUserId?: StringFilter<"TeamInviteToken"> | string
+    expiresAt?: DateTimeFilter<"TeamInviteToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"TeamInviteToken"> | Date | string | null
+    usedByUserId?: StringNullableFilter<"TeamInviteToken"> | string | null
+    createdAt?: DateTimeFilter<"TeamInviteToken"> | Date | string
+    team?: XOR<TeamRelationFilter, TeamWhereInput>
+  }, "id" | "token">
+
+  export type TeamInviteTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    teamId?: SortOrder
+    inviteeEmail?: SortOrder
+    role?: SortOrder
+    createdByUserId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    usedByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: TeamInviteTokenCountOrderByAggregateInput
+    _max?: TeamInviteTokenMaxOrderByAggregateInput
+    _min?: TeamInviteTokenMinOrderByAggregateInput
+  }
+
+  export type TeamInviteTokenScalarWhereWithAggregatesInput = {
+    AND?: TeamInviteTokenScalarWhereWithAggregatesInput | TeamInviteTokenScalarWhereWithAggregatesInput[]
+    OR?: TeamInviteTokenScalarWhereWithAggregatesInput[]
+    NOT?: TeamInviteTokenScalarWhereWithAggregatesInput | TeamInviteTokenScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TeamInviteToken"> | string
+    token?: StringWithAggregatesFilter<"TeamInviteToken"> | string
+    teamId?: StringWithAggregatesFilter<"TeamInviteToken"> | string
+    inviteeEmail?: StringWithAggregatesFilter<"TeamInviteToken"> | string
+    role?: EnumTeamRoleWithAggregatesFilter<"TeamInviteToken"> | $Enums.TeamRole
+    createdByUserId?: StringWithAggregatesFilter<"TeamInviteToken"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"TeamInviteToken"> | Date | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"TeamInviteToken"> | Date | string | null
+    usedByUserId?: StringNullableWithAggregatesFilter<"TeamInviteToken"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TeamInviteToken"> | Date | string
   }
 
   export type ProjectWhereInput = {
@@ -16733,6 +21162,7 @@ export namespace Prisma {
     lastOpenedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     team?: XOR<TeamRelationFilter, TeamWhereInput>
     members?: ProjectMemberListRelationFilter
     publishedAsset?: XOR<MarketplaceAssetNullableRelationFilter, MarketplaceAssetWhereInput> | null
@@ -16751,6 +21181,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     team?: TeamOrderByWithRelationInput
     members?: ProjectMemberOrderByRelationAggregateInput
     publishedAsset?: MarketplaceAssetOrderByWithRelationInput
@@ -16772,6 +21203,7 @@ export namespace Prisma {
     lastOpenedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     team?: XOR<TeamRelationFilter, TeamWhereInput>
     members?: ProjectMemberListRelationFilter
     publishedAsset?: XOR<MarketplaceAssetNullableRelationFilter, MarketplaceAssetWhereInput> | null
@@ -16790,6 +21222,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
     _min?: ProjectMinOrderByAggregateInput
@@ -16809,6 +21242,7 @@ export namespace Prisma {
     lastOpenedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   }
 
   export type ProjectMemberWhereInput = {
@@ -17160,6 +21594,58 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"PasswordResetToken"> | Date | string
   }
 
+  export type EmailVerificationTokenWhereInput = {
+    AND?: EmailVerificationTokenWhereInput | EmailVerificationTokenWhereInput[]
+    OR?: EmailVerificationTokenWhereInput[]
+    NOT?: EmailVerificationTokenWhereInput | EmailVerificationTokenWhereInput[]
+    id?: StringFilter<"EmailVerificationToken"> | string
+    token?: StringFilter<"EmailVerificationToken"> | string
+    email?: StringFilter<"EmailVerificationToken"> | string
+    expiresAt?: DateTimeFilter<"EmailVerificationToken"> | Date | string
+    createdAt?: DateTimeFilter<"EmailVerificationToken"> | Date | string
+  }
+
+  export type EmailVerificationTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailVerificationTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    token?: string
+    AND?: EmailVerificationTokenWhereInput | EmailVerificationTokenWhereInput[]
+    OR?: EmailVerificationTokenWhereInput[]
+    NOT?: EmailVerificationTokenWhereInput | EmailVerificationTokenWhereInput[]
+    email?: StringFilter<"EmailVerificationToken"> | string
+    expiresAt?: DateTimeFilter<"EmailVerificationToken"> | Date | string
+    createdAt?: DateTimeFilter<"EmailVerificationToken"> | Date | string
+  }, "id" | "token">
+
+  export type EmailVerificationTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    _count?: EmailVerificationTokenCountOrderByAggregateInput
+    _max?: EmailVerificationTokenMaxOrderByAggregateInput
+    _min?: EmailVerificationTokenMinOrderByAggregateInput
+  }
+
+  export type EmailVerificationTokenScalarWhereWithAggregatesInput = {
+    AND?: EmailVerificationTokenScalarWhereWithAggregatesInput | EmailVerificationTokenScalarWhereWithAggregatesInput[]
+    OR?: EmailVerificationTokenScalarWhereWithAggregatesInput[]
+    NOT?: EmailVerificationTokenScalarWhereWithAggregatesInput | EmailVerificationTokenScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"EmailVerificationToken"> | string
+    token?: StringWithAggregatesFilter<"EmailVerificationToken"> | string
+    email?: StringWithAggregatesFilter<"EmailVerificationToken"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"EmailVerificationToken"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"EmailVerificationToken"> | Date | string
+  }
+
   export type StarredProjectWhereInput = {
     AND?: StarredProjectWhereInput | StarredProjectWhereInput[]
     OR?: StarredProjectWhereInput[]
@@ -17209,6 +21695,131 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"StarredProject"> | Date | string
   }
 
+  export type TeamAuditLogWhereInput = {
+    AND?: TeamAuditLogWhereInput | TeamAuditLogWhereInput[]
+    OR?: TeamAuditLogWhereInput[]
+    NOT?: TeamAuditLogWhereInput | TeamAuditLogWhereInput[]
+    id?: StringFilter<"TeamAuditLog"> | string
+    teamId?: StringFilter<"TeamAuditLog"> | string
+    actorId?: StringNullableFilter<"TeamAuditLog"> | string | null
+    targetId?: StringNullableFilter<"TeamAuditLog"> | string | null
+    event?: EnumAuditEventTypeFilter<"TeamAuditLog"> | $Enums.AuditEventType
+    meta?: JsonFilter<"TeamAuditLog">
+    createdAt?: DateTimeFilter<"TeamAuditLog"> | Date | string
+    team?: XOR<TeamRelationFilter, TeamWhereInput>
+  }
+
+  export type TeamAuditLogOrderByWithRelationInput = {
+    id?: SortOrder
+    teamId?: SortOrder
+    actorId?: SortOrderInput | SortOrder
+    targetId?: SortOrderInput | SortOrder
+    event?: SortOrder
+    meta?: SortOrder
+    createdAt?: SortOrder
+    team?: TeamOrderByWithRelationInput
+  }
+
+  export type TeamAuditLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TeamAuditLogWhereInput | TeamAuditLogWhereInput[]
+    OR?: TeamAuditLogWhereInput[]
+    NOT?: TeamAuditLogWhereInput | TeamAuditLogWhereInput[]
+    teamId?: StringFilter<"TeamAuditLog"> | string
+    actorId?: StringNullableFilter<"TeamAuditLog"> | string | null
+    targetId?: StringNullableFilter<"TeamAuditLog"> | string | null
+    event?: EnumAuditEventTypeFilter<"TeamAuditLog"> | $Enums.AuditEventType
+    meta?: JsonFilter<"TeamAuditLog">
+    createdAt?: DateTimeFilter<"TeamAuditLog"> | Date | string
+    team?: XOR<TeamRelationFilter, TeamWhereInput>
+  }, "id">
+
+  export type TeamAuditLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    teamId?: SortOrder
+    actorId?: SortOrderInput | SortOrder
+    targetId?: SortOrderInput | SortOrder
+    event?: SortOrder
+    meta?: SortOrder
+    createdAt?: SortOrder
+    _count?: TeamAuditLogCountOrderByAggregateInput
+    _max?: TeamAuditLogMaxOrderByAggregateInput
+    _min?: TeamAuditLogMinOrderByAggregateInput
+  }
+
+  export type TeamAuditLogScalarWhereWithAggregatesInput = {
+    AND?: TeamAuditLogScalarWhereWithAggregatesInput | TeamAuditLogScalarWhereWithAggregatesInput[]
+    OR?: TeamAuditLogScalarWhereWithAggregatesInput[]
+    NOT?: TeamAuditLogScalarWhereWithAggregatesInput | TeamAuditLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TeamAuditLog"> | string
+    teamId?: StringWithAggregatesFilter<"TeamAuditLog"> | string
+    actorId?: StringNullableWithAggregatesFilter<"TeamAuditLog"> | string | null
+    targetId?: StringNullableWithAggregatesFilter<"TeamAuditLog"> | string | null
+    event?: EnumAuditEventTypeWithAggregatesFilter<"TeamAuditLog"> | $Enums.AuditEventType
+    meta?: JsonWithAggregatesFilter<"TeamAuditLog">
+    createdAt?: DateTimeWithAggregatesFilter<"TeamAuditLog"> | Date | string
+  }
+
+  export type NotificationWhereInput = {
+    AND?: NotificationWhereInput | NotificationWhereInput[]
+    OR?: NotificationWhereInput[]
+    NOT?: NotificationWhereInput | NotificationWhereInput[]
+    id?: StringFilter<"Notification"> | string
+    userId?: StringFilter<"Notification"> | string
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
+    meta?: JsonFilter<"Notification">
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type NotificationOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    meta?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type NotificationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NotificationWhereInput | NotificationWhereInput[]
+    OR?: NotificationWhereInput[]
+    NOT?: NotificationWhereInput | NotificationWhereInput[]
+    userId?: StringFilter<"Notification"> | string
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
+    meta?: JsonFilter<"Notification">
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type NotificationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    meta?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: NotificationCountOrderByAggregateInput
+    _max?: NotificationMaxOrderByAggregateInput
+    _min?: NotificationMinOrderByAggregateInput
+  }
+
+  export type NotificationScalarWhereWithAggregatesInput = {
+    AND?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
+    OR?: NotificationScalarWhereWithAggregatesInput[]
+    NOT?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Notification"> | string
+    userId?: StringWithAggregatesFilter<"Notification"> | string
+    type?: EnumNotificationTypeWithAggregatesFilter<"Notification"> | $Enums.NotificationType
+    meta?: JsonWithAggregatesFilter<"Notification">
+    readAt?: DateTimeNullableWithAggregatesFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
@@ -17227,6 +21838,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -17247,6 +21859,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneUncheckedCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -17267,6 +21880,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -17287,6 +21901,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUncheckedUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -17620,11 +22235,15 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutTeamsInput
     members?: TeamMemberCreateNestedManyWithoutTeamInput
     projects?: ProjectCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateInput = {
@@ -17632,21 +22251,29 @@ export namespace Prisma {
     organizationId: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
     projects?: ProjectUncheckedCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenUncheckedCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
     members?: TeamMemberUpdateManyWithoutTeamNestedInput
     projects?: ProjectUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateInput = {
@@ -17654,10 +22281,14 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUncheckedUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateManyInput = {
@@ -17665,6 +22296,8 @@ export namespace Prisma {
     organizationId: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17673,6 +22306,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17682,12 +22317,15 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeamMemberCreateInput = {
     id?: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
     team: TeamCreateNestedOneWithoutMembersInput
@@ -17698,12 +22336,14 @@ export namespace Prisma {
     id?: string
     teamId: string
     userId: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type TeamMemberUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     team?: TeamUpdateOneRequiredWithoutMembersNestedInput
@@ -17714,6 +22354,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     teamId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17722,12 +22363,14 @@ export namespace Prisma {
     id?: string
     teamId: string
     userId: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type TeamMemberUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17736,8 +22379,99 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     teamId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamInviteTokenCreateInput = {
+    id?: string
+    token: string
+    inviteeEmail: string
+    role: $Enums.TeamRole
+    createdByUserId: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    usedByUserId?: string | null
+    createdAt?: Date | string
+    team: TeamCreateNestedOneWithoutInviteTokensInput
+  }
+
+  export type TeamInviteTokenUncheckedCreateInput = {
+    id?: string
+    token: string
+    teamId: string
+    inviteeEmail: string
+    role: $Enums.TeamRole
+    createdByUserId: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    usedByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TeamInviteTokenUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    inviteeEmail?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    team?: TeamUpdateOneRequiredWithoutInviteTokensNestedInput
+  }
+
+  export type TeamInviteTokenUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    teamId?: StringFieldUpdateOperationsInput | string
+    inviteeEmail?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamInviteTokenCreateManyInput = {
+    id?: string
+    token: string
+    teamId: string
+    inviteeEmail: string
+    role: $Enums.TeamRole
+    createdByUserId: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    usedByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TeamInviteTokenUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    inviteeEmail?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamInviteTokenUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    teamId?: StringFieldUpdateOperationsInput | string
+    inviteeEmail?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectCreateInput = {
@@ -17750,6 +22484,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
@@ -17768,6 +22503,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
@@ -17784,6 +22520,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
@@ -17802,6 +22539,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
@@ -17819,6 +22557,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ProjectUpdateManyMutationInput = {
@@ -17831,6 +22570,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectUncheckedUpdateManyInput = {
@@ -17844,6 +22584,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectMemberCreateInput = {
@@ -18207,6 +22948,62 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EmailVerificationTokenCreateInput = {
+    id?: string
+    token: string
+    email: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type EmailVerificationTokenUncheckedCreateInput = {
+    id?: string
+    token: string
+    email: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type EmailVerificationTokenUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailVerificationTokenUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailVerificationTokenCreateManyInput = {
+    id?: string
+    token: string
+    email: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type EmailVerificationTokenUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailVerificationTokenUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StarredProjectCreateInput = {
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutStarredProjectsInput
@@ -18244,6 +23041,137 @@ export namespace Prisma {
   export type StarredProjectUncheckedUpdateManyInput = {
     userId?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamAuditLogCreateInput = {
+    id?: string
+    actorId?: string | null
+    targetId?: string | null
+    event: $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    team: TeamCreateNestedOneWithoutAuditLogsInput
+  }
+
+  export type TeamAuditLogUncheckedCreateInput = {
+    id?: string
+    teamId: string
+    actorId?: string | null
+    targetId?: string | null
+    event: $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TeamAuditLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    event?: EnumAuditEventTypeFieldUpdateOperationsInput | $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    team?: TeamUpdateOneRequiredWithoutAuditLogsNestedInput
+  }
+
+  export type TeamAuditLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    teamId?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    event?: EnumAuditEventTypeFieldUpdateOperationsInput | $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamAuditLogCreateManyInput = {
+    id?: string
+    teamId: string
+    actorId?: string | null
+    targetId?: string | null
+    event: $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TeamAuditLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    event?: EnumAuditEventTypeFieldUpdateOperationsInput | $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamAuditLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    teamId?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    event?: EnumAuditEventTypeFieldUpdateOperationsInput | $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationCreateInput = {
+    id?: string
+    type: $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateInput = {
+    id?: string
+    userId: string
+    type: $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationCreateManyInput = {
+    id?: string
+    userId: string
+    type: $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -18345,6 +23273,12 @@ export namespace Prisma {
     none?: StarredProjectWhereInput
   }
 
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -18371,6 +23305,10 @@ export namespace Prisma {
   }
 
   export type StarredProjectOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NotificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18760,7 +23698,27 @@ export namespace Prisma {
     none?: ProjectWhereInput
   }
 
+  export type TeamInviteTokenListRelationFilter = {
+    every?: TeamInviteTokenWhereInput
+    some?: TeamInviteTokenWhereInput
+    none?: TeamInviteTokenWhereInput
+  }
+
+  export type TeamAuditLogListRelationFilter = {
+    every?: TeamAuditLogWhereInput
+    some?: TeamAuditLogWhereInput
+    none?: TeamAuditLogWhereInput
+  }
+
   export type ProjectOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TeamInviteTokenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TeamAuditLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18769,6 +23727,8 @@ export namespace Prisma {
     organizationId?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    avatarUrl?: SortOrder
+    slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18778,6 +23738,8 @@ export namespace Prisma {
     organizationId?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    avatarUrl?: SortOrder
+    slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18787,8 +23749,17 @@ export namespace Prisma {
     organizationId?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    avatarUrl?: SortOrder
+    slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumTeamRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.TeamRole | EnumTeamRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.TeamRole[] | ListEnumTeamRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TeamRole[] | ListEnumTeamRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumTeamRoleFilter<$PrismaModel> | $Enums.TeamRole
   }
 
   export type TeamRelationFilter = {
@@ -18805,6 +23776,7 @@ export namespace Prisma {
     id?: SortOrder
     teamId?: SortOrder
     userId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18813,6 +23785,7 @@ export namespace Prisma {
     id?: SortOrder
     teamId?: SortOrder
     userId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18821,8 +23794,58 @@ export namespace Prisma {
     id?: SortOrder
     teamId?: SortOrder
     userId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumTeamRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TeamRole | EnumTeamRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.TeamRole[] | ListEnumTeamRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TeamRole[] | ListEnumTeamRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumTeamRoleWithAggregatesFilter<$PrismaModel> | $Enums.TeamRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTeamRoleFilter<$PrismaModel>
+    _max?: NestedEnumTeamRoleFilter<$PrismaModel>
+  }
+
+  export type TeamInviteTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    teamId?: SortOrder
+    inviteeEmail?: SortOrder
+    role?: SortOrder
+    createdByUserId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    usedByUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TeamInviteTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    teamId?: SortOrder
+    inviteeEmail?: SortOrder
+    role?: SortOrder
+    createdByUserId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    usedByUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TeamInviteTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    teamId?: SortOrder
+    inviteeEmail?: SortOrder
+    role?: SortOrder
+    createdByUserId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    usedByUserId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type MarketplaceAssetNullableRelationFilter = {
@@ -18846,6 +23869,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ProjectMaxOrderByAggregateInput = {
@@ -18859,6 +23883,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
@@ -18872,6 +23897,7 @@ export namespace Prisma {
     lastOpenedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type EnumProjectRoleFilter<$PrismaModel = never> = {
@@ -19084,6 +24110,30 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EmailVerificationTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailVerificationTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailVerificationTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    email?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
   export type StarredProjectUserIdProjectIdCompoundUniqueInput = {
     userId: string
     projectId: string
@@ -19105,6 +24155,93 @@ export namespace Prisma {
     userId?: SortOrder
     projectId?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type EnumAuditEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AuditEventType | EnumAuditEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AuditEventType[] | ListEnumAuditEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AuditEventType[] | ListEnumAuditEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAuditEventTypeFilter<$PrismaModel> | $Enums.AuditEventType
+  }
+
+  export type TeamAuditLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    teamId?: SortOrder
+    actorId?: SortOrder
+    targetId?: SortOrder
+    event?: SortOrder
+    meta?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TeamAuditLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    teamId?: SortOrder
+    actorId?: SortOrder
+    targetId?: SortOrder
+    event?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TeamAuditLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    teamId?: SortOrder
+    actorId?: SortOrder
+    targetId?: SortOrder
+    event?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumAuditEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AuditEventType | EnumAuditEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AuditEventType[] | ListEnumAuditEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AuditEventType[] | ListEnumAuditEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAuditEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.AuditEventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAuditEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumAuditEventTypeFilter<$PrismaModel>
+  }
+
+  export type EnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
+  export type NotificationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    meta?: SortOrder
+    readAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NotificationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    readAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NotificationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    readAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
   }
 
   export type OnboardingProgressCreateNestedOneWithoutUserInput = {
@@ -19155,6 +24292,13 @@ export namespace Prisma {
     connect?: StarredProjectWhereUniqueInput | StarredProjectWhereUniqueInput[]
   }
 
+  export type NotificationCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
   export type OnboardingProgressUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<OnboardingProgressCreateWithoutUserInput, OnboardingProgressUncheckedCreateWithoutUserInput>
     connectOrCreate?: OnboardingProgressCreateOrConnectWithoutUserInput
@@ -19201,6 +24345,13 @@ export namespace Prisma {
     connectOrCreate?: StarredProjectCreateOrConnectWithoutUserInput | StarredProjectCreateOrConnectWithoutUserInput[]
     createMany?: StarredProjectCreateManyUserInputEnvelope
     connect?: StarredProjectWhereUniqueInput | StarredProjectWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -19317,6 +24468,20 @@ export namespace Prisma {
     deleteMany?: StarredProjectScalarWhereInput | StarredProjectScalarWhereInput[]
   }
 
+  export type NotificationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type OnboardingProgressUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<OnboardingProgressCreateWithoutUserInput, OnboardingProgressUncheckedCreateWithoutUserInput>
     connectOrCreate?: OnboardingProgressCreateOrConnectWithoutUserInput
@@ -19409,6 +24574,20 @@ export namespace Prisma {
     update?: StarredProjectUpdateWithWhereUniqueWithoutUserInput | StarredProjectUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: StarredProjectUpdateManyWithWhereWithoutUserInput | StarredProjectUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: StarredProjectScalarWhereInput | StarredProjectScalarWhereInput[]
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutOnboardingProgressInput = {
@@ -19629,6 +24808,20 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
+  export type TeamInviteTokenCreateNestedManyWithoutTeamInput = {
+    create?: XOR<TeamInviteTokenCreateWithoutTeamInput, TeamInviteTokenUncheckedCreateWithoutTeamInput> | TeamInviteTokenCreateWithoutTeamInput[] | TeamInviteTokenUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamInviteTokenCreateOrConnectWithoutTeamInput | TeamInviteTokenCreateOrConnectWithoutTeamInput[]
+    createMany?: TeamInviteTokenCreateManyTeamInputEnvelope
+    connect?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+  }
+
+  export type TeamAuditLogCreateNestedManyWithoutTeamInput = {
+    create?: XOR<TeamAuditLogCreateWithoutTeamInput, TeamAuditLogUncheckedCreateWithoutTeamInput> | TeamAuditLogCreateWithoutTeamInput[] | TeamAuditLogUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamAuditLogCreateOrConnectWithoutTeamInput | TeamAuditLogCreateOrConnectWithoutTeamInput[]
+    createMany?: TeamAuditLogCreateManyTeamInputEnvelope
+    connect?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+  }
+
   export type TeamMemberUncheckedCreateNestedManyWithoutTeamInput = {
     create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
@@ -19641,6 +24834,20 @@ export namespace Prisma {
     connectOrCreate?: ProjectCreateOrConnectWithoutTeamInput | ProjectCreateOrConnectWithoutTeamInput[]
     createMany?: ProjectCreateManyTeamInputEnvelope
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type TeamInviteTokenUncheckedCreateNestedManyWithoutTeamInput = {
+    create?: XOR<TeamInviteTokenCreateWithoutTeamInput, TeamInviteTokenUncheckedCreateWithoutTeamInput> | TeamInviteTokenCreateWithoutTeamInput[] | TeamInviteTokenUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamInviteTokenCreateOrConnectWithoutTeamInput | TeamInviteTokenCreateOrConnectWithoutTeamInput[]
+    createMany?: TeamInviteTokenCreateManyTeamInputEnvelope
+    connect?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+  }
+
+  export type TeamAuditLogUncheckedCreateNestedManyWithoutTeamInput = {
+    create?: XOR<TeamAuditLogCreateWithoutTeamInput, TeamAuditLogUncheckedCreateWithoutTeamInput> | TeamAuditLogCreateWithoutTeamInput[] | TeamAuditLogUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamAuditLogCreateOrConnectWithoutTeamInput | TeamAuditLogCreateOrConnectWithoutTeamInput[]
+    createMany?: TeamAuditLogCreateManyTeamInputEnvelope
+    connect?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutTeamsNestedInput = {
@@ -19679,6 +24886,34 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
+  export type TeamInviteTokenUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<TeamInviteTokenCreateWithoutTeamInput, TeamInviteTokenUncheckedCreateWithoutTeamInput> | TeamInviteTokenCreateWithoutTeamInput[] | TeamInviteTokenUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamInviteTokenCreateOrConnectWithoutTeamInput | TeamInviteTokenCreateOrConnectWithoutTeamInput[]
+    upsert?: TeamInviteTokenUpsertWithWhereUniqueWithoutTeamInput | TeamInviteTokenUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: TeamInviteTokenCreateManyTeamInputEnvelope
+    set?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+    disconnect?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+    delete?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+    connect?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+    update?: TeamInviteTokenUpdateWithWhereUniqueWithoutTeamInput | TeamInviteTokenUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: TeamInviteTokenUpdateManyWithWhereWithoutTeamInput | TeamInviteTokenUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: TeamInviteTokenScalarWhereInput | TeamInviteTokenScalarWhereInput[]
+  }
+
+  export type TeamAuditLogUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<TeamAuditLogCreateWithoutTeamInput, TeamAuditLogUncheckedCreateWithoutTeamInput> | TeamAuditLogCreateWithoutTeamInput[] | TeamAuditLogUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamAuditLogCreateOrConnectWithoutTeamInput | TeamAuditLogCreateOrConnectWithoutTeamInput[]
+    upsert?: TeamAuditLogUpsertWithWhereUniqueWithoutTeamInput | TeamAuditLogUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: TeamAuditLogCreateManyTeamInputEnvelope
+    set?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+    disconnect?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+    delete?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+    connect?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+    update?: TeamAuditLogUpdateWithWhereUniqueWithoutTeamInput | TeamAuditLogUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: TeamAuditLogUpdateManyWithWhereWithoutTeamInput | TeamAuditLogUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: TeamAuditLogScalarWhereInput | TeamAuditLogScalarWhereInput[]
+  }
+
   export type TeamMemberUncheckedUpdateManyWithoutTeamNestedInput = {
     create?: XOR<TeamMemberCreateWithoutTeamInput, TeamMemberUncheckedCreateWithoutTeamInput> | TeamMemberCreateWithoutTeamInput[] | TeamMemberUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: TeamMemberCreateOrConnectWithoutTeamInput | TeamMemberCreateOrConnectWithoutTeamInput[]
@@ -19707,6 +24942,34 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
+  export type TeamInviteTokenUncheckedUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<TeamInviteTokenCreateWithoutTeamInput, TeamInviteTokenUncheckedCreateWithoutTeamInput> | TeamInviteTokenCreateWithoutTeamInput[] | TeamInviteTokenUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamInviteTokenCreateOrConnectWithoutTeamInput | TeamInviteTokenCreateOrConnectWithoutTeamInput[]
+    upsert?: TeamInviteTokenUpsertWithWhereUniqueWithoutTeamInput | TeamInviteTokenUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: TeamInviteTokenCreateManyTeamInputEnvelope
+    set?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+    disconnect?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+    delete?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+    connect?: TeamInviteTokenWhereUniqueInput | TeamInviteTokenWhereUniqueInput[]
+    update?: TeamInviteTokenUpdateWithWhereUniqueWithoutTeamInput | TeamInviteTokenUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: TeamInviteTokenUpdateManyWithWhereWithoutTeamInput | TeamInviteTokenUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: TeamInviteTokenScalarWhereInput | TeamInviteTokenScalarWhereInput[]
+  }
+
+  export type TeamAuditLogUncheckedUpdateManyWithoutTeamNestedInput = {
+    create?: XOR<TeamAuditLogCreateWithoutTeamInput, TeamAuditLogUncheckedCreateWithoutTeamInput> | TeamAuditLogCreateWithoutTeamInput[] | TeamAuditLogUncheckedCreateWithoutTeamInput[]
+    connectOrCreate?: TeamAuditLogCreateOrConnectWithoutTeamInput | TeamAuditLogCreateOrConnectWithoutTeamInput[]
+    upsert?: TeamAuditLogUpsertWithWhereUniqueWithoutTeamInput | TeamAuditLogUpsertWithWhereUniqueWithoutTeamInput[]
+    createMany?: TeamAuditLogCreateManyTeamInputEnvelope
+    set?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+    disconnect?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+    delete?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+    connect?: TeamAuditLogWhereUniqueInput | TeamAuditLogWhereUniqueInput[]
+    update?: TeamAuditLogUpdateWithWhereUniqueWithoutTeamInput | TeamAuditLogUpdateWithWhereUniqueWithoutTeamInput[]
+    updateMany?: TeamAuditLogUpdateManyWithWhereWithoutTeamInput | TeamAuditLogUpdateManyWithWhereWithoutTeamInput[]
+    deleteMany?: TeamAuditLogScalarWhereInput | TeamAuditLogScalarWhereInput[]
+  }
+
   export type TeamCreateNestedOneWithoutMembersInput = {
     create?: XOR<TeamCreateWithoutMembersInput, TeamUncheckedCreateWithoutMembersInput>
     connectOrCreate?: TeamCreateOrConnectWithoutMembersInput
@@ -19717,6 +24980,10 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutTeamMembershipsInput, UserUncheckedCreateWithoutTeamMembershipsInput>
     connectOrCreate?: UserCreateOrConnectWithoutTeamMembershipsInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type EnumTeamRoleFieldUpdateOperationsInput = {
+    set?: $Enums.TeamRole
   }
 
   export type TeamUpdateOneRequiredWithoutMembersNestedInput = {
@@ -19733,6 +25000,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutTeamMembershipsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTeamMembershipsInput, UserUpdateWithoutTeamMembershipsInput>, UserUncheckedUpdateWithoutTeamMembershipsInput>
+  }
+
+  export type TeamCreateNestedOneWithoutInviteTokensInput = {
+    create?: XOR<TeamCreateWithoutInviteTokensInput, TeamUncheckedCreateWithoutInviteTokensInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutInviteTokensInput
+    connect?: TeamWhereUniqueInput
+  }
+
+  export type TeamUpdateOneRequiredWithoutInviteTokensNestedInput = {
+    create?: XOR<TeamCreateWithoutInviteTokensInput, TeamUncheckedCreateWithoutInviteTokensInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutInviteTokensInput
+    upsert?: TeamUpsertWithoutInviteTokensInput
+    connect?: TeamWhereUniqueInput
+    update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutInviteTokensInput, TeamUpdateWithoutInviteTokensInput>, TeamUncheckedUpdateWithoutInviteTokensInput>
   }
 
   export type TeamCreateNestedOneWithoutProjectsInput = {
@@ -20078,6 +25359,42 @@ export namespace Prisma {
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutStarredByInput, ProjectUpdateWithoutStarredByInput>, ProjectUncheckedUpdateWithoutStarredByInput>
   }
 
+  export type TeamCreateNestedOneWithoutAuditLogsInput = {
+    create?: XOR<TeamCreateWithoutAuditLogsInput, TeamUncheckedCreateWithoutAuditLogsInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutAuditLogsInput
+    connect?: TeamWhereUniqueInput
+  }
+
+  export type EnumAuditEventTypeFieldUpdateOperationsInput = {
+    set?: $Enums.AuditEventType
+  }
+
+  export type TeamUpdateOneRequiredWithoutAuditLogsNestedInput = {
+    create?: XOR<TeamCreateWithoutAuditLogsInput, TeamUncheckedCreateWithoutAuditLogsInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutAuditLogsInput
+    upsert?: TeamUpsertWithoutAuditLogsInput
+    connect?: TeamWhereUniqueInput
+    update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutAuditLogsInput, TeamUpdateWithoutAuditLogsInput>, TeamUncheckedUpdateWithoutAuditLogsInput>
+  }
+
+  export type UserCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumNotificationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.NotificationType
+  }
+
+  export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
+    upsert?: UserUpsertWithoutNotificationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -20308,6 +25625,23 @@ export namespace Prisma {
     _max?: NestedEnumOrgRoleFilter<$PrismaModel>
   }
 
+  export type NestedEnumTeamRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.TeamRole | EnumTeamRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.TeamRole[] | ListEnumTeamRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TeamRole[] | ListEnumTeamRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumTeamRoleFilter<$PrismaModel> | $Enums.TeamRole
+  }
+
+  export type NestedEnumTeamRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TeamRole | EnumTeamRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.TeamRole[] | ListEnumTeamRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TeamRole[] | ListEnumTeamRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumTeamRoleWithAggregatesFilter<$PrismaModel> | $Enums.TeamRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTeamRoleFilter<$PrismaModel>
+    _max?: NestedEnumTeamRoleFilter<$PrismaModel>
+  }
+
   export type NestedEnumProjectRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectRole | EnumProjectRoleFieldRefInput<$PrismaModel>
     in?: $Enums.ProjectRole[] | ListEnumProjectRoleFieldRefInput<$PrismaModel>
@@ -20323,6 +25657,40 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProjectRoleFilter<$PrismaModel>
     _max?: NestedEnumProjectRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAuditEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AuditEventType | EnumAuditEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AuditEventType[] | ListEnumAuditEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AuditEventType[] | ListEnumAuditEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAuditEventTypeFilter<$PrismaModel> | $Enums.AuditEventType
+  }
+
+  export type NestedEnumAuditEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AuditEventType | EnumAuditEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AuditEventType[] | ListEnumAuditEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AuditEventType[] | ListEnumAuditEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAuditEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.AuditEventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAuditEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumAuditEventTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
+  export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
   }
 
   export type OnboardingProgressCreateWithoutUserInput = {
@@ -20374,6 +25742,7 @@ export namespace Prisma {
 
   export type TeamMemberCreateWithoutUserInput = {
     id?: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
     team: TeamCreateNestedOneWithoutMembersInput
@@ -20382,6 +25751,7 @@ export namespace Prisma {
   export type TeamMemberUncheckedCreateWithoutUserInput = {
     id?: string
     teamId: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20502,6 +25872,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type NotificationCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationCreateManyUserInputEnvelope = {
+    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OnboardingProgressUpsertWithoutUserInput = {
     update: XOR<OnboardingProgressUpdateWithoutUserInput, OnboardingProgressUncheckedUpdateWithoutUserInput>
     create: XOR<OnboardingProgressCreateWithoutUserInput, OnboardingProgressUncheckedCreateWithoutUserInput>
@@ -20580,6 +25976,7 @@ export namespace Prisma {
     id?: StringFilter<"TeamMember"> | string
     teamId?: StringFilter<"TeamMember"> | string
     userId?: StringFilter<"TeamMember"> | string
+    role?: EnumTeamRoleFilter<"TeamMember"> | $Enums.TeamRole
     createdAt?: DateTimeFilter<"TeamMember"> | Date | string
     updatedAt?: DateTimeFilter<"TeamMember"> | Date | string
   }
@@ -20696,6 +26093,34 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"StarredProject"> | Date | string
   }
 
+  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutUserInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NotificationScalarWhereInput = {
+    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    OR?: NotificationScalarWhereInput[]
+    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    id?: StringFilter<"Notification"> | string
+    userId?: StringFilter<"Notification"> | string
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
+    meta?: JsonFilter<"Notification">
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+  }
+
   export type UserCreateWithoutOnboardingProgressInput = {
     id?: string
     name?: string | null
@@ -20713,6 +26138,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOnboardingProgressInput = {
@@ -20732,6 +26158,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneUncheckedCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOnboardingProgressInput = {
@@ -20767,6 +26194,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOnboardingProgressInput = {
@@ -20786,6 +26214,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUncheckedUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrganizationMemberCreateWithoutOrganizationInput = {
@@ -20818,20 +26247,28 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: TeamMemberCreateNestedManyWithoutTeamInput
     projects?: ProjectCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutOrganizationInput = {
     id?: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
     projects?: ProjectUncheckedCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenUncheckedCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutOrganizationInput = {
@@ -20914,6 +26351,8 @@ export namespace Prisma {
     organizationId?: StringFilter<"Team"> | string
     name?: StringFilter<"Team"> | string
     description?: StringNullableFilter<"Team"> | string | null
+    avatarUrl?: StringNullableFilter<"Team"> | string | null
+    slug?: StringNullableFilter<"Team"> | string | null
     createdAt?: DateTimeFilter<"Team"> | Date | string
     updatedAt?: DateTimeFilter<"Team"> | Date | string
   }
@@ -20996,6 +26435,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrganizationsInput = {
@@ -21015,6 +26455,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneUncheckedCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrganizationsInput = {
@@ -21087,6 +26528,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrganizationsInput = {
@@ -21106,6 +26548,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUncheckedUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrganizationCreateWithoutInviteTokensInput = {
@@ -21209,6 +26652,7 @@ export namespace Prisma {
 
   export type TeamMemberCreateWithoutTeamInput = {
     id?: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutTeamMembershipsInput
@@ -21217,6 +26661,7 @@ export namespace Prisma {
   export type TeamMemberUncheckedCreateWithoutTeamInput = {
     id?: string
     userId: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21241,6 +26686,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneCreateNestedOneWithoutClonedProjectInput
@@ -21257,6 +26703,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
@@ -21270,6 +26717,68 @@ export namespace Prisma {
 
   export type ProjectCreateManyTeamInputEnvelope = {
     data: ProjectCreateManyTeamInput | ProjectCreateManyTeamInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TeamInviteTokenCreateWithoutTeamInput = {
+    id?: string
+    token: string
+    inviteeEmail: string
+    role: $Enums.TeamRole
+    createdByUserId: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    usedByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TeamInviteTokenUncheckedCreateWithoutTeamInput = {
+    id?: string
+    token: string
+    inviteeEmail: string
+    role: $Enums.TeamRole
+    createdByUserId: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    usedByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TeamInviteTokenCreateOrConnectWithoutTeamInput = {
+    where: TeamInviteTokenWhereUniqueInput
+    create: XOR<TeamInviteTokenCreateWithoutTeamInput, TeamInviteTokenUncheckedCreateWithoutTeamInput>
+  }
+
+  export type TeamInviteTokenCreateManyTeamInputEnvelope = {
+    data: TeamInviteTokenCreateManyTeamInput | TeamInviteTokenCreateManyTeamInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TeamAuditLogCreateWithoutTeamInput = {
+    id?: string
+    actorId?: string | null
+    targetId?: string | null
+    event: $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TeamAuditLogUncheckedCreateWithoutTeamInput = {
+    id?: string
+    actorId?: string | null
+    targetId?: string | null
+    event: $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type TeamAuditLogCreateOrConnectWithoutTeamInput = {
+    where: TeamAuditLogWhereUniqueInput
+    create: XOR<TeamAuditLogCreateWithoutTeamInput, TeamAuditLogUncheckedCreateWithoutTeamInput>
+  }
+
+  export type TeamAuditLogCreateManyTeamInputEnvelope = {
+    data: TeamAuditLogCreateManyTeamInput | TeamAuditLogCreateManyTeamInput[]
     skipDuplicates?: boolean
   }
 
@@ -21356,16 +26865,82 @@ export namespace Prisma {
     lastOpenedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+  }
+
+  export type TeamInviteTokenUpsertWithWhereUniqueWithoutTeamInput = {
+    where: TeamInviteTokenWhereUniqueInput
+    update: XOR<TeamInviteTokenUpdateWithoutTeamInput, TeamInviteTokenUncheckedUpdateWithoutTeamInput>
+    create: XOR<TeamInviteTokenCreateWithoutTeamInput, TeamInviteTokenUncheckedCreateWithoutTeamInput>
+  }
+
+  export type TeamInviteTokenUpdateWithWhereUniqueWithoutTeamInput = {
+    where: TeamInviteTokenWhereUniqueInput
+    data: XOR<TeamInviteTokenUpdateWithoutTeamInput, TeamInviteTokenUncheckedUpdateWithoutTeamInput>
+  }
+
+  export type TeamInviteTokenUpdateManyWithWhereWithoutTeamInput = {
+    where: TeamInviteTokenScalarWhereInput
+    data: XOR<TeamInviteTokenUpdateManyMutationInput, TeamInviteTokenUncheckedUpdateManyWithoutTeamInput>
+  }
+
+  export type TeamInviteTokenScalarWhereInput = {
+    AND?: TeamInviteTokenScalarWhereInput | TeamInviteTokenScalarWhereInput[]
+    OR?: TeamInviteTokenScalarWhereInput[]
+    NOT?: TeamInviteTokenScalarWhereInput | TeamInviteTokenScalarWhereInput[]
+    id?: StringFilter<"TeamInviteToken"> | string
+    token?: StringFilter<"TeamInviteToken"> | string
+    teamId?: StringFilter<"TeamInviteToken"> | string
+    inviteeEmail?: StringFilter<"TeamInviteToken"> | string
+    role?: EnumTeamRoleFilter<"TeamInviteToken"> | $Enums.TeamRole
+    createdByUserId?: StringFilter<"TeamInviteToken"> | string
+    expiresAt?: DateTimeFilter<"TeamInviteToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"TeamInviteToken"> | Date | string | null
+    usedByUserId?: StringNullableFilter<"TeamInviteToken"> | string | null
+    createdAt?: DateTimeFilter<"TeamInviteToken"> | Date | string
+  }
+
+  export type TeamAuditLogUpsertWithWhereUniqueWithoutTeamInput = {
+    where: TeamAuditLogWhereUniqueInput
+    update: XOR<TeamAuditLogUpdateWithoutTeamInput, TeamAuditLogUncheckedUpdateWithoutTeamInput>
+    create: XOR<TeamAuditLogCreateWithoutTeamInput, TeamAuditLogUncheckedCreateWithoutTeamInput>
+  }
+
+  export type TeamAuditLogUpdateWithWhereUniqueWithoutTeamInput = {
+    where: TeamAuditLogWhereUniqueInput
+    data: XOR<TeamAuditLogUpdateWithoutTeamInput, TeamAuditLogUncheckedUpdateWithoutTeamInput>
+  }
+
+  export type TeamAuditLogUpdateManyWithWhereWithoutTeamInput = {
+    where: TeamAuditLogScalarWhereInput
+    data: XOR<TeamAuditLogUpdateManyMutationInput, TeamAuditLogUncheckedUpdateManyWithoutTeamInput>
+  }
+
+  export type TeamAuditLogScalarWhereInput = {
+    AND?: TeamAuditLogScalarWhereInput | TeamAuditLogScalarWhereInput[]
+    OR?: TeamAuditLogScalarWhereInput[]
+    NOT?: TeamAuditLogScalarWhereInput | TeamAuditLogScalarWhereInput[]
+    id?: StringFilter<"TeamAuditLog"> | string
+    teamId?: StringFilter<"TeamAuditLog"> | string
+    actorId?: StringNullableFilter<"TeamAuditLog"> | string | null
+    targetId?: StringNullableFilter<"TeamAuditLog"> | string | null
+    event?: EnumAuditEventTypeFilter<"TeamAuditLog"> | $Enums.AuditEventType
+    meta?: JsonFilter<"TeamAuditLog">
+    createdAt?: DateTimeFilter<"TeamAuditLog"> | Date | string
   }
 
   export type TeamCreateWithoutMembersInput = {
     id?: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutTeamsInput
     projects?: ProjectCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutMembersInput = {
@@ -21373,9 +26948,13 @@ export namespace Prisma {
     organizationId: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenUncheckedCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutMembersInput = {
@@ -21400,6 +26979,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTeamMembershipsInput = {
@@ -21419,6 +26999,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneUncheckedCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTeamMembershipsInput = {
@@ -21441,10 +27022,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
     projects?: ProjectUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutMembersInput = {
@@ -21452,9 +27037,13 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUncheckedUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type UserUpsertWithoutTeamMembershipsInput = {
@@ -21485,6 +27074,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeamMembershipsInput = {
@@ -21504,16 +27094,93 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUncheckedUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TeamCreateWithoutInviteTokensInput = {
+    id?: string
+    name: string
+    description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTeamsInput
+    members?: TeamMemberCreateNestedManyWithoutTeamInput
+    projects?: ProjectCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamUncheckedCreateWithoutInviteTokensInput = {
+    id?: string
+    organizationId: string
+    name: string
+    description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogUncheckedCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamCreateOrConnectWithoutInviteTokensInput = {
+    where: TeamWhereUniqueInput
+    create: XOR<TeamCreateWithoutInviteTokensInput, TeamUncheckedCreateWithoutInviteTokensInput>
+  }
+
+  export type TeamUpsertWithoutInviteTokensInput = {
+    update: XOR<TeamUpdateWithoutInviteTokensInput, TeamUncheckedUpdateWithoutInviteTokensInput>
+    create: XOR<TeamCreateWithoutInviteTokensInput, TeamUncheckedCreateWithoutInviteTokensInput>
+    where?: TeamWhereInput
+  }
+
+  export type TeamUpdateToOneWithWhereWithoutInviteTokensInput = {
+    where?: TeamWhereInput
+    data: XOR<TeamUpdateWithoutInviteTokensInput, TeamUncheckedUpdateWithoutInviteTokensInput>
+  }
+
+  export type TeamUpdateWithoutInviteTokensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
+    members?: TeamMemberUpdateManyWithoutTeamNestedInput
+    projects?: ProjectUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUpdateManyWithoutTeamNestedInput
+  }
+
+  export type TeamUncheckedUpdateWithoutInviteTokensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamCreateWithoutProjectsInput = {
     id?: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutTeamsInput
     members?: TeamMemberCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogCreateNestedManyWithoutTeamInput
   }
 
   export type TeamUncheckedCreateWithoutProjectsInput = {
@@ -21521,9 +27188,13 @@ export namespace Prisma {
     organizationId: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenUncheckedCreateNestedManyWithoutTeamInput
+    auditLogs?: TeamAuditLogUncheckedCreateNestedManyWithoutTeamInput
   }
 
   export type TeamCreateOrConnectWithoutProjectsInput = {
@@ -21642,10 +27313,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
     members?: TeamMemberUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutProjectsInput = {
@@ -21653,9 +27328,13 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUncheckedUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type ProjectMemberUpsertWithWhereUniqueWithoutProjectInput = {
@@ -21764,6 +27443,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneCreateNestedOneWithoutClonedProjectInput
@@ -21781,6 +27461,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
     starredBy?: StarredProjectUncheckedCreateNestedManyWithoutProjectInput
@@ -21808,6 +27489,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectMembershipsInput = {
@@ -21827,6 +27509,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneUncheckedCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectMembershipsInput = {
@@ -21855,6 +27538,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUpdateOneWithoutClonedProjectNestedInput
@@ -21872,6 +27556,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
     starredBy?: StarredProjectUncheckedUpdateManyWithoutProjectNestedInput
@@ -21905,6 +27590,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectMembershipsInput = {
@@ -21924,6 +27610,7 @@ export namespace Prisma {
     publishedAssets?: MarketplaceAssetUncheckedUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUncheckedUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutPublishedAssetInput = {
@@ -21936,6 +27623,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     clonedFrom?: ProjectCloneCreateNestedOneWithoutClonedProjectInput
@@ -21953,6 +27641,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
     starredBy?: StarredProjectUncheckedCreateNestedManyWithoutProjectInput
@@ -21980,6 +27669,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberCreateNestedManyWithoutUserInput
     clonedProjects?: ProjectCloneCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPublishedAssetsInput = {
@@ -21999,6 +27689,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutUserInput
     clonedProjects?: ProjectCloneUncheckedCreateNestedManyWithoutClonedByInput
     starredProjects?: StarredProjectUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPublishedAssetsInput = {
@@ -22051,6 +27742,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUpdateOneWithoutClonedProjectNestedInput
@@ -22068,6 +27760,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
     starredBy?: StarredProjectUncheckedUpdateManyWithoutProjectNestedInput
@@ -22101,6 +27794,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUpdateManyWithoutUserNestedInput
     clonedProjects?: ProjectCloneUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPublishedAssetsInput = {
@@ -22120,6 +27814,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
     clonedProjects?: ProjectCloneUncheckedUpdateManyWithoutClonedByNestedInput
     starredProjects?: StarredProjectUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCloneUpsertWithWhereUniqueWithoutAssetInput = {
@@ -22181,6 +27876,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
@@ -22198,6 +27894,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     starredBy?: StarredProjectUncheckedCreateNestedManyWithoutProjectInput
@@ -22225,6 +27922,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberCreateNestedManyWithoutUserInput
     publishedAssets?: MarketplaceAssetCreateNestedManyWithoutAuthorInput
     starredProjects?: StarredProjectCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutClonedProjectsInput = {
@@ -22244,6 +27942,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutUserInput
     publishedAssets?: MarketplaceAssetUncheckedCreateNestedManyWithoutAuthorInput
     starredProjects?: StarredProjectUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutClonedProjectsInput = {
@@ -22311,6 +28010,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
@@ -22328,6 +28028,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     starredBy?: StarredProjectUncheckedUpdateManyWithoutProjectNestedInput
@@ -22361,6 +28062,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUpdateManyWithoutUserNestedInput
     publishedAssets?: MarketplaceAssetUpdateManyWithoutAuthorNestedInput
     starredProjects?: StarredProjectUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutClonedProjectsInput = {
@@ -22380,6 +28082,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
     publishedAssets?: MarketplaceAssetUncheckedUpdateManyWithoutAuthorNestedInput
     starredProjects?: StarredProjectUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStarredProjectsInput = {
@@ -22399,6 +28102,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberCreateNestedManyWithoutUserInput
     publishedAssets?: MarketplaceAssetCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneCreateNestedManyWithoutClonedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStarredProjectsInput = {
@@ -22418,6 +28122,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutUserInput
     publishedAssets?: MarketplaceAssetUncheckedCreateNestedManyWithoutAuthorInput
     clonedProjects?: ProjectCloneUncheckedCreateNestedManyWithoutClonedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStarredProjectsInput = {
@@ -22435,6 +28140,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     team: TeamCreateNestedOneWithoutProjectsInput
     members?: ProjectMemberCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetCreateNestedOneWithoutProjectInput
@@ -22452,6 +28158,7 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     members?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
     publishedAsset?: MarketplaceAssetUncheckedCreateNestedOneWithoutProjectInput
     clonedFrom?: ProjectCloneUncheckedCreateNestedOneWithoutClonedProjectInput
@@ -22490,6 +28197,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUpdateManyWithoutUserNestedInput
     publishedAssets?: MarketplaceAssetUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUpdateManyWithoutClonedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStarredProjectsInput = {
@@ -22509,6 +28217,7 @@ export namespace Prisma {
     projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
     publishedAssets?: MarketplaceAssetUncheckedUpdateManyWithoutAuthorNestedInput
     clonedProjects?: ProjectCloneUncheckedUpdateManyWithoutClonedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectUpsertWithoutStarredByInput = {
@@ -22532,6 +28241,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     team?: TeamUpdateOneRequiredWithoutProjectsNestedInput
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
@@ -22549,9 +28259,178 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
+  }
+
+  export type TeamCreateWithoutAuditLogsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTeamsInput
+    members?: TeamMemberCreateNestedManyWithoutTeamInput
+    projects?: ProjectCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamUncheckedCreateWithoutAuditLogsInput = {
+    id?: string
+    organizationId: string
+    name: string
+    description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: TeamMemberUncheckedCreateNestedManyWithoutTeamInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutTeamInput
+    inviteTokens?: TeamInviteTokenUncheckedCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamCreateOrConnectWithoutAuditLogsInput = {
+    where: TeamWhereUniqueInput
+    create: XOR<TeamCreateWithoutAuditLogsInput, TeamUncheckedCreateWithoutAuditLogsInput>
+  }
+
+  export type TeamUpsertWithoutAuditLogsInput = {
+    update: XOR<TeamUpdateWithoutAuditLogsInput, TeamUncheckedUpdateWithoutAuditLogsInput>
+    create: XOR<TeamCreateWithoutAuditLogsInput, TeamUncheckedCreateWithoutAuditLogsInput>
+    where?: TeamWhereInput
+  }
+
+  export type TeamUpdateToOneWithWhereWithoutAuditLogsInput = {
+    where?: TeamWhereInput
+    data: XOR<TeamUpdateWithoutAuditLogsInput, TeamUncheckedUpdateWithoutAuditLogsInput>
+  }
+
+  export type TeamUpdateWithoutAuditLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
+    members?: TeamMemberUpdateManyWithoutTeamNestedInput
+    projects?: ProjectUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUpdateManyWithoutTeamNestedInput
+  }
+
+  export type TeamUncheckedUpdateWithoutAuditLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUncheckedUpdateManyWithoutTeamNestedInput
+  }
+
+  export type UserCreateWithoutNotificationsInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    password?: string | null
+    bio?: string | null
+    onboardingComplete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    onboardingProgress?: OnboardingProgressCreateNestedOneWithoutUserInput
+    organizations?: OrganizationMemberCreateNestedManyWithoutUserInput
+    teamMemberships?: TeamMemberCreateNestedManyWithoutUserInput
+    projectMemberships?: ProjectMemberCreateNestedManyWithoutUserInput
+    publishedAssets?: MarketplaceAssetCreateNestedManyWithoutAuthorInput
+    clonedProjects?: ProjectCloneCreateNestedManyWithoutClonedByInput
+    starredProjects?: StarredProjectCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutNotificationsInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    password?: string | null
+    bio?: string | null
+    onboardingComplete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    onboardingProgress?: OnboardingProgressUncheckedCreateNestedOneWithoutUserInput
+    organizations?: OrganizationMemberUncheckedCreateNestedManyWithoutUserInput
+    teamMemberships?: TeamMemberUncheckedCreateNestedManyWithoutUserInput
+    projectMemberships?: ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+    publishedAssets?: MarketplaceAssetUncheckedCreateNestedManyWithoutAuthorInput
+    clonedProjects?: ProjectCloneUncheckedCreateNestedManyWithoutClonedByInput
+    starredProjects?: StarredProjectUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutNotificationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type UserUpsertWithoutNotificationsInput = {
+    update: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type UserUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    onboardingProgress?: OnboardingProgressUpdateOneWithoutUserNestedInput
+    organizations?: OrganizationMemberUpdateManyWithoutUserNestedInput
+    teamMemberships?: TeamMemberUpdateManyWithoutUserNestedInput
+    projectMemberships?: ProjectMemberUpdateManyWithoutUserNestedInput
+    publishedAssets?: MarketplaceAssetUpdateManyWithoutAuthorNestedInput
+    clonedProjects?: ProjectCloneUpdateManyWithoutClonedByNestedInput
+    starredProjects?: StarredProjectUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingComplete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    onboardingProgress?: OnboardingProgressUncheckedUpdateOneWithoutUserNestedInput
+    organizations?: OrganizationMemberUncheckedUpdateManyWithoutUserNestedInput
+    teamMemberships?: TeamMemberUncheckedUpdateManyWithoutUserNestedInput
+    projectMemberships?: ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+    publishedAssets?: MarketplaceAssetUncheckedUpdateManyWithoutAuthorNestedInput
+    clonedProjects?: ProjectCloneUncheckedUpdateManyWithoutClonedByNestedInput
+    starredProjects?: StarredProjectUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrganizationMemberCreateManyUserInput = {
@@ -22565,6 +28444,7 @@ export namespace Prisma {
   export type TeamMemberCreateManyUserInput = {
     id?: string
     teamId: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22601,6 +28481,14 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type NotificationCreateManyUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type OrganizationMemberUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: EnumOrgRoleFieldUpdateOperationsInput | $Enums.OrgRole
@@ -22627,6 +28515,7 @@ export namespace Prisma {
 
   export type TeamMemberUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     team?: TeamUpdateOneRequiredWithoutMembersNestedInput
@@ -22635,6 +28524,7 @@ export namespace Prisma {
   export type TeamMemberUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     teamId?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22642,6 +28532,7 @@ export namespace Prisma {
   export type TeamMemberUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     teamId?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22744,6 +28635,30 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type NotificationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    meta?: JsonNullValueInput | InputJsonValue
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrganizationMemberCreateManyOrganizationInput = {
     id?: string
     userId: string
@@ -22756,6 +28671,8 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    avatarUrl?: string | null
+    slug?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22798,26 +28715,36 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: TeamMemberUpdateManyWithoutTeamNestedInput
     projects?: ProjectUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: TeamMemberUncheckedUpdateManyWithoutTeamNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutTeamNestedInput
+    inviteTokens?: TeamInviteTokenUncheckedUpdateManyWithoutTeamNestedInput
+    auditLogs?: TeamAuditLogUncheckedUpdateManyWithoutTeamNestedInput
   }
 
   export type TeamUncheckedUpdateManyWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22855,6 +28782,7 @@ export namespace Prisma {
   export type TeamMemberCreateManyTeamInput = {
     id?: string
     userId: string
+    role?: $Enums.TeamRole
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22869,10 +28797,33 @@ export namespace Prisma {
     lastOpenedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type TeamInviteTokenCreateManyTeamInput = {
+    id?: string
+    token: string
+    inviteeEmail: string
+    role: $Enums.TeamRole
+    createdByUserId: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    usedByUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type TeamAuditLogCreateManyTeamInput = {
+    id?: string
+    actorId?: string | null
+    targetId?: string | null
+    event: $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
   }
 
   export type TeamMemberUpdateWithoutTeamInput = {
     id?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutTeamMembershipsNestedInput
@@ -22881,6 +28832,7 @@ export namespace Prisma {
   export type TeamMemberUncheckedUpdateWithoutTeamInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22888,6 +28840,7 @@ export namespace Prisma {
   export type TeamMemberUncheckedUpdateManyWithoutTeamInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22902,6 +28855,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUpdateOneWithoutClonedProjectNestedInput
@@ -22918,6 +28872,7 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     members?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
     publishedAsset?: MarketplaceAssetUncheckedUpdateOneWithoutProjectNestedInput
     clonedFrom?: ProjectCloneUncheckedUpdateOneWithoutClonedProjectNestedInput
@@ -22934,6 +28889,70 @@ export namespace Prisma {
     lastOpenedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type TeamInviteTokenUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    inviteeEmail?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamInviteTokenUncheckedUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    inviteeEmail?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamInviteTokenUncheckedUpdateManyWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    inviteeEmail?: StringFieldUpdateOperationsInput | string
+    role?: EnumTeamRoleFieldUpdateOperationsInput | $Enums.TeamRole
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamAuditLogUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    event?: EnumAuditEventTypeFieldUpdateOperationsInput | $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamAuditLogUncheckedUpdateWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    event?: EnumAuditEventTypeFieldUpdateOperationsInput | $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TeamAuditLogUncheckedUpdateManyWithoutTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    event?: EnumAuditEventTypeFieldUpdateOperationsInput | $Enums.AuditEventType
+    meta?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectMemberCreateManyProjectInput = {
@@ -23066,6 +29085,10 @@ export namespace Prisma {
      */
     export type TeamMemberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TeamMemberDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use TeamInviteTokenDefaultArgs instead
+     */
+    export type TeamInviteTokenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TeamInviteTokenDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ProjectDefaultArgs instead
      */
     export type ProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectDefaultArgs<ExtArgs>
@@ -23090,9 +29113,21 @@ export namespace Prisma {
      */
     export type PasswordResetTokenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PasswordResetTokenDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use EmailVerificationTokenDefaultArgs instead
+     */
+    export type EmailVerificationTokenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EmailVerificationTokenDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use StarredProjectDefaultArgs instead
      */
     export type StarredProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = StarredProjectDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use TeamAuditLogDefaultArgs instead
+     */
+    export type TeamAuditLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TeamAuditLogDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use NotificationDefaultArgs instead
+     */
+    export type NotificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NotificationDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

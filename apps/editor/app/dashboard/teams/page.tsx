@@ -27,7 +27,7 @@ export default function TeamsPage() {
     const orgId = data.organizations[0].organizationId;
     
     try {
-      await createTeam(orgId, name, desc);
+      await createTeam({ name, organizationId: orgId });
       const newData = await getDashboardData();
       setData(newData);
       setShowModal(false);

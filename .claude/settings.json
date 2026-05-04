@@ -1,7 +1,31 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx turbo:*)"
+      "Bash(npx turbo:*)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git show *)",
+      "Bash(git status *)",
+      "Bash(git branch *)",
+      "Bash(git blame *)",
+      "Bash(git tag *)",
+      "Bash(git remote *)",
+      "Bash(git config *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh issue view *)",
+      "Bash(gh issue list *)",
+      "Bash(gh run view *)",
+      "Bash(gh run list *)",
+      "Bash(gh api *)",
+      "Bash(rg *)",
+      "Bash(grep *)",
+      "Bash(jq *)",
+      "Bash(docker ps *)",
+      "Bash(docker logs *)",
+      "Bash(docker inspect *)",
+      "Bash(docker images *)"
     ]
   }
 }

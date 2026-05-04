@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { createHash } from "node:crypto";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
@@ -12,21 +13,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
     }
 
-    const record = await prisma.passwordResetToken.findUnique({ where: { token } });
+    const hashedToken = createHash("sha256").update(token).digest("hex");
+    const record = await prisma.passwordResetToken.findUnique({ where: { token: hashedToken } });
     if (!record || record.usedAt || record.expiresAt < new Date()) {
       return NextResponse.json({ error: "This reset link is invalid or has expired" }, { status: 400 });
     }
 
-    const hashed = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Mark token used + update password atomically.
     await prisma.$transaction([
       prisma.user.update({
         where: { email: record.email },
-        data: { password: hashed },
+        data: { password: hashedPassword },
       }),
       prisma.passwordResetToken.update({
-        where: { token },
+        where: { token: hashedToken },
         data: { usedAt: new Date() },
       }),
     ]);

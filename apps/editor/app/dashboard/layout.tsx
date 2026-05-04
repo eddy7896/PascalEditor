@@ -4,6 +4,9 @@ import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { DashboardSidebar } from './_components/DashboardSidebar'
+import { BreadcrumbProvider } from './_components/breadcrumb-context'
+import { BreadcrumbNav } from './_components/BreadcrumbNav'
+import { NotificationBell } from './_components/NotificationBell'
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const session = await getServerSession(authOptions)
@@ -39,15 +42,16 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     role: m.role,
   }))
 
-  const firstOrg = memberships[0]?.organization
-  const teams = firstOrg?.teams.map((t, i) => ({
+  const allTeams = memberships.flatMap((m) => m.organization.teams)
+  const TEAM_COLORS = ['#4F8EF7', '#F97316', '#A855F7', '#10B981', '#F59E0B']
+  const teams = allTeams.map((t, i) => ({
     id: t.id,
     name: t.name,
     projectCount: t.projects.length,
-    color: ['#4F8EF7', '#F97316', '#A855F7', '#10B981', '#F59E0B'][i % 5]!,
-  })) ?? []
+    color: TEAM_COLORS[i % TEAM_COLORS.length]!,
+  }))
 
-  const totalProjects = firstOrg?.teams.reduce((acc, t) => acc + t.projects.length, 0) ?? 0
+  const totalProjects = allTeams.reduce((acc, t) => acc + t.projects.length, 0)
   const starredCount = user.starredProjects.length
 
   return (
@@ -66,7 +70,13 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         storageLimitGb={500}
       />
       <main className="flex-1 ml-[220px] overflow-y-auto min-h-screen">
-        {children}
+        <header className="sticky top-0 z-30 flex items-center justify-end px-6 py-2 border-b border-zinc-800 bg-[#0A0A0A]">
+          <NotificationBell />
+        </header>
+        <BreadcrumbProvider>
+          <BreadcrumbNav />
+          {children}
+        </BreadcrumbProvider>
       </main>
     </div>
   )

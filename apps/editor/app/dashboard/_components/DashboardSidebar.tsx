@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import { signOut } from 'next-auth/react'
 import {
   FolderKanban, Clock, Star, Users, FileText,
-  LogOut, Settings, HardDrive, ChevronRight,
+  LogOut, Settings, HardDrive, ChevronRight, Plus,
 } from 'lucide-react'
+import { CreateTeamModal } from './CreateTeamModal'
 
 type Org = { id: string; name: string; slug: string; logoUrl: string | null; role: string }
 type Team = { id: string; name: string; projectCount: number; color: string }
@@ -42,6 +44,8 @@ export function DashboardSidebar({
   const pathname = usePathname()
   const activeOrg = orgs[0] ?? null
   const storagePercent = Math.min(100, Math.round((storageUsedGb / storageLimitGb) * 100))
+  const activeTeamId = pathname.match(/^\/dashboard\/teams\/([^/]+)/)?.[1] ?? null
+  const [teamModalOpen, setTeamModalOpen] = useState(false)
 
   const counts: Record<'total' | 'starred', number> = { total: totalProjects, starred: starredCount }
 
@@ -90,13 +94,18 @@ export function DashboardSidebar({
       </div>
 
       {/* Teams */}
-      {teams.length > 0 && (
-        <div className="px-3 pt-3 pb-2">
-          <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold px-2 mb-1.5">Teams</p>
-          <nav className="space-y-0.5">
-            {teams.map((team, i) => (
-              <Link key={team.id} href={`/dashboard/teams`}>
-                <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04] transition-all text-[13px]">
+      <div className="px-3 pt-3 pb-2">
+        <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold px-2 mb-1.5">Teams</p>
+        <nav className="space-y-0.5">
+          {teams.map((team, i) => {
+            const isActive = activeTeamId === team.id
+            return (
+              <Link key={team.id} href={`/dashboard/teams/${team.id}`}>
+                <div className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-all text-[13px] ${
+                  isActive
+                    ? 'bg-white/[0.07] text-white'
+                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]'
+                }`}>
                   <span
                     className="w-2 h-2 rounded-sm flex-shrink-0"
                     style={{ backgroundColor: TEAM_COLORS[i % TEAM_COLORS.length] }}
@@ -107,10 +116,19 @@ export function DashboardSidebar({
                   )}
                 </div>
               </Link>
-            ))}
-          </nav>
-        </div>
-      )}
+            )
+          })}
+          <button
+            onClick={() => setTeamModalOpen(true)}
+            className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-zinc-600 hover:text-zinc-400 hover:bg-white/[0.04] transition-all text-[13px]"
+          >
+            <Plus className="w-3 h-3 flex-shrink-0" />
+            <span>New team</span>
+          </button>
+        </nav>
+      </div>
+
+      <CreateTeamModal open={teamModalOpen} onClose={() => setTeamModalOpen(false)} />
 
       <div className="flex-1" />
 
