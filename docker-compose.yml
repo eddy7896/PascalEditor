@@ -1,5 +1,6 @@
 services:
   app:
+    env_file: .env
     build:
       context: .
       dockerfile: apps/editor/Dockerfile
@@ -22,6 +23,10 @@ services:
       - NEXT_PUBLIC_POSTHOG_KEY=${NEXT_PUBLIC_POSTHOG_KEY}
       - NEXT_PUBLIC_POSTHOG_HOST=${NEXT_PUBLIC_POSTHOG_HOST}
       - NEXT_PUBLIC_SOCKET_URL=https://archly.cloud
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - SKIP_ENV_VALIDATION=1
     depends_on:
       db:

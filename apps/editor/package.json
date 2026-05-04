@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e ./.env.local --override -- bun server.ts",
-    "build": "dotenv -e ./.env.local --override -- next build",
+    "dev": "bun server.ts",
+    "build": "next build",
     "start": "next start",
     "lint": "biome lint",
     "check-types": "next typegen && tsc --noEmit"
