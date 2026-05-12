@@ -7,6 +7,7 @@ import { signOut } from 'next-auth/react'
 import {
   Clock,
   FileText,
+  Trash2,
   Users2,
   ChevronDown,
   Check,
@@ -16,6 +17,7 @@ import {
   LogOut,
   ChevronRight,
 } from 'lucide-react'
+import { CreateTeamModal } from './CreateTeamModal'
 
 type Team = { id: string; name: string }
 type Org = { 
@@ -32,9 +34,10 @@ export function DashboardSidebar({ orgs, user }: { orgs: Org[]; user: User }) {
   const pathname = usePathname()
   const [activeOrg, setActiveOrg] = useState(orgs[0]!)
   const [orgMenuOpen, setOrgMenuOpen] = useState(false)
+  const [showCreateTeamModal, setShowCreateTeamModal] = useState(false)
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-60 z-40 flex flex-col bg-[#2c2c2c] border-r border-[#3b3b3b] text-zinc-300 select-none font-sans">
+    <aside className="fixed left-0 top-0 h-full w-64 z-40 flex flex-col bg-[#2c2c2c] border-r border-[#3b3b3b] text-zinc-300 select-none font-sans">
       {/* User & Org Selector (Top) */}
       <div className="relative p-2">
         <button
@@ -100,11 +103,20 @@ export function DashboardSidebar({ orgs, user }: { orgs: Org[]; user: User }) {
           label="Drafts" 
           active={pathname === '/dashboard/drafts'} 
         />
+        <SidebarItem 
+          href="/dashboard/trash" 
+          icon={<Trash2 className="w-4 h-4" />} 
+          label="Trash" 
+          active={pathname === '/dashboard/trash'} 
+        />
 
         {/* Teams Section */}
         <div className="mt-6 mb-2 px-2 flex items-center justify-between group">
           <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Teams</span>
-          <button className="p-0.5 hover:bg-[#3e3e3e] rounded transition-colors opacity-0 group-hover:opacity-100">
+          <button 
+            onClick={() => setShowCreateTeamModal(true)}
+            className="p-0.5 hover:bg-[#3e3e3e] rounded transition-colors opacity-0 group-hover:opacity-100"
+          >
             <Plus className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-300" />
           </button>
         </div>
@@ -132,6 +144,11 @@ export function DashboardSidebar({ orgs, user }: { orgs: Org[]; user: User }) {
           <ChevronRight className="w-3 h-3 text-zinc-500 group-hover:text-zinc-300" />
         </div>
       </div>
+      <CreateTeamModal 
+        isOpen={showCreateTeamModal} 
+        onClose={() => setShowCreateTeamModal(false)} 
+        orgId={activeOrg.id}
+      />
     </aside>
   )
 }

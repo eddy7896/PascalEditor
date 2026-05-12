@@ -18,7 +18,9 @@ export async function getDashboardData() {
             include: {
               teams: {
                 include: {
-                  projects: true,
+                  projects: {
+                    where: { deletedAt: null }
+                  },
                   members: true,
                 },
               },
@@ -65,9 +67,13 @@ export async function createProject(teamId: string, name: string, description: s
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) throw new Error("Unauthorized");
 
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!user) throw new Error("User not found");
+
   const project = await prisma.project.create({
     data: {
       teamId,
+      userId: user.id,
       name,
       description,
     },
@@ -75,7 +81,74 @@ export async function createProject(teamId: string, name: string, description: s
 
   revalidatePath("/dashboard/projects");
   revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/teams/${teamId}`);
   return { success: true, project };
+}
+
+export async function createDraft(name: string, description?: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) throw new Error("Unauthorized");
+
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!user) throw new Error("User not found");
+
+  const project = await prisma.project.create({
+    data: {
+      userId: user.id,
+      name,
+      description,
+    },
+  });
+
+  revalidatePath("/dashboard/drafts");
+  revalidatePath("/dashboard");
+  return { success: true, project };
+}
+
+export async function getDrafts() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) return [];
+
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!user) return [];
+
+  return prisma.project.findMany({
+    where: {
+      userId: user.id,
+      teamId: null,
+      deletedAt: null,
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
+export async function getTrash() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) return [];
+
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  if (!user) return [];
+
+  return prisma.project.findMany({
+    where: {
+      userId: user.id,
+      deletedAt: { not: null },
+    },
+    orderBy: { deletedAt: "desc" },
+  });
+}
+
+export async function deleteProject(projectId: string) {
+  await prisma.project.update({
+    where: { id: projectId },
+    data: { deletedAt: new Date() },
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/projects");
+  revalidatePath("/dashboard/drafts");
+  revalidatePath("/dashboard/trash");
+  return { success: true };
 }
 
 export async function inviteMember(organizationId: string, email: string, name: string) {
@@ -83,14 +156,12 @@ export async function inviteMember(organizationId: string, email: string, name: 
   if (!session?.user?.email) throw new Error("Unauthorized");
 
   try {
-    // Upsert user
     const invitedUser = await prisma.user.upsert({
       where: { email },
       update: {},
       create: { email, name },
     });
 
-    // Create org member
     await prisma.organizationMember.create({
       data: {
         organizationId,
@@ -103,9 +174,21 @@ export async function inviteMember(organizationId: string, email: string, name: 
     return { success: true };
   } catch (error) {
     console.error("Invite error:", error);
-    return { success: false, error: "Failed to invite member. They may already be in the organization." };
+    return { success: false, error: "Failed to invite member." };
   }
 }
+
+export async function restoreProject(projectId: string) {
+  await prisma.project.update({
+    where: { id: projectId },
+    data: { deletedAt: null },
+  });
+
+  revalidatePath("/dashboard/trash");
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
 export async function getTeamData(teamId: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return null;
@@ -114,6 +197,7 @@ export async function getTeamData(teamId: string) {
     where: { id: teamId },
     include: {
       projects: {
+        where: { deletedAt: null },
         orderBy: { updatedAt: 'desc' }
       },
       members: {

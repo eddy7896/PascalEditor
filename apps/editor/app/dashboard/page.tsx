@@ -1,7 +1,7 @@
-import { getDashboardData } from './actions'
+import { getDashboardData, getDrafts } from './actions'
 import { ProjectCard } from './_components/ProjectCard'
-import { Plus, Search, ListFilter, LayoutGrid, ChevronDown } from 'lucide-react'
-import Link from 'next/link'
+import { Search, ListFilter, LayoutGrid, ChevronDown } from 'lucide-react'
+import { NewProjectButton } from './_components/NewProjectButton'
 
 export default async function DashboardOverview() {
   const data = await getDashboardData()
@@ -11,9 +11,16 @@ export default async function DashboardOverview() {
   }
 
   const org = data.organizations[0]!.organization
-  const allProjects = org.teams.flatMap((team) =>
-    team.projects.map((proj) => ({ ...proj, teamName: team.name }))
-  )
+  
+  // Also include drafts in Recents
+  const drafts = await getDrafts()
+  
+  const allProjects = [
+    ...org.teams.flatMap((team) =>
+      team.projects.map((proj) => ({ ...proj, teamName: team.name }))
+    ),
+    ...drafts.map(d => ({ ...d, teamName: 'Draft' }))
+  ]
 
   const sortedProjects = [...allProjects].sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
@@ -43,13 +50,7 @@ export default async function DashboardOverview() {
                 <ListFilter size={14} />
               </button>
             </div>
-            <Link
-              href="/editor/new"
-              className="flex items-center gap-2 px-3 py-1.5 bg-[#0d99ff] hover:bg-[#0b85de] text-white text-[13px] font-medium rounded transition-colors"
-            >
-              <Plus size={16} />
-              <span>Design file</span>
-            </Link>
+            <NewProjectButton />
           </div>
         </div>
       </header>

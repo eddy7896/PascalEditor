@@ -21,6 +21,7 @@ model User {
   organizations    OrganizationMember[]
   teamMemberships  TeamMember[]
   projectMemberships ProjectMember[]
+  ownedProjects    Project[]
   publishedAssets  MarketplaceAsset[]
   clonedProjects   ProjectClone[]
 
@@ -104,14 +105,17 @@ model TeamMember {
 
 model Project {
   id           String   @id @default(cuid())
-  teamId       String
+  teamId       String?
+  userId       String?
   name         String
   description  String?
   thumbnailUrl String?
   stateUrl     String?
   isPublic     Boolean  @default(false)
+  deletedAt    DateTime?
 
-  team             Team              @relation(fields: [teamId], references: [id])
+  team             Team?             @relation(fields: [teamId], references: [id])
+  owner            User?             @relation(fields: [userId], references: [id])
   members          ProjectMember[]
   publishedAsset   MarketplaceAsset?
   clonedFrom       ProjectClone?     @relation("ClonedProject")
@@ -120,6 +124,7 @@ model Project {
   updatedAt    DateTime @updatedAt
 
   @@index([teamId])
+  @@index([userId])
 }
 
 model ProjectMember {

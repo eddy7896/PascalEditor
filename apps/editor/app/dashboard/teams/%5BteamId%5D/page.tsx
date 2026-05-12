@@ -1,7 +1,8 @@
 import { getTeamData } from '../../actions'
 import { ProjectCard } from '../../_components/ProjectCard'
-import { Users, LayoutGrid, UserPlus } from 'lucide-react'
+import { Users, LayoutGrid, UserPlus, Plus } from 'lucide-react'
 import Link from 'next/link'
+import { NewProjectButton } from '../../../_components/NewProjectButton'
 
 export default async function TeamPage({ 
   params,
@@ -30,10 +31,13 @@ export default async function TeamPage({
             </div>
           </div>
           
-          <button className="flex items-center gap-2 px-3 py-1.5 bg-[#2c2c2c] border border-[#3b3b3b] hover:bg-[#3e3e3e] text-[13px] font-medium text-white rounded transition-colors">
-            <UserPlus size={16} />
-            <span>Invite</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-2 px-3 py-1.5 bg-[#2c2c2c] border border-[#3b3b3b] hover:bg-[#3e3e3e] text-[13px] font-medium text-white rounded transition-colors">
+              <UserPlus size={16} />
+              <span>Invite</span>
+            </button>
+            <NewProjectButton teamId={params.teamId} label="New file" />
+          </div>
         </div>
 
         {/* Tabs */}
