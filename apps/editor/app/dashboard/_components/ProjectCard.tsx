@@ -14,7 +14,7 @@ type Project = {
   description: string | null
   thumbnailUrl: string | null
   updatedAt: Date | string
-  teamName: string
+  teamName?: string
   role?: ProjectRole
 }
 
@@ -112,7 +112,7 @@ export function ProjectCard({ project }: { project: Project }) {
             </h3>
             <div className="flex items-center gap-2 mt-1 text-[11px] text-zinc-500 font-medium">
               <span>{isDeleted ? 'Deleted' : `Modified ${timeAgo(project.updatedAt)}`}</span>
-              {!isDeleted && (
+              {!isDeleted && project.teamName && (
                 <>
                   <span>·</span>
                   <span className="truncate">{project.teamName}</span>

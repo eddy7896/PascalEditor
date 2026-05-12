@@ -20,7 +20,7 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
 
   let role: ProjectRole | null = projectMember?.role as ProjectRole ?? null
 
-  // Fall back to org-level role for org owners/admins
+  // Fall back to owner/org-level role
   if (!role) {
     const project = await prisma.project.findUnique({
       where: { id: projectId },
@@ -34,10 +34,20 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
         },
       },
     })
+    
     if (!project) redirect('/dashboard')
-    const orgRole = project.team.organization.members[0]?.role
-    if (orgRole === 'OWNER' || orgRole === 'ADMIN') {
-      role = 'OWNER'
+
+    // If it's a draft (no team), check if the current user is the owner
+    if (!project.team) {
+      if (project.userId === userId) {
+        role = 'OWNER'
+      }
+    } else {
+      // If it has a team, check organization-level permissions
+      const orgRole = project.team.organization.members[0]?.role
+      if (orgRole === 'OWNER' || orgRole === 'ADMIN') {
+        role = 'OWNER'
+      }
     }
   }
 
