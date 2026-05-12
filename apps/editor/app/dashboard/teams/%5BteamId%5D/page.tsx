@@ -2,7 +2,7 @@ import { getTeamData } from '../../actions'
 import { ProjectCard } from '../../_components/ProjectCard'
 import { Users, LayoutGrid, UserPlus, Plus } from 'lucide-react'
 import Link from 'next/link'
-import { NewProjectButton } from '../../../_components/NewProjectButton'
+import { NewProjectButton } from '../../_components/NewProjectButton'
 
 export default async function TeamPage({ 
   params,
