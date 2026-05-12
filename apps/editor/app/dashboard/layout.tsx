@@ -11,7 +11,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   const userId = (session.user as { id: string }).id
 
-  const memberships = await prisma.organizationMember.findMany({
+  let memberships = await prisma.organizationMember.findMany({
     where: { userId },
     include: {
       organization: { select: { id: true, name: true, slug: true, logoUrl: true } },
@@ -19,7 +19,33 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     orderBy: { createdAt: 'asc' },
   })
 
-  if (memberships.length === 0) redirect('/onboarding')
+  if (memberships.length === 0) {
+    // Fallback for legacy users or edge cases: Create a default workspace on the fly
+    const workspaceName = session.user.name ? `${session.user.name}'s Workspace` : 'My Workspace'
+    const slug = `user-${Math.random().toString(36).slice(2, 7)}`
+
+    const newOrg = await prisma.organization.create({
+      data: {
+        name: workspaceName,
+        slug,
+        status: 'APPROVED',
+        members: {
+          create: { userId, role: 'OWNER' }
+        },
+        teams: {
+          create: { name: 'General' }
+        }
+      }
+    })
+
+    // Re-fetch memberships to continue layout render
+    memberships = await prisma.organizationMember.findMany({
+      where: { userId },
+      include: {
+        organization: { select: { id: true, name: true, slug: true, logoUrl: true } },
+      },
+    })
+  }
 
   const orgs = memberships.map((m) => ({ ...m.organization, role: m.role }))
 

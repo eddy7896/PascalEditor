@@ -56,9 +56,9 @@ export default function LoginPage() {
         className="w-full max-w-md bg-[#0a0a0a] border border-white/10 rounded-2xl p-8"
       >
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-white mb-2">Sign in to your Workspace</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">Sign In</h1>
           <p className="text-gray-400 text-sm">
-            Enter your work email address and password to sign in to your organization.
+            Enter your email address and password to access your workspace.
           </p>
         </div>
 
@@ -71,13 +71,13 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1.5">Work Email</label>
+            <label className="block text-sm font-medium text-gray-400 mb-1.5">Email Address</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@company.com"
+              placeholder="name@example.com"
               className="w-full bg-[#111] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder:text-gray-600"
             />
           </div>
@@ -112,9 +112,6 @@ export default function LoginPage() {
 
       <p className="mt-8 text-sm text-gray-500">
         Don't have an account? <Link href="/signup" className="text-indigo-400 hover:text-indigo-300">Sign Up</Link>
-      </p>
-      <p className="mt-2 text-sm text-gray-500">
-        Don't have an organization yet? <Link href="/apply" className="text-indigo-400 hover:text-indigo-300">Apply for Early Access</Link>
       </p>
     </div>
   );

@@ -16,64 +16,60 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
-    const org = await prisma.organization.findUnique({
-      where: { domain },
-    });
-
-    if (!org || org.status !== 'APPROVED') {
-      return NextResponse.json({ error: "Your organization has not been registered or approved yet." }, { status: 403 });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     let user = await prisma.user.findUnique({
       where: { email: emailLower },
     });
 
-    if (user) {
-      if (user.password) {
-        return NextResponse.json({ error: "User already exists. Please sign in." }, { status: 400 });
-      }
-      
-      // Update existing user (e.g., OWNER created during org approval)
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: { 
-          password: hashedPassword,
-          name: name // update name if they provided one
-        }
-      });
+    if (user && user.password) {
+      return NextResponse.json({ error: "User already exists. Please sign in." }, { status: 400 });
+    }
 
-      // Ensure they are linked to the organization if they aren't already
-      const membership = await prisma.organizationMember.findUnique({
-        where: {
-          organizationId_userId: {
-            organizationId: org.id,
-            userId: user.id
-          }
-        }
-      });
-
-      if (!membership) {
-        await prisma.organizationMember.create({
-          data: {
-            organizationId: org.id,
-            userId: user.id,
-            role: 'MEMBER'
-          }
-        });
-      }
-    } else {
-      // Create new user
+    // 1. Create or Find User
+    if (!user) {
       user = await prisma.user.create({
         data: {
           email: emailLower,
           name,
           password: hashedPassword,
-          organizations: {
+        }
+      });
+    } else {
+      // Update existing user (e.g. if they were invited or partially created)
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { 
+          password: hashedPassword,
+          name: name || user.name
+        }
+      });
+    }
+
+    // 2. Check if they already have an organization (safety check)
+    const existingMembership = await prisma.organizationMember.findFirst({
+      where: { userId: user.id }
+    });
+
+    if (!existingMembership) {
+      // 3. Create a personal workspace and default team
+      const workspaceName = name ? `${name}'s Workspace` : 'My Workspace';
+      const slug = `${(name || 'user').toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Math.random().toString(36).slice(2, 7)}`;
+
+      await prisma.organization.create({
+        data: {
+          name: workspaceName,
+          slug,
+          status: 'APPROVED',
+          members: {
             create: {
-              organizationId: org.id,
-              role: 'MEMBER',
+              userId: user.id,
+              role: 'OWNER'
+            }
+          },
+          teams: {
+            create: {
+              name: 'General',
             }
           }
         }

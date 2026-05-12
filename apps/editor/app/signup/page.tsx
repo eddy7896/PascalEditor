@@ -65,7 +65,7 @@ export default function SignupPage() {
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold text-white mb-2">Create an Account</h1>
           <p className="text-gray-400 text-sm">
-            Sign up using your work email to join your organization's workspace.
+            Sign up to start building and collaborating in your personal workspace.
           </p>
         </div>
 
@@ -96,13 +96,13 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">Work Email</label>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">Email Address</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com"
+                placeholder="name@example.com"
                 className="w-full bg-[#111] border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder:text-gray-600"
               />
             </div>
