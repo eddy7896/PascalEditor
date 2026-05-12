@@ -7,10 +7,10 @@ export default async function TrashPage() {
   const trash = await getTrash()
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#1e1e1e] text-zinc-300 font-sans">
-      <header className="px-8 py-3 border-b border-[#3b3b3b] sticky top-0 bg-[#1e1e1e]/80 backdrop-blur-md z-30">
+    <div className="flex flex-col min-h-screen bg-background text-zinc-300 font-sans">
+      <header className="px-8 py-4 border-b border-border/40 sticky top-0 bg-background/80 backdrop-blur-2xl z-30">
         <div className="flex items-center justify-between">
-          <h1 className="text-[14px] font-semibold text-white">Trash</h1>
+          <h1 className="text-[17px] font-bold text-white tracking-tight">Recently Deleted</h1>
         </div>
       </header>
       
@@ -25,9 +25,15 @@ export default async function TrashPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-            {trash.map((project) => (
+            {trash.map((project: any) => (
               <div key={project.id} className="relative group">
-                <ProjectCard project={{ ...project, teamName: 'Deleted' }} />
+                <ProjectCard 
+                  project={{ 
+                    ...project, 
+                    updatedAt: project.updatedAt instanceof Date ? project.updatedAt.toISOString() : project.updatedAt,
+                    teamName: 'Deleted' 
+                  }} 
+                />
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                    {/* We could add a restore button here, but for now just viewing is fine or handled by a context menu */}
                 </div>

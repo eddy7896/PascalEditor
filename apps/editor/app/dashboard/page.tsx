@@ -4,7 +4,7 @@ import { Search, ListFilter, LayoutGrid, ChevronDown } from 'lucide-react'
 import { NewProjectButton } from './_components/NewProjectButton'
 
 export default async function DashboardOverview() {
-  const data = await getDashboardData()
+  const data = (await getDashboardData()) as any
 
   if (!data || data.organizations.length === 0) {
     return null // Handled by layout or onboarding
@@ -16,8 +16,8 @@ export default async function DashboardOverview() {
   const drafts = await getDrafts()
   
   const allProjects = [
-    ...org.teams.flatMap((team) =>
-      team.projects.map((proj) => ({ ...proj, teamName: team.name }))
+    ...org.teams.flatMap((team: any) =>
+      team.projects.map((proj: any) => ({ ...proj, teamName: team.name }))
     ),
     ...drafts.map(d => ({ ...d, teamName: 'Draft' }))
   ]
@@ -29,25 +29,25 @@ export default async function DashboardOverview() {
   const groups = groupProjects(sortedProjects)
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#1e1e1e] text-zinc-300 font-sans">
+    <div className="flex flex-col min-h-screen bg-background text-zinc-300 font-sans">
       {/* Header / Toolbar */}
-      <header className="sticky top-0 z-30 bg-[#1e1e1e]/80 backdrop-blur-md border-b border-[#3b3b3b] px-8 py-3">
+      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-2xl border-b border-border/40 px-8 py-4">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <h1 className="text-[14px] font-semibold text-white">Recently viewed</h1>
-            <div className="flex items-center gap-1 text-[13px] text-zinc-500 hover:text-zinc-300 cursor-pointer transition-colors">
+          <div className="flex items-center gap-8">
+            <h1 className="text-[17px] font-bold text-white tracking-tight">Recent Files</h1>
+            <div className="flex items-center gap-1.5 text-[13px] font-semibold text-zinc-500 hover:text-white cursor-pointer transition-colors group">
               <span>All files</span>
-              <ChevronDown size={14} />
+              <ChevronDown size={14} className="text-zinc-600 group-hover:text-white transition-colors" />
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center bg-[#2c2c2c] border border-[#3b3b3b] rounded p-0.5">
-              <button className="p-1.5 bg-[#3b3b3b] text-white rounded-sm shadow-sm">
-                <LayoutGrid size={14} />
+          <div className="flex items-center gap-4">
+            <div className="flex items-center bg-white/5 border border-white/5 rounded-xl p-1">
+              <button className="p-1.5 bg-white/10 text-white rounded-lg shadow-sm">
+                <LayoutGrid size={16} />
               </button>
-              <button className="p-1.5 text-zinc-500 hover:text-zinc-300">
-                <ListFilter size={14} />
+              <button className="p-1.5 text-zinc-600 hover:text-zinc-300">
+                <ListFilter size={16} />
               </button>
             </div>
             <NewProjectButton />
@@ -74,7 +74,13 @@ export default async function DashboardOverview() {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
                   {group.projects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+                    <ProjectCard 
+                      key={project.id} 
+                      project={{ 
+                        ...project, 
+                        updatedAt: project.updatedAt instanceof Date ? project.updatedAt.toISOString() : project.updatedAt 
+                      }} 
+                    />
                   ))}
                 </div>
               </section>

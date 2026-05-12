@@ -7,10 +7,10 @@ export default async function DraftsPage() {
   const drafts = await getDrafts()
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#1e1e1e] text-zinc-300 font-sans">
-      <header className="px-8 py-3 border-b border-[#3b3b3b] sticky top-0 bg-[#1e1e1e]/80 backdrop-blur-md z-30">
+    <div className="flex flex-col min-h-screen bg-background text-zinc-300 font-sans">
+      <header className="px-8 py-4 border-b border-border/40 sticky top-0 bg-background/80 backdrop-blur-2xl z-30">
         <div className="flex items-center justify-between">
-          <h1 className="text-[14px] font-semibold text-white">Drafts</h1>
+          <h1 className="text-[17px] font-bold text-white tracking-tight">My Drafts</h1>
           <NewProjectButton label="New Draft" />
         </div>
       </header>
@@ -26,8 +26,15 @@ export default async function DraftsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl2:grid-cols-5 gap-x-6 gap-y-10">
-            {drafts.map((draft) => (
-              <ProjectCard key={draft.id} project={{ ...draft, teamName: 'Draft' }} />
+            {drafts.map((draft: any) => (
+              <ProjectCard 
+                key={draft.id} 
+                project={{ 
+                  ...draft, 
+                  updatedAt: draft.updatedAt instanceof Date ? draft.updatedAt.toISOString() : draft.updatedAt,
+                  teamName: 'Draft' 
+                }} 
+              />
             ))}
           </div>
         )}

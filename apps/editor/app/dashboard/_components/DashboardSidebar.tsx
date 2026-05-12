@@ -37,87 +37,90 @@ export function DashboardSidebar({ orgs, user }: { orgs: Org[]; user: User }) {
   const [showCreateTeamModal, setShowCreateTeamModal] = useState(false)
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 z-40 flex flex-col bg-[#2c2c2c] border-r border-[#3b3b3b] text-zinc-300 select-none font-sans">
+    <aside className="fixed left-0 top-0 h-full w-64 z-40 flex flex-col bg-sidebar/80 backdrop-blur-2xl border-r border-border/40 text-zinc-400 select-none font-sans transition-all duration-300">
       {/* User & Org Selector (Top) */}
-      <div className="relative p-2">
+      <div className="relative p-3">
         <button
           onClick={() => setOrgMenuOpen(!orgMenuOpen)}
-          className="w-full flex items-center gap-2 p-1.5 rounded hover:bg-[#3e3e3e] transition-colors group"
+          className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 active:scale-[0.98] transition-all group"
         >
-          <div className="w-5 h-5 rounded bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-blue-400 flex items-center justify-center text-[12px] font-bold text-white shadow-lg shadow-primary/20 flex-shrink-0">
             {activeOrg.name[0]?.toUpperCase()}
           </div>
-          <span className="flex-1 text-[13px] font-medium truncate text-left">{activeOrg.name}</span>
-          <ChevronDown className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300" />
+          <div className="flex-1 text-left">
+            <div className="text-[13px] font-semibold text-white truncate leading-tight">{activeOrg.name}</div>
+            <div className="text-[10px] font-medium text-zinc-500 uppercase tracking-tight">Workspace</div>
+          </div>
+          <ChevronDown className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
         </button>
 
         {orgMenuOpen && (
-          <div className="absolute top-full left-2 right-2 mt-1 z-50 bg-[#2c2c2c] border border-[#3b3b3b] rounded shadow-xl overflow-hidden py-1">
-            <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Workspaces</div>
+          <div className="absolute top-full left-3 right-3 mt-1 z-50 bg-[#1c1c1e]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden py-2 animate-in fade-in zoom-in duration-150">
+            <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Workspaces</div>
             {orgs.map((org) => (
               <button
                 key={org.id}
                 onClick={() => { setActiveOrg(org); setOrgMenuOpen(false) }}
-                className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-[#3e3e3e] transition-colors"
+                className="w-full flex items-center gap-3 px-3 py-2 hover:bg-primary/10 transition-colors group"
               >
-                <div className="w-4 h-4 rounded bg-indigo-500 flex items-center justify-center text-[8px] font-bold text-white flex-shrink-0">
+                <div className="w-6 h-6 rounded-md bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0 group-hover:bg-primary transition-colors">
                   {org.name[0]?.toUpperCase()}
                 </div>
-                <span className="text-xs truncate flex-1 text-left">{org.name}</span>
-                {org.id === activeOrg.id && <Check className="w-3 h-3 text-indigo-400" />}
+                <span className="text-xs font-medium text-zinc-300 truncate flex-1 text-left">{org.name}</span>
+                {org.id === activeOrg.id && <Check className="w-3.5 h-3.5 text-primary" />}
               </button>
             ))}
-            <div className="h-px bg-[#3b3b3b] my-1" />
-            <Link href="/dashboard/settings" className="flex items-center gap-2 px-3 py-1.5 hover:bg-[#3e3e3e] text-xs transition-colors">
-              <Settings className="w-3.5 h-3.5" /> Settings
+            <div className="h-px bg-white/5 my-2" />
+            <Link href="/dashboard/settings" className="flex items-center gap-3 px-3 py-2 hover:bg-white/5 text-xs font-medium text-zinc-300 transition-colors">
+              <Settings className="w-4 h-4 text-zinc-500" /> Settings
             </Link>
             <button 
               onClick={() => signOut({ callbackUrl: '/' })}
-              className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-[#3e3e3e] text-xs text-red-400 transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2 hover:bg-red-500/10 text-xs font-medium text-red-400 transition-colors"
             >
-              <LogOut className="w-3.5 h-3.5" /> Sign Out
+              <LogOut className="w-4 h-4" /> Sign Out
             </button>
           </div>
         )}
       </div>
 
       {/* Search Bar */}
-      <div className="px-3 mb-4">
-        <button className="w-full flex items-center gap-2 px-2 py-1.5 bg-[#3e3e3e] hover:bg-[#454545] rounded text-zinc-400 text-xs transition-colors">
-          <Search className="w-3.5 h-3.5" />
-          <span>Search</span>
+      <div className="px-4 mb-6">
+        <button className="w-full flex items-center gap-2.5 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-zinc-500 text-xs font-medium transition-all group">
+          <Search className="w-4 h-4 group-hover:text-zinc-300 transition-colors" />
+          <span>Search...</span>
         </button>
       </div>
 
       {/* Main Navigation */}
-      <nav className="flex-1 overflow-y-auto px-2 space-y-0.5 custom-scrollbar">
+      <nav className="flex-1 overflow-y-auto px-3 space-y-1 custom-scrollbar">
         <SidebarItem 
           href="/dashboard" 
           icon={<Clock className="w-4 h-4" />} 
-          label="Recently viewed" 
+          label="Recent Files" 
           active={pathname === '/dashboard'} 
         />
         <SidebarItem 
           href="/dashboard/drafts" 
           icon={<FileText className="w-4 h-4" />} 
-          label="Drafts" 
+          label="My Drafts" 
           active={pathname === '/dashboard/drafts'} 
         />
         <SidebarItem 
           href="/dashboard/trash" 
           icon={<Trash2 className="w-4 h-4" />} 
-          label="Trash" 
+          label="Recently Deleted" 
           active={pathname === '/dashboard/trash'} 
         />
 
         {/* Teams Section */}
-        <div className="mt-6 mb-2 px-2 flex items-center justify-between group">
-          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Teams</span>
+        <div className="mt-8 mb-2 px-3 flex items-center justify-between group">
+          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Shared Teams</span>
           <button 
             onClick={() => setShowCreateTeamModal(true)}
-            className="p-0.5 hover:bg-[#3e3e3e] rounded transition-colors opacity-0 group-hover:opacity-100"
+            className="p-1 hover:bg-white/10 rounded-md transition-all active:scale-90"
           >
-            <Plus className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-300" />
+            <Plus className="w-4 h-4 text-zinc-600 hover:text-primary transition-colors" />
           </button>
         </div>
 
@@ -133,17 +136,19 @@ export function DashboardSidebar({ orgs, user }: { orgs: Org[]; user: User }) {
       </nav>
 
       {/* Bottom User Profile */}
-      <div className="p-2 border-t border-[#3b3b3b]">
-        <div className="flex items-center gap-2 p-1.5 rounded hover:bg-[#3e3e3e] transition-colors cursor-pointer group">
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0 shadow-sm">
-            {user.image ? <img src={user.image} alt="" className="w-full h-full rounded-full" /> : (user.name?.[0] ?? 'U')}
+      <div className="p-3 mt-auto">
+        <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all cursor-pointer group">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-zinc-700 to-zinc-900 border border-white/10 flex items-center justify-center text-[12px] font-bold text-white flex-shrink-0 shadow-lg overflow-hidden group-hover:border-primary/50 transition-colors">
+            {user.image ? <img src={user.image} alt="" className="w-full h-full object-cover" /> : (user.name?.[0] ?? 'U')}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium truncate">{user.name ?? 'User'}</div>
+            <div className="text-[13px] font-semibold text-white truncate">{user.name ?? 'Guest User'}</div>
+            <div className="text-[10px] font-medium text-zinc-500 truncate">{user.email ?? 'Pro Account'}</div>
           </div>
-          <ChevronRight className="w-3 h-3 text-zinc-500 group-hover:text-zinc-300" />
+          <ChevronRight className="w-4 h-4 text-zinc-700 group-hover:text-zinc-400 transition-colors" />
         </div>
       </div>
+
       <CreateTeamModal 
         isOpen={showCreateTeamModal} 
         onClose={() => setShowCreateTeamModal(false)} 
@@ -156,12 +161,12 @@ export function DashboardSidebar({ orgs, user }: { orgs: Org[]; user: User }) {
 function SidebarItem({ href, icon, label, active }: { href: string; icon: React.ReactNode; label: string; active?: boolean }) {
   return (
     <Link href={href}>
-      <div className={`flex items-center gap-2.5 px-2 py-1.5 rounded text-[13px] font-medium transition-colors ${
+      <div className={`flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-200 ${
         active 
-          ? 'bg-[#3e3e3e] text-white shadow-sm' 
-          : 'text-zinc-400 hover:bg-[#3e3e3e] hover:text-zinc-200'
+          ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+          : 'text-zinc-400 hover:bg-white/5 hover:text-white'
       }`}>
-        <span className={`${active ? 'text-indigo-400' : 'text-zinc-500'}`}>{icon}</span>
+        <span className={`${active ? 'text-white' : 'text-zinc-500'}`}>{icon}</span>
         <span className="truncate">{label}</span>
       </div>
     </Link>

@@ -8,35 +8,39 @@ export default async function TeamPage({
   params,
   searchParams 
 }: { 
-  params: { teamId: string },
-  searchParams: { tab?: string }
+  params: Promise<{ teamId: string }>,
+  searchParams: Promise<{ tab?: string }>
 }) {
-  const team = await getTeamData(params.teamId)
+  const { teamId } = await params
+  const { tab } = await searchParams
+  const team = (await getTeamData(teamId)) as any
   if (!team) return <div>Team not found</div>
 
-  const activeTab = searchParams.tab || 'projects'
+  const activeTab = tab || 'projects'
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#1e1e1e] text-zinc-300 font-sans">
+    <div className="flex flex-col min-h-screen bg-background text-zinc-300 font-sans">
       {/* Team Header */}
-      <header className="px-8 pt-8 pb-0 border-b border-[#3b3b3b] bg-[#1e1e1e]">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded bg-indigo-500 flex items-center justify-center text-xl font-bold text-white shadow-lg shadow-indigo-500/10">
+      <header className="px-8 pt-10 pb-0 border-b border-border/40 sticky top-0 bg-background/80 backdrop-blur-2xl z-30">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-blue-400 flex items-center justify-center text-2xl font-bold text-white shadow-2xl shadow-primary/20">
               {team.name[0]?.toUpperCase()}
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">{team.name}</h1>
-              <p className="text-[13px] text-zinc-500">{team.members.length} members · {team.projects.length} projects</p>
+              <div className="flex items-center gap-2">
+                <h1 className="text-3xl font-bold text-white tracking-tight">{team.name}</h1>
+              </div>
+              <p className="text-[13px] font-medium text-zinc-500 mt-1">{team.members.length} members · {team.projects.length} projects</p>
             </div>
           </div>
           
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-[#2c2c2c] border border-[#3b3b3b] hover:bg-[#3e3e3e] text-[13px] font-medium text-white rounded transition-colors">
-              <UserPlus size={16} />
+            <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/5 hover:bg-white/10 active:scale-95 text-[13px] font-semibold text-white rounded-xl transition-all">
+              <UserPlus size={16} className="text-zinc-400" />
               <span>Invite</span>
             </button>
-            <NewProjectButton teamId={params.teamId} label="New file" />
+            <NewProjectButton teamId={teamId} label="New file" />
           </div>
         </div>
 
@@ -46,52 +50,61 @@ export default async function TeamPage({
             href={`?tab=projects`} 
             label="Projects" 
             active={activeTab === 'projects'} 
-            icon={<LayoutGrid size={14} />} 
+            icon={<LayoutGrid size={16} />} 
           />
           <TabLink 
             href={`?tab=members`} 
             label="Members" 
             active={activeTab === 'members'} 
-            icon={<Users size={14} />} 
+            icon={<Users size={16} />} 
           />
         </div>
       </header>
 
       {/* Tab Content */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 max-w-[1600px] mx-auto w-full">
         {activeTab === 'projects' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-            {team.projects.map((project) => (
-              <ProjectCard key={project.id} project={{ ...project, teamName: team.name }} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-8 gap-y-12">
+            {team.projects.map((project: any) => (
+              <ProjectCard 
+                key={project.id} 
+                project={{ 
+                  ...project, 
+                  updatedAt: project.updatedAt instanceof Date ? project.updatedAt.toISOString() : project.updatedAt,
+                  teamName: team.name 
+                }} 
+              />
             ))}
             {team.projects.length === 0 && (
-              <div className="col-span-full py-20 text-center border-2 border-dashed border-[#3b3b3b] rounded-xl text-zinc-500">
-                No projects in this team yet.
+              <div className="col-span-full py-32 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-3xl text-zinc-500 bg-white/[0.01]">
+                <Plus size={48} className="text-zinc-800 mb-4" />
+                <p className="text-lg font-medium text-zinc-400">No projects yet</p>
+                <p className="text-sm mt-1">Create a new file to get started.</p>
               </div>
             )}
           </div>
         ) : (
-          <div className="max-w-4xl border border-[#3b3b3b] rounded-lg overflow-hidden">
-            <table className="w-full text-left text-[13px]">
-              <thead className="bg-[#2c2c2c] border-b border-[#3b3b3b]">
+          <div className="max-w-5xl bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+            <table className="w-full text-left text-[14px]">
+              <thead className="bg-white/[0.03] border-b border-white/5">
                 <tr>
-                  <th className="px-4 py-3 font-semibold text-zinc-400">Name</th>
-                  <th className="px-4 py-3 font-semibold text-zinc-400">Email</th>
-                  <th className="px-4 py-3 font-semibold text-zinc-400">Role</th>
+                  <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">Name</th>
+                  <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">Email</th>
+                  <th className="px-6 py-4 font-bold text-zinc-400 uppercase tracking-widest text-[10px]">Role</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#3b3b3b]">
+              <tbody className="divide-y divide-white/5">
                 {team.members.map((member: any) => (
-                  <tr key={member.userId} className="hover:bg-[#2c2c2c] transition-colors group">
-                    <td className="px-4 py-4 flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-[10px] font-bold text-white">
-                        {member.user.image ? <img src={member.user.image} alt="" className="w-full h-full rounded-full" /> : member.user.name?.[0]}
+                  <tr key={member.userId} className="hover:bg-white/[0.03] transition-colors group">
+                    <td className="px-6 py-5 flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-700 to-zinc-900 border border-white/10 flex items-center justify-center text-xs font-bold text-white shadow-lg overflow-hidden">
+                        {member.user.image ? <img src={member.user.image} alt="" className="w-full h-full object-cover" /> : member.user.name?.[0]}
                       </div>
-                      <span className="font-medium text-white">{member.user.name}</span>
+                      <span className="font-semibold text-white tracking-tight">{member.user.name}</span>
                     </td>
-                    <td className="px-4 py-4 text-zinc-500">{member.user.email}</td>
-                    <td className="px-4 py-4">
-                      <span className="px-2 py-1 rounded bg-[#3b3b3b] text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                    <td className="px-6 py-5 text-zinc-500 font-medium">{member.user.email}</td>
+                    <td className="px-6 py-5">
+                      <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
                         Member
                       </span>
                     </td>
