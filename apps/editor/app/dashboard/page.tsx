@@ -1,106 +1,120 @@
 import { getDashboardData } from './actions'
 import { ProjectCard } from './_components/ProjectCard'
-import { Plus, FolderKanban, Users, Building2 } from 'lucide-react'
+import { Plus, Search, ListFilter, LayoutGrid, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function DashboardOverview() {
   const data = await getDashboardData()
 
   if (!data || data.organizations.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto mb-4">
-            <Building2 className="w-8 h-8 text-zinc-600" />
-          </div>
-          <p className="text-zinc-400 text-sm">No organization found.</p>
-        </div>
-      </div>
-    )
+    return null // Handled by layout or onboarding
   }
 
   const org = data.organizations[0]!.organization
-  const totalTeams = org.teams.length
-  const totalProjects = org.teams.reduce((acc, t) => acc + t.projects.length, 0)
-  const totalMembers = org.members.length
-
   const allProjects = org.teams.flatMap((team) =>
     team.projects.map((proj) => ({ ...proj, teamName: team.name }))
   )
 
-  const recentProjects = [...allProjects]
-    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-    .slice(0, 9)
+  const sortedProjects = [...allProjects].sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  )
+
+  const groups = groupProjects(sortedProjects)
 
   return (
-    <div className="p-8 max-w-[1400px]">
-      {/* Header */}
-      <header className="mb-10">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">{org.name}</h1>
-            <p className="text-zinc-500 text-sm mt-0.5">Your workspace overview</p>
+    <div className="flex flex-col min-h-screen bg-[#1e1e1e] text-zinc-300 font-sans">
+      {/* Header / Toolbar */}
+      <header className="sticky top-0 z-30 bg-[#1e1e1e]/80 backdrop-blur-md border-b border-[#3b3b3b] px-8 py-3">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-6">
+            <h1 className="text-[14px] font-semibold text-white">Recently viewed</h1>
+            <div className="flex items-center gap-1 text-[13px] text-zinc-500 hover:text-zinc-300 cursor-pointer transition-colors">
+              <span>All files</span>
+              <ChevronDown size={14} />
+            </div>
           </div>
-          <Link
-            href="/dashboard/projects"
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-500/15 border border-indigo-500/25 text-indigo-300 text-sm font-semibold rounded-xl hover:bg-indigo-500/20 transition-all"
-          >
-            <Plus className="w-4 h-4" /> New Project
-          </Link>
+
+          <div className="flex items-center gap-3">
+            <div className="flex items-center bg-[#2c2c2c] border border-[#3b3b3b] rounded p-0.5">
+              <button className="p-1.5 bg-[#3b3b3b] text-white rounded-sm shadow-sm">
+                <LayoutGrid size={14} />
+              </button>
+              <button className="p-1.5 text-zinc-500 hover:text-zinc-300">
+                <ListFilter size={14} />
+              </button>
+            </div>
+            <Link
+              href="/editor/new"
+              className="flex items-center gap-2 px-3 py-1.5 bg-[#0d99ff] hover:bg-[#0b85de] text-white text-[13px] font-medium rounded transition-colors"
+            >
+              <Plus size={16} />
+              <span>Design file</span>
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-10">
-        <StatCard label="Teams" value={totalTeams} icon={<Building2 className="w-4 h-4 text-indigo-400" />} />
-        <StatCard label="Projects" value={totalProjects} icon={<FolderKanban className="w-4 h-4 text-violet-400" />} />
-        <StatCard label="Members" value={totalMembers} icon={<Users className="w-4 h-4 text-emerald-400" />} />
-      </div>
-
-      {/* Recent projects masonry grid */}
-      <section>
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Recent Projects</h2>
-          <Link href="/dashboard/projects" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors font-medium">
-            View all →
-          </Link>
-        </div>
-
-        {recentProjects.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-white/[0.08] py-20 flex flex-col items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
-              <FolderKanban className="w-6 h-6 text-zinc-600" />
+      {/* Content */}
+      <main className="flex-1 p-8">
+        {sortedProjects.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-40">
+            <div className="w-16 h-16 rounded-full bg-[#2c2c2c] flex items-center justify-center mb-4">
+              <Search size={32} className="text-zinc-600" />
             </div>
-            <div className="text-center">
-              <p className="text-zinc-400 font-medium text-sm">No projects yet</p>
-              <p className="text-zinc-600 text-xs mt-1">Create your first project to get started</p>
-            </div>
-            <Link href="/dashboard/projects" className="px-4 py-2 bg-indigo-500/15 border border-indigo-500/25 text-indigo-300 text-sm font-semibold rounded-xl hover:bg-indigo-500/20 transition-all">
-              Create Project
-            </Link>
+            <h2 className="text-lg font-medium text-white">No recently viewed files</h2>
+            <p className="text-zinc-500 mt-1">Files you open will appear here.</p>
           </div>
         ) : (
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-            {recentProjects.map((project) => (
-              <div key={project.id} className="break-inside-avoid">
-                <ProjectCard project={project} />
-              </div>
+          <div className="space-y-12">
+            {groups.map((group) => (
+              <section key={group.label}>
+                <h2 className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-6 px-1">
+                  {group.label}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
+                  {group.projects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         )}
-      </section>
+      </main>
     </div>
   )
 }
 
-function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-5 hover:border-white/[0.10] transition-all">
-      <div className="flex items-center gap-2 mb-3">
-        <div className="p-1.5 bg-white/[0.05] rounded-lg">{icon}</div>
-        <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider">{label}</span>
-      </div>
-      <span className="text-3xl font-bold">{value}</span>
-    </div>
-  )
+function groupProjects(projects: any[]) {
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  const lastWeek = new Date(today)
+  lastWeek.setDate(lastWeek.getDate() - 7)
+
+  return [
+    {
+      label: 'Today',
+      projects: projects.filter((p) => new Date(p.updatedAt) >= today),
+    },
+    {
+      label: 'Yesterday',
+      projects: projects.filter((p) => {
+        const d = new Date(p.updatedAt)
+        return d >= yesterday && d < today
+      }),
+    },
+    {
+      label: 'Last 7 days',
+      projects: projects.filter((p) => {
+        const d = new Date(p.updatedAt)
+        return d >= lastWeek && d < yesterday
+      }),
+    },
+    {
+      label: 'Older',
+      projects: projects.filter((p) => new Date(p.updatedAt) < lastWeek),
+    },
+  ].filter((group) => group.projects.length > 0)
 }

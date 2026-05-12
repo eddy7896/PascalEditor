@@ -14,7 +14,15 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   let memberships = await prisma.organizationMember.findMany({
     where: { userId },
     include: {
-      organization: { select: { id: true, name: true, slug: true, logoUrl: true } },
+      organization: { 
+        select: { 
+          id: true, 
+          name: true, 
+          slug: true, 
+          logoUrl: true,
+          teams: { select: { id: true, name: true } }
+        } 
+      },
     },
     orderBy: { createdAt: 'asc' },
   })
@@ -42,12 +50,24 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     memberships = await prisma.organizationMember.findMany({
       where: { userId },
       include: {
-        organization: { select: { id: true, name: true, slug: true, logoUrl: true } },
+        organization: { 
+          select: { 
+            id: true, 
+            name: true, 
+            slug: true, 
+            logoUrl: true,
+            teams: { select: { id: true, name: true } }
+          } 
+        },
       },
     })
   }
 
-  const orgs = memberships.map((m) => ({ ...m.organization, role: m.role }))
+  const orgs = memberships.map((m) => ({ 
+    ...m.organization, 
+    role: m.role,
+    teams: m.organization.teams 
+  }))
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white flex">

@@ -5,122 +5,148 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import {
-  LayoutDashboard, FolderKanban, Users2, Users, Settings,
-  LogOut, ChevronDown, Check, Box, Globe, ShoppingBag,
+  Clock,
+  FileText,
+  Users2,
+  ChevronDown,
+  Check,
+  Plus,
+  Search,
+  Settings,
+  LogOut,
+  ChevronRight,
 } from 'lucide-react'
 
-type Org = { id: string; name: string; slug: string; logoUrl: string | null; role: string }
+type Team = { id: string; name: string }
+type Org = { 
+  id: string; 
+  name: string; 
+  slug: string; 
+  logoUrl: string | null; 
+  role: string;
+  teams: Team[];
+}
 type User = { name: string | null; email: string | null; image: string | null }
-
-const NAV = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Overview', exact: true },
-  { href: '/dashboard/projects', icon: FolderKanban, label: 'Projects', exact: false },
-  { href: '/dashboard/teams', icon: Users2, label: 'Teams', exact: false },
-  { href: '/dashboard/members', icon: Users, label: 'Members', exact: false },
-  { href: '/marketplace', icon: ShoppingBag, label: 'Marketplace', exact: false },
-]
 
 export function DashboardSidebar({ orgs, user }: { orgs: Org[]; user: User }) {
   const pathname = usePathname()
   const [activeOrg, setActiveOrg] = useState(orgs[0]!)
   const [orgMenuOpen, setOrgMenuOpen] = useState(false)
 
-  const initial = (activeOrg.name[0] ?? 'A').toUpperCase()
-
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 z-40 flex flex-col border-r border-white/[0.06] bg-white/[0.03] backdrop-blur-2xl">
-      {/* Specular top highlight */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-      {/* Org Switcher */}
-      <div className="p-4 border-b border-white/[0.06]">
+    <aside className="fixed left-0 top-0 h-full w-60 z-40 flex flex-col bg-[#2c2c2c] border-r border-[#3b3b3b] text-zinc-300 select-none font-sans">
+      {/* User & Org Selector (Top) */}
+      <div className="relative p-2">
         <button
-          onClick={() => setOrgMenuOpen((o) => !o)}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.05] transition-all group"
+          onClick={() => setOrgMenuOpen(!orgMenuOpen)}
+          className="w-full flex items-center gap-2 p-1.5 rounded hover:bg-[#3e3e3e] transition-colors group"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-lg shadow-indigo-500/20">
-            {activeOrg.logoUrl ? (
-              <img src={activeOrg.logoUrl} alt="" className="w-full h-full rounded-lg object-cover" />
-            ) : (
-              initial
-            )}
+          <div className="w-5 h-5 rounded bg-indigo-500 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0">
+            {activeOrg.name[0]?.toUpperCase()}
           </div>
-          <div className="flex-1 min-w-0 text-left">
-            <div className="text-sm font-semibold truncate">{activeOrg.name}</div>
-            <div className="text-[11px] text-zinc-500 capitalize">{activeOrg.role.toLowerCase()}</div>
-          </div>
-          <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform ${orgMenuOpen ? 'rotate-180' : ''}`} />
+          <span className="flex-1 text-[13px] font-medium truncate text-left">{activeOrg.name}</span>
+          <ChevronDown className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300" />
         </button>
 
-        {orgMenuOpen && orgs.length > 1 && (
-          <div className="mt-1 rounded-xl border border-white/[0.08] bg-[#111]/90 backdrop-blur-xl overflow-hidden shadow-2xl">
+        {orgMenuOpen && (
+          <div className="absolute top-full left-2 right-2 mt-1 z-50 bg-[#2c2c2c] border border-[#3b3b3b] rounded shadow-xl overflow-hidden py-1">
+            <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Workspaces</div>
             {orgs.map((org) => (
               <button
                 key={org.id}
                 onClick={() => { setActiveOrg(org); setOrgMenuOpen(false) }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/[0.05] transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-[#3e3e3e] transition-colors"
               >
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0">
-                  {(org.name[0] ?? 'A').toUpperCase()}
+                <div className="w-4 h-4 rounded bg-indigo-500 flex items-center justify-center text-[8px] font-bold text-white flex-shrink-0">
+                  {org.name[0]?.toUpperCase()}
                 </div>
-                <span className="text-sm font-medium truncate flex-1 text-left">{org.name}</span>
-                {org.id === activeOrg.id && <Check className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />}
+                <span className="text-xs truncate flex-1 text-left">{org.name}</span>
+                {org.id === activeOrg.id && <Check className="w-3 h-3 text-indigo-400" />}
               </button>
             ))}
+            <div className="h-px bg-[#3b3b3b] my-1" />
+            <Link href="/dashboard/settings" className="flex items-center gap-2 px-3 py-1.5 hover:bg-[#3e3e3e] text-xs transition-colors">
+              <Settings className="w-3.5 h-3.5" /> Settings
+            </Link>
+            <button 
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-[#3e3e3e] text-xs text-red-400 transition-colors"
+            >
+              <LogOut className="w-3.5 h-3.5" /> Sign Out
+            </button>
           </div>
         )}
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-0.5 overflow-y-auto">
-        {NAV.map(({ href, icon: Icon, label, exact }) => {
-          const active = exact ? pathname === href : pathname.startsWith(href)
-          return (
-            <Link key={href} href={href}>
-              <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm font-medium ${
-                active
-                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/20'
-                  : 'text-zinc-400 hover:bg-white/[0.05] hover:text-white'
-              }`}>
-                <Icon className="w-4 h-4 flex-shrink-0" />
-                {label}
-              </div>
-            </Link>
-          )
-        })}
+      {/* Search Bar */}
+      <div className="px-3 mb-4">
+        <button className="w-full flex items-center gap-2 px-2 py-1.5 bg-[#3e3e3e] hover:bg-[#454545] rounded text-zinc-400 text-xs transition-colors">
+          <Search className="w-3.5 h-3.5" />
+          <span>Search</span>
+        </button>
+      </div>
+
+      {/* Main Navigation */}
+      <nav className="flex-1 overflow-y-auto px-2 space-y-0.5 custom-scrollbar">
+        <SidebarItem 
+          href="/dashboard" 
+          icon={<Clock className="w-4 h-4" />} 
+          label="Recently viewed" 
+          active={pathname === '/dashboard'} 
+        />
+        <SidebarItem 
+          href="/dashboard/drafts" 
+          icon={<FileText className="w-4 h-4" />} 
+          label="Drafts" 
+          active={pathname === '/dashboard/drafts'} 
+        />
+
+        {/* Teams Section */}
+        <div className="mt-6 mb-2 px-2 flex items-center justify-between group">
+          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Teams</span>
+          <button className="p-0.5 hover:bg-[#3e3e3e] rounded transition-colors opacity-0 group-hover:opacity-100">
+            <Plus className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-300" />
+          </button>
+        </div>
+
+        {activeOrg.teams.map((team) => (
+          <SidebarItem 
+            key={team.id}
+            href={`/dashboard/teams/${team.id}`} 
+            icon={<Users2 className="w-4 h-4" />} 
+            label={team.name} 
+            active={pathname === `/dashboard/teams/${team.id}`} 
+          />
+        ))}
       </nav>
 
-      {/* Bottom section */}
-      <div className="p-4 border-t border-white/[0.06] space-y-0.5">
-        <Link href="/dashboard/settings">
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:bg-white/[0.05] hover:text-white transition-all text-sm font-medium">
-            <Settings className="w-4 h-4 flex-shrink-0" />
-            Settings
+      {/* Bottom User Profile */}
+      <div className="p-2 border-t border-[#3b3b3b]">
+        <div className="flex items-center gap-2 p-1.5 rounded hover:bg-[#3e3e3e] transition-colors cursor-pointer group">
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0 shadow-sm">
+            {user.image ? <img src={user.image} alt="" className="w-full h-full rounded-full" /> : (user.name?.[0] ?? 'U')}
           </div>
-        </Link>
-        <button
-          onClick={() => signOut({ callbackUrl: '/' })}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400/80 hover:bg-red-500/10 hover:text-red-400 transition-all text-sm font-medium"
-        >
-          <LogOut className="w-4 h-4 flex-shrink-0" />
-          Sign Out
-        </button>
-
-        {/* User profile */}
-        <div className="mt-2 pt-3 border-t border-white/[0.06] flex items-center gap-3 px-1">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
-            {user.image ? (
-              <img src={user.image} alt="" className="w-full h-full rounded-full object-cover" />
-            ) : (
-              (user.name?.[0] ?? user.email?.[0] ?? 'U').toUpperCase()
-            )}
+          <div className="flex-1 min-w-0">
+            <div className="text-xs font-medium truncate">{user.name ?? 'User'}</div>
           </div>
-          <div className="min-w-0">
-            <div className="text-xs font-semibold truncate">{user.name ?? 'User'}</div>
-            <div className="text-[11px] text-zinc-600 truncate">{user.email}</div>
-          </div>
+          <ChevronRight className="w-3 h-3 text-zinc-500 group-hover:text-zinc-300" />
         </div>
       </div>
     </aside>
+  )
+}
+
+function SidebarItem({ href, icon, label, active }: { href: string; icon: React.ReactNode; label: string; active?: boolean }) {
+  return (
+    <Link href={href}>
+      <div className={`flex items-center gap-2.5 px-2 py-1.5 rounded text-[13px] font-medium transition-colors ${
+        active 
+          ? 'bg-[#3e3e3e] text-white shadow-sm' 
+          : 'text-zinc-400 hover:bg-[#3e3e3e] hover:text-zinc-200'
+      }`}>
+        <span className={`${active ? 'text-indigo-400' : 'text-zinc-500'}`}>{icon}</span>
+        <span className="truncate">{label}</span>
+      </div>
+    </Link>
   )
 }

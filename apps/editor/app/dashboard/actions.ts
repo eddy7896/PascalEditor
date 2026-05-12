@@ -106,3 +106,23 @@ export async function inviteMember(organizationId: string, email: string, name: 
     return { success: false, error: "Failed to invite member. They may already be in the organization." };
   }
 }
+export async function getTeamData(teamId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) return null;
+
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    include: {
+      projects: {
+        orderBy: { updatedAt: 'desc' }
+      },
+      members: {
+        include: {
+          user: true
+        }
+      }
+    }
+  });
+
+  return team;
+}
