@@ -4,6 +4,18 @@ const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
 
 const globalForRedis = global as unknown as { redis: Redis }
 
-export const redis = globalForRedis.redis || new Redis(redisUrl)
+function getRedis(): Redis {
+  if (!globalForRedis.redis) {
+    globalForRedis.redis = new Redis(redisUrl)
+  }
+  return globalForRedis.redis
+}
 
-if (process.env.NODE_ENV !== 'production') globalForRedis.redis = redis
+// Lazy proxy — Redis client is only created on first property access
+export const redis = new Proxy({} as Redis, {
+  get(_target, prop, receiver) {
+    const instance = getRedis()
+    const value = Reflect.get(instance, prop, receiver)
+    return typeof value === 'function' ? value.bind(instance) : value
+  },
+})
